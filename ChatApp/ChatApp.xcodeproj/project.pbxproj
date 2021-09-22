@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		22B50F7726FB01810099436A /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B50F7626FB01810099436A /* Log.swift */; };
 		22CC53B926FAC8220036F6F9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CC53B826FAC8220036F6F9 /* AppDelegate.swift */; };
 		22CC53BB26FAC8220036F6F9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CC53BA26FAC8220036F6F9 /* SceneDelegate.swift */; };
 		22CC53BD26FAC8220036F6F9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CC53BC26FAC8220036F6F9 /* ViewController.swift */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		22B50F7626FB01810099436A /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		22CC53B526FAC8220036F6F9 /* ChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		22CC53B826FAC8220036F6F9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		22CC53BA26FAC8220036F6F9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -37,6 +39,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		22B50F7826FB0E610099436A /* Debug */ = {
+			isa = PBXGroup;
+			children = (
+				22B50F7626FB01810099436A /* Log.swift */,
+			);
+			path = Debug;
+			sourceTree = "<group>";
+		};
+		22B50F7926FB0E760099436A /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				22CC53B826FAC8220036F6F9 /* AppDelegate.swift */,
+				22CC53BA26FAC8220036F6F9 /* SceneDelegate.swift */,
+				22CC53C626FAC8260036F6F9 /* Info.plist */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		22B50F7A26FB0E860099436A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				22CC53C126FAC8260036F6F9 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		22CC53AC26FAC8220036F6F9 = {
 			isa = PBXGroup;
 			children = (
@@ -56,13 +84,12 @@
 		22CC53B726FAC8220036F6F9 /* ChatApp */ = {
 			isa = PBXGroup;
 			children = (
-				22CC53B826FAC8220036F6F9 /* AppDelegate.swift */,
-				22CC53BA26FAC8220036F6F9 /* SceneDelegate.swift */,
 				22CC53BC26FAC8220036F6F9 /* ViewController.swift */,
-				22CC53BE26FAC8220036F6F9 /* Main.storyboard */,
-				22CC53C126FAC8260036F6F9 /* Assets.xcassets */,
 				22CC53C326FAC8260036F6F9 /* LaunchScreen.storyboard */,
-				22CC53C626FAC8260036F6F9 /* Info.plist */,
+				22CC53BE26FAC8220036F6F9 /* Main.storyboard */,
+				22B50F7926FB0E760099436A /* Application */,
+				22B50F7A26FB0E860099436A /* Resources */,
+				22B50F7826FB0E610099436A /* Debug */,
 			);
 			path = ChatApp;
 			sourceTree = "<group>";
@@ -141,6 +168,7 @@
 				22CC53BD26FAC8220036F6F9 /* ViewController.swift in Sources */,
 				22CC53B926FAC8220036F6F9 /* AppDelegate.swift in Sources */,
 				22CC53BB26FAC8220036F6F9 /* SceneDelegate.swift in Sources */,
+				22B50F7726FB01810099436A /* Log.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,7 +319,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = JWKUVZUV6F;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ChatApp/Info.plist;
+				INFOPLIST_FILE = ChatApp/Application/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ChatApp;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -322,7 +350,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = JWKUVZUV6F;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ChatApp/Info.plist;
+				INFOPLIST_FILE = ChatApp/Application/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ChatApp;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
