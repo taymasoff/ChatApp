@@ -12,11 +12,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    // MARK: - UIApplicationDelegate Lifecycle Methods
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        print("\(#function) - App just Launched")
         return true
     }
-
+    
+    // Методы жизненного цикла приложения были заменены на методы жизненного цикла UIScene
+    // Методы ниже не работают с iOS 13
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        print("\(#function) - App has become Active")
+    }
+    
+    func applicationWillResignActive(_ application: UIApplication) {
+        print("\(#function) - App is about to leave an Active state and become Inactive")
+    }
+    
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        print("\(#function) - App is now in Background state")
+    }
+    
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        print("\(#function) - App is entering Foreground state")
+    }
+    
+    func applicationWillTerminate(_ application: UIApplication) {
+        print("\(#function) - App is about to Terminate")
+    }
+    
     // MARK: UISceneSession Lifecycle
     @available(iOS 13.0, *)
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
