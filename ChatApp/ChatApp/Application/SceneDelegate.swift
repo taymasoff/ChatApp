@@ -20,29 +20,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     // MARK: - UIWindowSceneDelegate Lifecycle Methods
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
-        Log.info("Scene is Connected to the App")
-        
-        guard let _ = (scene as? UIWindowScene) else { return }
-    }
-    
-    func sceneDidDisconnect(_ scene: UIScene) {
-        Log.info("Scene has been Removed from the App")
-    }
-
-    func sceneDidBecomeActive(_ scene: UIScene) {
-        Log.info("Scene has become Active")
-    }
-
-    func sceneWillResignActive(_ scene: UIScene) {
-        Log.info("Scene is about to leave an Active state and become Inactive")
-    }
-
-    func sceneWillEnterForeground(_ scene: UIScene) {
-        Log.info("Scene is entering Foreground state")
-    }
-
-    func sceneDidEnterBackground(_ scene: UIScene) {
-        Log.info("Scene has entered Background state")
+        guard let windowScene = scene as? UIWindowScene else { return }
+        window = UIWindow(windowScene: windowScene)
+            window?.backgroundColor = AppAssets.colors(.appMain)
+            let navController = UINavigationController()
+            let moduleBuilder = ModuleBuilder()
+            let router = MainRouter(navigationController: navController,
+                                    moduleBuilder: moduleBuilder)
+            router.initiateFirstViewController()
+            window?.rootViewController = navController
+            window?.makeKeyAndVisible()
     }
 }
 

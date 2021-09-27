@@ -10,10 +10,27 @@
 		22B50F7726FB01810099436A /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B50F7626FB01810099436A /* Log.swift */; };
 		22CC53B926FAC8220036F6F9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CC53B826FAC8220036F6F9 /* AppDelegate.swift */; };
 		22CC53BB26FAC8220036F6F9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CC53BA26FAC8220036F6F9 /* SceneDelegate.swift */; };
-		22CC53BD26FAC8220036F6F9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CC53BC26FAC8220036F6F9 /* ViewController.swift */; };
-		22CC53C026FAC8220036F6F9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 22CC53BE26FAC8220036F6F9 /* Main.storyboard */; };
+		22CC53BD26FAC8220036F6F9 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CC53BC26FAC8220036F6F9 /* ChatViewController.swift */; };
 		22CC53C226FAC8260036F6F9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 22CC53C126FAC8260036F6F9 /* Assets.xcassets */; };
 		22CC53C526FAC8260036F6F9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 22CC53C326FAC8260036F6F9 /* LaunchScreen.storyboard */; };
+		22D104A42702498F006CF686 /* SF-Pro-Display-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 22D104A32702498F006CF686 /* SF-Pro-Display-Bold.otf */; };
+		22D104A6270249A4006CF686 /* SF-Pro-Display-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 22D104A5270249A4006CF686 /* SF-Pro-Display-Semibold.otf */; };
+		22D104A9270249B6006CF686 /* SF-Pro-Text-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 22D104A7270249B6006CF686 /* SF-Pro-Text-Bold.otf */; };
+		22D104AA270249B6006CF686 /* SF-Pro-Text-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 22D104A8270249B6006CF686 /* SF-Pro-Text-Semibold.otf */; };
+		22D104AC27024EBF006CF686 /* ChatViewController+Elements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D104AB27024EBF006CF686 /* ChatViewController+Elements.swift */; };
+		22D104AE27025E6B006CF686 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D104AD27025E6B006CF686 /* Constants.swift */; };
+		22D104B027027F69006CF686 /* ProfileViewController+Elements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D104AF27027F68006CF686 /* ProfileViewController+Elements.swift */; };
+		22E69D182701D9A4009CAAC0 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E69D172701D9A4009CAAC0 /* Router.swift */; };
+		22E69D1B2701DA27009CAAC0 /* ModuleBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E69D1A2701DA27009CAAC0 /* ModuleBuilder.swift */; };
+		22E69D202701DACA009CAAC0 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E69D1F2701DACA009CAAC0 /* ChatViewModel.swift */; };
+		22E69D232701E0AD009CAAC0 /* DMViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E69D222701E0AD009CAAC0 /* DMViewController.swift */; };
+		22E69D252701E0B7009CAAC0 /* DMViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E69D242701E0B7009CAAC0 /* DMViewModel.swift */; };
+		22E69D2A2701E0E8009CAAC0 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E69D292701E0E8009CAAC0 /* ProfileViewController.swift */; };
+		22E69D2C2701E0EF009CAAC0 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E69D2B2701E0EF009CAAC0 /* ProfileViewModel.swift */; };
+		22E69D332701E2C1009CAAC0 /* ChatCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E69D322701E2C1009CAAC0 /* ChatCell.swift */; };
+		22E69D352701E2D8009CAAC0 /* ChatCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E69D342701E2D8009CAAC0 /* ChatCellViewModel.swift */; };
+		22E69D3A2701EC18009CAAC0 /* SF-Pro-Display-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 22E69D392701EC18009CAAC0 /* SF-Pro-Display-Regular.otf */; };
+		22E69D3C2701EC25009CAAC0 /* SF-Pro-Text-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 22E69D3B2701EC25009CAAC0 /* SF-Pro-Text-Regular.otf */; };
 		6AB9E66E2FE3AEB3F44AE343 /* Pods_ChatApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02B3F92A3AD20A17B61C1BF3 /* Pods_ChatApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -23,11 +40,28 @@
 		22CC53B526FAC8220036F6F9 /* ChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		22CC53B826FAC8220036F6F9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		22CC53BA26FAC8220036F6F9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		22CC53BC26FAC8220036F6F9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		22CC53BF26FAC8220036F6F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		22CC53BC26FAC8220036F6F9 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		22CC53C126FAC8260036F6F9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		22CC53C426FAC8260036F6F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		22CC53C626FAC8260036F6F9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		22D104A32702498F006CF686 /* SF-Pro-Display-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Bold.otf"; sourceTree = "<group>"; };
+		22D104A5270249A4006CF686 /* SF-Pro-Display-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Semibold.otf"; sourceTree = "<group>"; };
+		22D104A7270249B6006CF686 /* SF-Pro-Text-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Bold.otf"; sourceTree = "<group>"; };
+		22D104A8270249B6006CF686 /* SF-Pro-Text-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Semibold.otf"; sourceTree = "<group>"; };
+		22D104AB27024EBF006CF686 /* ChatViewController+Elements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatViewController+Elements.swift"; sourceTree = "<group>"; };
+		22D104AD27025E6B006CF686 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		22D104AF27027F68006CF686 /* ProfileViewController+Elements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProfileViewController+Elements.swift"; sourceTree = "<group>"; };
+		22E69D172701D9A4009CAAC0 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		22E69D1A2701DA27009CAAC0 /* ModuleBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleBuilder.swift; sourceTree = "<group>"; };
+		22E69D1F2701DACA009CAAC0 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
+		22E69D222701E0AD009CAAC0 /* DMViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMViewController.swift; sourceTree = "<group>"; };
+		22E69D242701E0B7009CAAC0 /* DMViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMViewModel.swift; sourceTree = "<group>"; };
+		22E69D292701E0E8009CAAC0 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		22E69D2B2701E0EF009CAAC0 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
+		22E69D322701E2C1009CAAC0 /* ChatCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCell.swift; sourceTree = "<group>"; };
+		22E69D342701E2D8009CAAC0 /* ChatCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCellViewModel.swift; sourceTree = "<group>"; };
+		22E69D392701EC18009CAAC0 /* SF-Pro-Display-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Regular.otf"; sourceTree = "<group>"; };
+		22E69D3B2701EC25009CAAC0 /* SF-Pro-Text-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Regular.otf"; sourceTree = "<group>"; };
 		444A44EF379D39E27847B025 /* Pods-ChatApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatApp.debug.xcconfig"; path = "Target Support Files/Pods-ChatApp/Pods-ChatApp.debug.xcconfig"; sourceTree = "<group>"; };
 		FF7F6A44DD7E6D65C0DF1039 /* Pods-ChatApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatApp.release.xcconfig"; path = "Target Support Files/Pods-ChatApp/Pods-ChatApp.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -65,6 +99,7 @@
 			children = (
 				22CC53B826FAC8220036F6F9 /* AppDelegate.swift */,
 				22CC53BA26FAC8220036F6F9 /* SceneDelegate.swift */,
+				22CC53C326FAC8260036F6F9 /* LaunchScreen.storyboard */,
 				22CC53C626FAC8260036F6F9 /* Info.plist */,
 			);
 			path = Application;
@@ -73,6 +108,8 @@
 		22B50F7A26FB0E860099436A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				22D104AD27025E6B006CF686 /* Constants.swift */,
+				22E69D382701EBAD009CAAC0 /* Fonts */,
 				22CC53C126FAC8260036F6F9 /* Assets.xcassets */,
 			);
 			path = Resources;
@@ -99,14 +136,140 @@
 		22CC53B726FAC8220036F6F9 /* ChatApp */ = {
 			isa = PBXGroup;
 			children = (
-				22CC53BC26FAC8220036F6F9 /* ViewController.swift */,
-				22CC53C326FAC8260036F6F9 /* LaunchScreen.storyboard */,
-				22CC53BE26FAC8220036F6F9 /* Main.storyboard */,
+				22E69D1C2701DA91009CAAC0 /* ChatModule */,
+				22E69D212701E07F009CAAC0 /* DMModule */,
+				22E69D282701E0D3009CAAC0 /* ProfileModule */,
 				22B50F7926FB0E760099436A /* Application */,
+				22E69D192701D9AA009CAAC0 /* Routing */,
 				22B50F7A26FB0E860099436A /* Resources */,
 				22B50F7826FB0E610099436A /* Debug */,
 			);
 			path = ChatApp;
+			sourceTree = "<group>";
+		};
+		22E69D192701D9AA009CAAC0 /* Routing */ = {
+			isa = PBXGroup;
+			children = (
+				22E69D172701D9A4009CAAC0 /* Router.swift */,
+				22E69D1A2701DA27009CAAC0 /* ModuleBuilder.swift */,
+			);
+			path = Routing;
+			sourceTree = "<group>";
+		};
+		22E69D1C2701DA91009CAAC0 /* ChatModule */ = {
+			isa = PBXGroup;
+			children = (
+				22E69D1D2701DAA6009CAAC0 /* View */,
+				22E69D1E2701DAB9009CAAC0 /* ViewModel */,
+				22E69D2F2701E285009CAAC0 /* ChatCell */,
+			);
+			path = ChatModule;
+			sourceTree = "<group>";
+		};
+		22E69D1D2701DAA6009CAAC0 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				22CC53BC26FAC8220036F6F9 /* ChatViewController.swift */,
+				22D104AB27024EBF006CF686 /* ChatViewController+Elements.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		22E69D1E2701DAB9009CAAC0 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				22E69D1F2701DACA009CAAC0 /* ChatViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		22E69D212701E07F009CAAC0 /* DMModule */ = {
+			isa = PBXGroup;
+			children = (
+				22E69D262701E0BB009CAAC0 /* View */,
+				22E69D272701E0C4009CAAC0 /* ViewModel */,
+			);
+			path = DMModule;
+			sourceTree = "<group>";
+		};
+		22E69D262701E0BB009CAAC0 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				22E69D222701E0AD009CAAC0 /* DMViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		22E69D272701E0C4009CAAC0 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				22E69D242701E0B7009CAAC0 /* DMViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		22E69D282701E0D3009CAAC0 /* ProfileModule */ = {
+			isa = PBXGroup;
+			children = (
+				22E69D2D2701E0F6009CAAC0 /* View */,
+				22E69D2E2701E101009CAAC0 /* ViewModel */,
+			);
+			path = ProfileModule;
+			sourceTree = "<group>";
+		};
+		22E69D2D2701E0F6009CAAC0 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				22E69D292701E0E8009CAAC0 /* ProfileViewController.swift */,
+				22D104AF27027F68006CF686 /* ProfileViewController+Elements.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		22E69D2E2701E101009CAAC0 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				22E69D2B2701E0EF009CAAC0 /* ProfileViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		22E69D2F2701E285009CAAC0 /* ChatCell */ = {
+			isa = PBXGroup;
+			children = (
+				22E69D302701E28C009CAAC0 /* View */,
+				22E69D312701E29A009CAAC0 /* ViewModel */,
+			);
+			path = ChatCell;
+			sourceTree = "<group>";
+		};
+		22E69D302701E28C009CAAC0 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				22E69D322701E2C1009CAAC0 /* ChatCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		22E69D312701E29A009CAAC0 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				22E69D342701E2D8009CAAC0 /* ChatCellViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		22E69D382701EBAD009CAAC0 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				22E69D392701EC18009CAAC0 /* SF-Pro-Display-Regular.otf */,
+				22E69D3B2701EC25009CAAC0 /* SF-Pro-Text-Regular.otf */,
+				22D104A32702498F006CF686 /* SF-Pro-Display-Bold.otf */,
+				22D104A5270249A4006CF686 /* SF-Pro-Display-Semibold.otf */,
+				22D104A7270249B6006CF686 /* SF-Pro-Text-Bold.otf */,
+				22D104A8270249B6006CF686 /* SF-Pro-Text-Semibold.otf */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 		D7A6C4DCD4ACFC2AE5C4C0B4 /* Pods */ = {
@@ -115,7 +278,6 @@
 				444A44EF379D39E27847B025 /* Pods-ChatApp.debug.xcconfig */,
 				FF7F6A44DD7E6D65C0DF1039 /* Pods-ChatApp.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -179,9 +341,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22D104A6270249A4006CF686 /* SF-Pro-Display-Semibold.otf in Resources */,
+				22D104A9270249B6006CF686 /* SF-Pro-Text-Bold.otf in Resources */,
 				22CC53C526FAC8260036F6F9 /* LaunchScreen.storyboard in Resources */,
+				22D104A42702498F006CF686 /* SF-Pro-Display-Bold.otf in Resources */,
+				22D104AA270249B6006CF686 /* SF-Pro-Text-Semibold.otf in Resources */,
+				22E69D3A2701EC18009CAAC0 /* SF-Pro-Display-Regular.otf in Resources */,
+				22E69D3C2701EC25009CAAC0 /* SF-Pro-Text-Regular.otf in Resources */,
 				22CC53C226FAC8260036F6F9 /* Assets.xcassets in Resources */,
-				22CC53C026FAC8220036F6F9 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -234,24 +401,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				22CC53BD26FAC8220036F6F9 /* ViewController.swift in Sources */,
+				22CC53BD26FAC8220036F6F9 /* ChatViewController.swift in Sources */,
+				22D104AE27025E6B006CF686 /* Constants.swift in Sources */,
+				22E69D232701E0AD009CAAC0 /* DMViewController.swift in Sources */,
+				22E69D2A2701E0E8009CAAC0 /* ProfileViewController.swift in Sources */,
+				22E69D202701DACA009CAAC0 /* ChatViewModel.swift in Sources */,
 				22CC53B926FAC8220036F6F9 /* AppDelegate.swift in Sources */,
+				22E69D332701E2C1009CAAC0 /* ChatCell.swift in Sources */,
+				22D104B027027F69006CF686 /* ProfileViewController+Elements.swift in Sources */,
+				22E69D182701D9A4009CAAC0 /* Router.swift in Sources */,
 				22CC53BB26FAC8220036F6F9 /* SceneDelegate.swift in Sources */,
+				22D104AC27024EBF006CF686 /* ChatViewController+Elements.swift in Sources */,
+				22E69D2C2701E0EF009CAAC0 /* ProfileViewModel.swift in Sources */,
+				22E69D352701E2D8009CAAC0 /* ChatCellViewModel.swift in Sources */,
 				22B50F7726FB01810099436A /* Log.swift in Sources */,
+				22E69D1B2701DA27009CAAC0 /* ModuleBuilder.swift in Sources */,
+				22E69D252701E0B7009CAAC0 /* DMViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		22CC53BE26FAC8220036F6F9 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				22CC53BF26FAC8220036F6F9 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		22CC53C326FAC8260036F6F9 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -393,7 +564,6 @@
 				INFOPLIST_KEY_CFBundleDisplayName = ChatApp;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -425,7 +595,6 @@
 				INFOPLIST_KEY_CFBundleDisplayName = ChatApp;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
