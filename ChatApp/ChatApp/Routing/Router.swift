@@ -7,10 +7,6 @@
 
 import UIKit
 
-/*
- 👉 Простая реализация паттерна Координатор. Отвечает за логику роутинга в приложении.
- */
-
 protocol RouterProtocol {
     var navigationController: UINavigationController? { get set }
     var moduleBuilder: ModuleBuilderProtocol? { get set }
@@ -64,9 +60,9 @@ class MainRouter: MainRouterProtocol {
                 Log.info("Cannot create Profile Module")
                 return
             }
-            // Еще один navigation controller создается для того, чтобы модальное представление ProfileViewController имело свой navigationBar, как в дизайне
-            let emptyNav = UINavigationController(rootViewController: profileViewController)
-            navigationController.present(emptyNav, animated: true, completion: nil)
+            // Представляем модально с прозрачным эффектом
+            profileViewController.modalPresentationStyle = .overCurrentContext
+            navigationController.present(profileViewController, animated: false, completion: nil)
         }
     }
     

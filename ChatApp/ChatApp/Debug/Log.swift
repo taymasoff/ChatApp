@@ -9,7 +9,7 @@ import Foundation
 
 /*
  👉 Простой логер событий в консоль. В будущем можно легко дополнить и модифицировать.
- ⚙️ Использование: Log.info(...)
+ ⚙️ Использование: Log.info(...) или Log.error(...)
  🖥 Пример вывода:
     10:16:46537 📝 [AppDelegate.swift]: application(_:didFinishLaunchingWithOptions:) -> App just Launched
  */
@@ -44,6 +44,20 @@ class Log {
         
          if isLoggingEnabled {
              print("\(Date().toString()) 📝 [\(sourceFileName(filePath: filename))]: \(funcName) -> \(object)")
+         }
+    }
+    
+    /// Вывод сообщения об ошибке в консоль
+    /// - Parameters:
+    ///   - object: Объект логирования
+    ///   - filename: Название файла, из которого ведется логирование
+    ///   - funcName: Название функции, откуда вызван метод логирования
+    class func error(_ object: Any,
+                     filename: String = #file,
+                     funcName: String = #function) {
+        
+         if isLoggingEnabled {
+             print("\(Date().toString()) ‼️ [\(sourceFileName(filePath: filename))]: \(funcName) -> \(object)")
          }
     }
     

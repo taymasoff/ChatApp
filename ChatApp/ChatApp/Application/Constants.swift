@@ -64,6 +64,7 @@ enum FontTypes: String {
 enum AppImages: String {
     case gear
     case yellowCircle
+    case camera
     
     var rawValue: String {
         switch self {
@@ -71,6 +72,8 @@ enum AppImages: String {
             return "gear"
         case .yellowCircle:
             return "yellowCircle"
+        case .camera:
+            return "camera"
         }
     }
 }
@@ -83,12 +86,7 @@ struct AppAssets {
     /// - Parameter image: список доступных изображений типа AppImages
     /// - Returns: опциональное изображение
     static func image(_ image: AppImages) -> UIImage? {
-        switch image {
-        case .gear:
-            return UIImage(named: image.rawValue)
-        case .yellowCircle:
-            return UIImage(named: image.rawValue)
-        }
+        return UIImage(named: image.rawValue)
     }
     
     /// Получить шрифт из библиотеки асетов

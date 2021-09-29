@@ -7,10 +7,6 @@
 
 import UIKit
 
-/*
- 👉 Простой билдер модулей. Упрощает работу роутера.
- */
-
 protocol ModuleBuilderProtocol {
     func createChatModule(router: MainRouterProtocol) -> UIViewController
     func createDMModule(router: MainRouterProtocol) -> UIViewController
