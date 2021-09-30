@@ -37,6 +37,7 @@ class ProfileView: UIView {
 private extension ProfileView {
     func makeProfileImageView() -> UIImageView {
         let imageView = UIImageView()
+        imageView.isUserInteractionEnabled = true
         self.addSubview(imageView)
         imageView.snp.makeConstraints { [unowned self] make in
             make.size.equalTo(self.frame.size.width / 2)
@@ -46,6 +47,7 @@ private extension ProfileView {
         // Перерисовываем фреймы, чтобы получить ширину фрейма imageView
         self.layoutIfNeeded()
         imageView.layer.cornerRadius = imageView.frame.size.width / 2
+        imageView.layer.masksToBounds = true
         return imageView
     }
     
@@ -78,20 +80,21 @@ private extension ProfileView {
         let button = UIButton(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
         button.backgroundColor = .systemBlue
         button.setImage(AppAssets.image(.camera), for: .normal)
-        profileImageView.addSubview(button)
+        // Если добавить к ImageView, то углы срежутся, поэтому поверх
+        self.addSubview(button)
         // Формула для нахождения точки на окружности
         let radius = profileImageView.frame.size.width / 2
         let xCoord = radius * sin(45 * (Double.pi / 180))
         let yCoord = radius * cos(45 * (Double.pi / 180))
         button.snp.makeConstraints { make in
-            make.centerX.equalToSuperview().offset(xCoord)
-            make.centerY.equalToSuperview().offset(yCoord)
+            make.size.equalTo(profileImageView.snp.size).dividedBy(5)
+            make.centerX.equalTo(profileImageView.snp.centerX).offset(xCoord)
+            make.centerY.equalTo(profileImageView.snp.centerY).offset(yCoord)
         }
         button.imageView?.snp.makeConstraints { make in
-            make.edges.equalToSuperview().inset(8)
+            make.edges.equalTo(button.snp.edges).inset(8)
         }
         button.layer.cornerRadius = button.frame.size.width / 2
-        
         return button
     }
 }

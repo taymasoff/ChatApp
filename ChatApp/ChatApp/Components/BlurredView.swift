@@ -8,7 +8,7 @@
 import UIKit
 
 /*
- Эффект блура. Используется в ProfileViewController для 
+ Эффект блура.
  */
 
 class BlurredView: UIVisualEffectView {

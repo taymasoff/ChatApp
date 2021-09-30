@@ -30,8 +30,6 @@ class ChatViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        Log.info("ChatVC Loaded")
-        
         
     }
     
@@ -49,12 +47,10 @@ class ChatViewController: UIViewController {
     @objc
     func profileBarButtonPressed() {
         self.viewModel.router?.showProfileViewController(animated: true)
-        Log.info("Profile Bar Button Pressed")
     }
     
     @objc
     func gearBarButtonPressed() {
-        Log.info("Gear Bar Button Pressed")
     }
 }
 

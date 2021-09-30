@@ -32,7 +32,7 @@ class MainRouter: MainRouterProtocol {
     func initiateFirstViewController() {
         if let navigationController = navigationController {
             guard let toDoViewController = moduleBuilder?.createChatModule(router: self) else {
-                Log.info("Cannot create Chat Module")
+                Log.error("Cannot create Chat Module")
                 return
             }
             navigationController.viewControllers = [toDoViewController]
@@ -44,7 +44,7 @@ class MainRouter: MainRouterProtocol {
     func showDMViewController(animated: Bool = true) {
         if let navigationController = navigationController {
             guard let dmViewController = moduleBuilder?.createDMModule(router: self) else {
-                Log.info("Cannot create DM Module")
+                Log.error("Cannot create DM Module")
                 return
             }
             navigationController.pushViewController(dmViewController,
@@ -57,7 +57,7 @@ class MainRouter: MainRouterProtocol {
     func showProfileViewController(animated: Bool = true) {
         if let navigationController = navigationController {
             guard let profileViewController = moduleBuilder?.createProfileModule(router: self) else {
-                Log.info("Cannot create Profile Module")
+                Log.error("Cannot create Profile Module")
                 return
             }
             // Представляем модально с прозрачным эффектом

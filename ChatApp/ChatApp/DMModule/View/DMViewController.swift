@@ -15,7 +15,5 @@ final class DMViewController: UIViewController {
         super.viewDidLoad()
         
         navigationItem.title = "Martha Craig"
-        
-        Log.info("DMVC Loaded")
     }
 }
