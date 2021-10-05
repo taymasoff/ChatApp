@@ -14,6 +14,9 @@ protocol ProfileViewModelProtocol {
     var userName: Dynamic<String?> { get set }
     var userDescription: Dynamic<String?> { get set }
     var userAvatar: Dynamic<UIImage?> { get set }
+    
+    func editProfileImagePressed(sender: UIViewController)
+    func didDismissProfileView()
 }
 
 final class ProfileViewModel: ProfileViewModelProtocol {
@@ -30,5 +33,15 @@ final class ProfileViewModel: ProfileViewModelProtocol {
         self.userName.value = "Marina Dudarenko"
         self.userDescription.value =
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    }
+    
+    func editProfileImagePressed(sender: UIViewController) {
+        ImagePickerManager().pickImage(sender) { [weak self] image in
+            self?.userAvatar.value = image
+        }
+    }
+    
+    func didDismissProfileView() {
+        // Action on dismiss
     }
 }

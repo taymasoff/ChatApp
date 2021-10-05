@@ -10,6 +10,9 @@ import Foundation
 protocol ChatViewModelProtocol {
     var router: MainRouterProtocol? { get }
     init(router: MainRouterProtocol)
+    
+    func profileBarButtonPressed()
+    func gearBarButtonPressed()
 }
 
 final class ChatViewModel: ChatViewModelProtocol {
@@ -18,5 +21,13 @@ final class ChatViewModel: ChatViewModelProtocol {
     
     init(router: MainRouterProtocol) {
         self.router = router
+    }
+    
+    func profileBarButtonPressed() {
+        router?.presentProfileViewController()
+    }
+    
+    func gearBarButtonPressed() {
+        // Обработка нажатия на левый BarButton
     }
 }

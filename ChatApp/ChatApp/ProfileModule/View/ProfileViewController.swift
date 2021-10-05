@@ -14,18 +14,10 @@ final class ProfileViewController: UIViewController {
     
     var viewModel: ProfileViewModelProtocol!
     
+    lazy var blurredView = BlurredView()
     var profileView: ProfileView!
     
     // MARK: - Lifecycle Methods
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?)   {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-//        Log.info(profileView.setImageButton.frame)
-        // Само-собой тут будет fatalError, потому что profileView = nil до окончания метода loadView()
-    }
-
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-    }
     
     override func loadView() {
         super.loadView()
@@ -35,8 +27,6 @@ final class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        Log.info("setImageButton.frame: \(profileView.setImageButton.frame)")
-        // 📝 [ProfileViewController.swift]: viewDidLoad() -> setImageButton.frame: (9.166666666666668, 9.166666666666668, 41.666666666666664, 41.666666666666664)
         setupGestureRecognizers()
         bindWithViewModel()
     }
@@ -47,11 +37,6 @@ final class ProfileViewController: UIViewController {
     }
 
     override func viewDidAppear(_ animated: Bool) {
-        Log.info("setImageButton.frame: \(profileView.setImageButton.frame)")
-        // 📝 [ProfileViewController.swift]: viewDidAppear(_:) -> setImageButton Frame: (259.3333333333333, 52.33333333333337, 41.666666666666664, 41.666666666666664)
-        // 🖊 Значения разные, потому что между этими методами VC вызывает layoutSubviews(), в котором перерисовываются фреймы
-        
-        let blurredView = BlurredView()
         self.view.insertSubview(blurredView, at: 0)
         showProfileView(animated: true)
     }
@@ -111,18 +96,18 @@ final class ProfileViewController: UIViewController {
     
     @objc
     fileprivate func editProfileImagePressed() {
-        ImagePickerManager().pickImage(self) { [weak self] image in
-            self?.viewModel.userAvatar.value = image
-        }
+        viewModel?.editProfileImagePressed(sender: self)
     }
     
     @objc
     fileprivate func didTapOutsideProfileView() {
         dismissProfileView(animated: true)
+        viewModel.didDismissProfileView()
     }
     @objc
     fileprivate func didSwipeProfileViewDown() {
         dismissProfileView(animated: true)
+        viewModel.didDismissProfileView()
     }
     
     // MARK: - Show/Hide Profile View Animations
@@ -189,7 +174,7 @@ private extension ProfileViewController {
  Когда появляется клавиатура - смещаем вьюшку наверх с той же скоростью, с которой появляется клавиатура. Когда клавиатура убирается, делаем то же самое, только наоборот.
  */
 
-extension ProfileViewController {
+private extension ProfileViewController {
     func addKeyboardObserver() {
         NotificationCenter.default
             .addObserver(self,

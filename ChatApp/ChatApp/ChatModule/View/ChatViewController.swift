@@ -13,8 +13,8 @@ class ChatViewController: UIViewController {
     // MARK: - Properties
     var viewModel: ChatViewModelProtocol!
     
-    var profileBarButton: UIBarButtonItem!
-    var gearBarButton: UIBarButtonItem!
+    private var profileBarButton: UIBarButtonItem!
+    private var gearBarButton: UIBarButtonItem!
     
     // MARK: - UIViewController Lifecycle Methods
     override func loadView() {
@@ -30,7 +30,6 @@ class ChatViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -43,14 +42,16 @@ class ChatViewController: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = false
     }
     
+    
     // MARK: - Objc Action Methods
     @objc
     func profileBarButtonPressed() {
-        self.viewModel.router?.showProfileViewController(animated: true)
+        viewModel.profileBarButtonPressed()
     }
     
     @objc
     func gearBarButtonPressed() {
+        
     }
 }
 
@@ -74,7 +75,7 @@ private extension ChatViewController {
         profileBarButton = UIBarButtonItem(customView: button)
     }
     
-    func updateProfileBarButton(with fullName: String) {
+    func updateProfileBarButton(with fullName: String?) {
         let imageView = UIImageView()
         imageView.snp.makeConstraints { make in
             make.size.equalTo(40)

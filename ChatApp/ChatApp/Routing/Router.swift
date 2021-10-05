@@ -15,7 +15,7 @@ protocol RouterProtocol {
 protocol MainRouterProtocol: RouterProtocol {
     func initiateFirstViewController()
     func showDMViewController(animated: Bool)
-    func showProfileViewController(animated: Bool)
+    func presentProfileViewController()
     func popToRoot(animated: Bool)
 }
 
@@ -54,7 +54,7 @@ class MainRouter: MainRouterProtocol {
     
     /// Инициализировать и представить модально экран профиля в своем собственном NC
     /// - Parameter animated: включена ли анимация перехода (да по умолчанию)
-    func showProfileViewController(animated: Bool = true) {
+    func presentProfileViewController() {
         if let navigationController = navigationController {
             guard let profileViewController = moduleBuilder?.createProfileModule(router: self) else {
                 Log.error("Cannot create Profile Module")
