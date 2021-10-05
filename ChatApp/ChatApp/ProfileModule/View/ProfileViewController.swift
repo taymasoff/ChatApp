@@ -81,6 +81,7 @@ final class ProfileViewController: UIViewController {
         profileView.addGestureRecognizer(UITapGestureRecognizer(
             target: profileView,
             action: #selector(UIView.endEditing(_:))))
+        
         let swipeDown = UISwipeGestureRecognizer(
             target: self,
             action: #selector(didSwipeProfileViewDown))

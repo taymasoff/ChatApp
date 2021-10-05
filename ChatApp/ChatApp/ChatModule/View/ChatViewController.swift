@@ -13,23 +13,33 @@ class ChatViewController: UIViewController {
     // MARK: - Properties
     var viewModel: ChatViewModelProtocol!
     
-    private var profileBarButton: UIBarButtonItem!
-    private var gearBarButton: UIBarButtonItem!
+    var profileBarButton: UIBarButtonItem!
+    var gearBarButton: UIBarButtonItem!
+    var searchBar: UISearchBar!
+    var chatTableView: UITableView!
     
     // MARK: - UIViewController Lifecycle Methods
     override func loadView() {
         super.loadView()
         
         gearBarButton = makeGearBarButton()
+        searchBar = makeSearchBar()
+        chatTableView = makeChatTableView()
+        
         updateProfileBarButton(with: "Marina Dudarenko")
         
-        navigationItem.title = "Chat"
+        navigationItem.title = "Tinkoff Chat"
         navigationItem.leftBarButtonItem = gearBarButton
         navigationItem.rightBarButtonItem = profileBarButton
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        chatTableView.register(ChatCell.self, forCellReuseIdentifier: ChatCell.identifier)
+        chatTableView.estimatedRowHeight = 50
+        
+        setupGestureRecognizers()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -43,6 +53,13 @@ class ChatViewController: UIViewController {
     }
     
     
+    // MARK: - Setup Gesture Recognizers
+    private func setupGestureRecognizers() {
+        view.addGestureRecognizer(UITapGestureRecognizer(
+            target: view,
+            action: #selector(UIView.endEditing(_:))))
+    }
+    
     // MARK: - Objc Action Methods
     @objc
     func profileBarButtonPressed() {
@@ -52,6 +69,31 @@ class ChatViewController: UIViewController {
     @objc
     func gearBarButtonPressed() {
         
+    }
+}
+// MARK: - UITableView Delegate & Data Source
+extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return ChatSections.allCases.count
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return viewModel.numberOfRowsInSection(section)
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return ChatSections.allCases[section].rawValue.capitalized
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: ChatCell.identifier,
+                                                 for: indexPath) as? ChatCell
+        guard let conversation = viewModel.conversation(forIndexPath: indexPath) else {
+            Log.error("Cell at \(indexPath) didn't recieve proper data")
+            return UITableViewCell()
+        }
+        cell?.configure(conversation)
+        return cell ?? UITableViewCell()
     }
 }
 

@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		222A55AC270BFC500047CA24 /* ChatCell+Subviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222A55AB270BFC500047CA24 /* ChatCell+Subviews.swift */; };
+		222A55B1270C055D0047CA24 /* ConversationViewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222A55B0270C055D0047CA24 /* ConversationViewData.swift */; };
+		222A55B3270C06C10047CA24 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222A55B2270C06C10047CA24 /* Conversation.swift */; };
+		222A55B6270C0FA90047CA24 /* Date+TimeSince.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222A55B5270C0FA90047CA24 /* Date+TimeSince.swift */; };
 		22B50F7726FB01810099436A /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B50F7626FB01810099436A /* Log.swift */; };
 		22CC53B926FAC8220036F6F9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CC53B826FAC8220036F6F9 /* AppDelegate.swift */; };
 		22CC53BB26FAC8220036F6F9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CC53BA26FAC8220036F6F9 /* SceneDelegate.swift */; };
@@ -40,6 +44,10 @@
 
 /* Begin PBXFileReference section */
 		02B3F92A3AD20A17B61C1BF3 /* Pods_ChatApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		222A55AB270BFC500047CA24 /* ChatCell+Subviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatCell+Subviews.swift"; sourceTree = "<group>"; };
+		222A55B0270C055D0047CA24 /* ConversationViewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationViewData.swift; sourceTree = "<group>"; };
+		222A55B2270C06C10047CA24 /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
+		222A55B5270C0FA90047CA24 /* Date+TimeSince.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+TimeSince.swift"; sourceTree = "<group>"; };
 		22B50F7626FB01810099436A /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		22CC53B526FAC8220036F6F9 /* ChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		22CC53B826FAC8220036F6F9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -92,6 +100,14 @@
 				02B3F92A3AD20A17B61C1BF3 /* Pods_ChatApp.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		222A55B4270C06C50047CA24 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				222A55B2270C06C10047CA24 /* Conversation.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		22B50F7826FB0E610099436A /* Debug */ = {
@@ -170,6 +186,7 @@
 			isa = PBXGroup;
 			children = (
 				22D104BC2704DCDA006CF686 /* UIImageView+AddProfilePlaceholder.swift */,
+				222A55B5270C0FA90047CA24 /* Date+TimeSince.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -195,6 +212,7 @@
 		22E69D1C2701DA91009CAAC0 /* ChatModule */ = {
 			isa = PBXGroup;
 			children = (
+				222A55B4270C06C50047CA24 /* Model */,
 				22E69D1D2701DAA6009CAAC0 /* View */,
 				22E69D1E2701DAB9009CAAC0 /* ViewModel */,
 				22E69D2F2701E285009CAAC0 /* ChatCell */,
@@ -283,6 +301,7 @@
 			isa = PBXGroup;
 			children = (
 				22E69D322701E2C1009CAAC0 /* ChatCell.swift */,
+				222A55AB270BFC500047CA24 /* ChatCell+Subviews.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -290,6 +309,7 @@
 		22E69D312701E29A009CAAC0 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				222A55B0270C055D0047CA24 /* ConversationViewData.swift */,
 				22E69D342701E2D8009CAAC0 /* ChatCellViewModel.swift */,
 			);
 			path = ViewModel;
@@ -439,14 +459,18 @@
 			files = (
 				22CC53BD26FAC8220036F6F9 /* ChatViewController.swift in Sources */,
 				22D104C6270535D3006CF686 /* Dynamic.swift in Sources */,
+				222A55B3270C06C10047CA24 /* Conversation.swift in Sources */,
 				22D104AE27025E6B006CF686 /* Constants.swift in Sources */,
+				222A55AC270BFC500047CA24 /* ChatCell+Subviews.swift in Sources */,
 				22E69D232701E0AD009CAAC0 /* DMViewController.swift in Sources */,
 				22E69D2A2701E0E8009CAAC0 /* ProfileViewController.swift in Sources */,
 				22E69D202701DACA009CAAC0 /* ChatViewModel.swift in Sources */,
 				22D104BD2704DCDA006CF686 /* UIImageView+AddProfilePlaceholder.swift in Sources */,
+				222A55B6270C0FA90047CA24 /* Date+TimeSince.swift in Sources */,
 				22CC53B926FAC8220036F6F9 /* AppDelegate.swift in Sources */,
 				22E69D332701E2C1009CAAC0 /* ChatCell.swift in Sources */,
 				22E69D182701D9A4009CAAC0 /* Router.swift in Sources */,
+				222A55B1270C055D0047CA24 /* ConversationViewData.swift in Sources */,
 				22D104B22704A12C006CF686 /* ProfileView.swift in Sources */,
 				22CC53BB26FAC8220036F6F9 /* SceneDelegate.swift in Sources */,
 				22D104AC27024EBF006CF686 /* ChatViewController+Subviews.swift in Sources */,
