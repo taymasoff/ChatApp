@@ -18,6 +18,7 @@ protocol ConversationsTableViewCompatible {
     func numberOfRowsInSection(_ section: Int) -> Int
     func titleForHeaderInSection(_ section: Int) -> String?
     func conversation(forIndexPath indexPath: IndexPath) -> ConversationViewDataType?
+    func didSelectRowAt(_ indexPath: IndexPath)
 }
 
 protocol ConversationsModelPresentable {
@@ -73,6 +74,15 @@ extension ConversationsViewModel: ConversationsTableViewCompatible {
             return nil
         }
         return ConversationViewData(conversation: conversation)
+    }
+    
+    func didSelectRowAt(_ indexPath: IndexPath) {
+        let key = ConversationsSections.allCases[indexPath.section].rawValue
+        let conversation = conversations?[key]?[indexPath.row]
+        let dmViewModel = DMViewModel(router: router!,
+                                      chatBuddyName: conversation?.userName,
+                                      chatBuddyImageURL: conversation?.profileImageURL)
+        router?.showDMViewController(animated: true, withViewModel: dmViewModel)
     }
 }
 

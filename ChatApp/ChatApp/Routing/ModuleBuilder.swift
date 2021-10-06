@@ -9,7 +9,7 @@ import UIKit
 
 protocol ModuleBuilderProtocol {
     func createConversationsModule(router: MainRouterProtocol) -> UIViewController
-    func createDMModule(router: MainRouterProtocol) -> UIViewController
+    func createDMModule(router: MainRouterProtocol, withViewModel viewModel: DMViewModelProtocol?) -> UIViewController
     func createProfileModule(router: MainRouterProtocol) -> UIViewController
 }
 
@@ -22,10 +22,13 @@ class ModuleBuilder: ModuleBuilderProtocol {
         return vc
     }
     
-    func createDMModule(router: MainRouterProtocol) -> UIViewController {
+    func createDMModule(router: MainRouterProtocol, withViewModel viewModel: DMViewModelProtocol? = nil) -> UIViewController {
         let vc = DMViewController()
-        let viewModel = DMViewModel(router: router)
-        vc.viewModel = viewModel
+        if let viewModel = viewModel {
+            vc.viewModel = viewModel
+        } else {
+            vc.viewModel = DMViewModel(router: router)
+        }
         return vc
     }
     

@@ -14,7 +14,7 @@ protocol RouterProtocol {
 
 protocol MainRouterProtocol: RouterProtocol {
     func initiateFirstViewController()
-    func showDMViewController(animated: Bool)
+    func showDMViewController(animated: Bool, withViewModel viewModel: DMViewModelProtocol?)
     func presentProfileViewController()
     func popToRoot(animated: Bool)
 }
@@ -41,9 +41,9 @@ class MainRouter: MainRouterProtocol {
     
     /// Инициализировать и закинуть в navigation стэк экран переписки
     /// - Parameter animated: включена ли анимация перехода (да по умолчанию)
-    func showDMViewController(animated: Bool = true) {
+    func showDMViewController(animated: Bool = true, withViewModel viewModel: DMViewModelProtocol? = nil) {
         if let navigationController = navigationController {
-            guard let dmViewController = moduleBuilder?.createDMModule(router: self) else {
+            guard let dmViewController = moduleBuilder?.createDMModule(router: self, withViewModel: viewModel) else {
                 Log.error("Cannot create DM Module")
                 return
             }

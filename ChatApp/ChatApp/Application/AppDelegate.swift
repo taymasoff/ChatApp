@@ -36,8 +36,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if #available(iOS 13.0, *) {
             let appearance = UINavigationBarAppearance()
             appearance.backgroundColor = AppAssets.colors(.appGray)
-            appearance.titleTextAttributes = [.foregroundColor: UIColor.black, .font: AppAssets.font(.sfProText, type: .regular, size: 20)]
-            appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.black, .font: AppAssets.font(.sfProDisplay, type: .bold, size: 34)]
+            appearance.titleTextAttributes = [.foregroundColor: UIColor.black,
+                                                .font: AppAssets.font(.sfProDisplay, type: .semibold, size: 18)]
+            appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.black,
+                                                    .font: AppAssets.font(.sfProDisplay, type: .bold, size: 30)]
 
             UINavigationBar.appearance().tintColor = .systemBlue
             UINavigationBar.appearance().isTranslucent = false

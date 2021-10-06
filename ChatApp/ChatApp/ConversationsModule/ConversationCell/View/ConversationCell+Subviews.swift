@@ -10,6 +10,12 @@ import UIKit
 extension ConversationCell {
     
     // MARK: - Create Subviews
+    func makeCellContainer() -> UIView {
+        let view = UIView()
+        view.backgroundColor = .white
+        return view
+    }
+    
     func makeAllTextContainer() -> UIView {
         let view = UIView()
         view.backgroundColor = .clear
@@ -66,6 +72,7 @@ extension ConversationCell {
     
     // MARK: - Subview Setup Methods
     func setupSubviews() {
+        cellContainer = makeCellContainer()
         allTextContainer = makeAllTextContainer()
         nameDateContainer = makeNameDateContainer()
         
@@ -77,13 +84,14 @@ extension ConversationCell {
     }
     
     func setupSubviewsHierarchy() {
-        contentView.addSubview(profileImageView)
-        contentView.addSubview(allTextContainer)
+        contentView.addSubview(cellContainer)
+        cellContainer.addSubview(profileImageView)
+        cellContainer.addSubview(allTextContainer)
         nameDateContainer.addSubview(nameLabel)
         nameDateContainer.addSubview(dateLabel)
         allTextContainer.addSubview(nameDateContainer)
         allTextContainer.addSubview(lastMessageLabel)
-        contentView.addSubview(onlineIndicatorView)
+        cellContainer.addSubview(onlineIndicatorView)
     }
     
     func setupSubviewsLayout() {
@@ -130,6 +138,10 @@ extension ConversationCell {
         
         dateLabel.snp.makeConstraints { make in
             make.top.right.bottom.equalToSuperview()
+        }
+        
+        cellContainer.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
         }
     }
 }

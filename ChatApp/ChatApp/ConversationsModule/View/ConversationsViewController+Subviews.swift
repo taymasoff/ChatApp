@@ -40,5 +40,6 @@ extension ConversationsViewController {
         searchController.searchBar.placeholder = "Search"
         self.navigationItem.searchController = searchController
         self.definesPresentationContext = true
+        conversationsTableView.keyboardDismissMode = .onDrag
     }
 }

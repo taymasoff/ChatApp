@@ -24,6 +24,7 @@ class ConversationCell: UITableViewCell {
     
     var allTextContainer: UIView!
     var nameDateContainer: UIView!
+    var cellContainer: UIView!
     
     // MARK: - Initializers
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -32,6 +33,8 @@ class ConversationCell: UITableViewCell {
         setupSubviews()
         setupSubviewsHierarchy()
         setupSubviewsLayout()
+        
+        self.selectionStyle = .none
     }
     
     required init?(coder: NSCoder) {
@@ -83,6 +86,52 @@ class ConversationCell: UITableViewCell {
             lastMessageLabel.font = AppAssets.font(.sfProText, type: .bold, size: 13)
         case false:
             lastMessageLabel.font = AppAssets.font(.sfProText, type: .regular, size: 13)
+        }
+    }
+}
+
+// MARK: - OnSelect Animations
+extension ConversationCell {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        animate(isHighlighted: true)
+    }
+
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        animate(isHighlighted: false)
+    }
+
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesCancelled(touches, with: event)
+        animate(isHighlighted: false)
+    }
+    
+    private func animate(isHighlighted: Bool, completion: ((Bool) -> Void)? = nil) {
+        let animationOptions: UIView.AnimationOptions = [.allowUserInteraction]
+        if isHighlighted {
+            UIView.animate(withDuration: 0.4,
+                           delay: 0,
+                           usingSpringWithDamping: 1,
+                           initialSpringVelocity: 0,
+                           options: animationOptions,
+                           animations: { [weak self] in
+                self?.cellContainer.transform = .init(scaleX: 0.93, y: 0.9)
+                self?.contentView.backgroundColor = AppAssets.colors(.appYellow)
+                self?.cellContainer.layer.cornerRadius = 15
+                
+            }, completion: completion)
+        } else {
+            UIView.animate(withDuration: 0.4,
+                           delay: 0,
+                           usingSpringWithDamping: 1,
+                           initialSpringVelocity: 0,
+                           options: animationOptions,
+                           animations: { [weak self] in
+                self?.cellContainer.transform = .identity
+                self?.cellContainer.layer.cornerRadius = 0
+                self?.contentView.backgroundColor = .white
+            }, completion: completion)
         }
     }
 }

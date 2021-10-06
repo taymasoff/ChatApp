@@ -40,8 +40,6 @@ class ConversationsViewController: UIViewController {
         conversationsTableView.rowHeight = 80
         
         setupSearchController()
-        
-        setupGestureRecognizers()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -61,14 +59,6 @@ class ConversationsViewController: UIViewController {
         super.viewWillDisappear(animated)
         navigationController?.navigationBar.prefersLargeTitles = false
         navigationItem.largeTitleDisplayMode = .never
-    }
-    
-    
-    // MARK: - Setup Gesture Recognizers
-    private func setupGestureRecognizers() {
-        view.addGestureRecognizer(UITapGestureRecognizer(
-            target: view,
-            action: #selector(UIView.endEditing(_:))))
     }
     
     // MARK: - Objc Action Methods
@@ -105,6 +95,19 @@ extension ConversationsViewController: UITableViewDataSource, UITableViewDelegat
         }
         cell?.configure(conversation)
         return cell ?? UITableViewCell()
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        viewModel.didSelectRowAt(indexPath)
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    // Scroll Animation
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cell.transform = CGAffineTransform(scaleX: 0.9, y: 0.5)
+        UIView.animate(withDuration: 0.4, delay: 0, options: [.allowUserInteraction]) {
+            cell.transform = CGAffineTransform.identity
+        }
     }
 }
 
