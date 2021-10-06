@@ -1,5 +1,5 @@
 //
-//  ChatViewController.swift
+//  ConversationsViewController.swift
 //  ChatApp
 //
 //  Created by Тимур Таймасов on 22.09.2021.
@@ -8,21 +8,23 @@
 import UIKit
 import SnapKit
 
-class ChatViewController: UIViewController {
+typealias ConversationsViewModelProtocol = ConversationsModelPresentable & ConversationsTableViewCompatible & UISearchResultsUpdating
+
+class ConversationsViewController: UIViewController {
     
     // MARK: - Properties
-    var viewModel: ChatViewModelProtocol!
+    var viewModel: ConversationsViewModelProtocol!
     
     var profileBarButton: UIBarButtonItem!
     var gearBarButton: UIBarButtonItem!
-    var chatTableView: UITableView!
+    var conversationsTableView: UITableView!
     
     // MARK: - UIViewController Lifecycle Methods
     override func loadView() {
         super.loadView()
         
         gearBarButton = makeGearBarButton()
-        chatTableView = makeChatTableView()
+        conversationsTableView = makeConversationsTableView()
         
         updateProfileBarButton(with: "Marina Dudarenko")
         
@@ -34,8 +36,8 @@ class ChatViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        chatTableView.register(ChatCell.self, forCellReuseIdentifier: ChatCell.identifier)
-        chatTableView.rowHeight = 80
+        conversationsTableView.register(ConversationCell.self, forCellReuseIdentifier: ConversationCell.identifier)
+        conversationsTableView.rowHeight = 80
         
         setupSearchController()
         
@@ -81,7 +83,7 @@ class ChatViewController: UIViewController {
     }
 }
 // MARK: - UITableView Delegate & Data Source
-extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
+extension ConversationsViewController: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int {
         return viewModel.numberOfSections()
     }
@@ -95,8 +97,8 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ChatCell.identifier,
-                                                 for: indexPath) as? ChatCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: ConversationCell.identifier,
+                                                 for: indexPath) as? ConversationCell
         guard let conversation = viewModel.conversation(forIndexPath: indexPath) else {
             Log.error("Cell at \(indexPath) didn't recieve proper data")
             return UITableViewCell()
@@ -109,7 +111,7 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
 // MARK: - Update Bar Button Items Methods
 // Обновляет ProfileBarButtonItem картинкой, или плейсхолдером с инициалами
 
-private extension ChatViewController {
+private extension ConversationsViewController {
     func updateProfileBarButton(with image: UIImage?) {
         guard let image = image else {
             Log.error("No image was set. Updating Profile Bar Button with default image.")

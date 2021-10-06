@@ -8,16 +8,16 @@
 import UIKit
 
 protocol ModuleBuilderProtocol {
-    func createChatModule(router: MainRouterProtocol) -> UIViewController
+    func createConversationsModule(router: MainRouterProtocol) -> UIViewController
     func createDMModule(router: MainRouterProtocol) -> UIViewController
     func createProfileModule(router: MainRouterProtocol) -> UIViewController
 }
 
 class ModuleBuilder: ModuleBuilderProtocol {
     
-    func createChatModule(router: MainRouterProtocol) -> UIViewController {
-        let vc = ChatViewController()
-        let viewModel = ChatViewModel(router: router)
+    func createConversationsModule(router: MainRouterProtocol) -> UIViewController {
+        let vc = ConversationsViewController()
+        let viewModel = ConversationsViewModel(router: router)
         vc.viewModel = viewModel
         return vc
     }

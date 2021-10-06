@@ -1,5 +1,5 @@
 //
-//  ChatCell+Subviews.swift
+//  ConversationCell+Subviews.swift
 //  ChatApp
 //
 //  Created by Тимур Таймасов on 05.10.2021.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension ChatCell {
+extension ConversationCell {
     
     // MARK: - Create Subviews
     func makeAllTextContainer() -> UIView {

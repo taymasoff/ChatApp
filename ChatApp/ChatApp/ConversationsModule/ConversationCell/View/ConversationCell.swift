@@ -1,5 +1,5 @@
 //
-//  ChatCell.swift
+//  ConversationCell.swift
 //  ChatApp
 //
 //  Created by Тимур Таймасов on 27.09.2021.
@@ -7,12 +7,14 @@
 
 import UIKit
 
-class ChatCell: UITableViewCell {
+class ConversationCell: UITableViewCell {
     
     // MARK: - Properties
-    static let identifier = "ConversationsChatCell"
+    static let identifier = "ConversationCell"
     
-    private var viewModel: ChatCellViewModelProtocol!
+    lazy var viewModel: ConversationCellViewModelProtocol = {
+        return ConversationCellViewModel()
+    }()
     
     var profileImageView: UIImageView!
     var nameLabel: UILabel!
@@ -26,8 +28,6 @@ class ChatCell: UITableViewCell {
     // MARK: - Initializers
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-        viewModel = ChatCellViewModel()
         
         setupSubviews()
         setupSubviewsHierarchy()

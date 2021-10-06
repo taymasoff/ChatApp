@@ -1,5 +1,5 @@
 //
-//  ChatCellViewModel.swift
+//  ConversationCellViewModel.swift
 //  ChatApp
 //
 //  Created by Тимур Таймасов on 27.09.2021.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol ChatCellViewModelProtocol {
+protocol ConversationCellViewModelProtocol {
     var profileImage: Dynamic<UIImage?> { get set }
     var profileImageURL: Dynamic<String?> { get set }
     var name: Dynamic<String?> { get set }
@@ -19,7 +19,7 @@ protocol ChatCellViewModelProtocol {
     func configure(_ conversation: ConversationViewDataType)
 }
 
-class ChatCellViewModel: ChatCellViewModelProtocol {
+class ConversationCellViewModel: ConversationCellViewModelProtocol {
     var profileImage: Dynamic<UIImage?> = Dynamic(nil)
     var profileImageURL: Dynamic<String?> = Dynamic(nil)
     var name: Dynamic<String?> = Dynamic(nil)

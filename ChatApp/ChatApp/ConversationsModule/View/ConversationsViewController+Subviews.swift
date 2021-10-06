@@ -1,5 +1,5 @@
 //
-//  ChatViewController+Subviews.swift
+//  ConversationsViewController+Subviews.swift
 //  ChatApp
 //
 //  Created by Тимур Таймасов on 27.09.2021.
@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-extension ChatViewController {
+extension ConversationsViewController {
     
     func makeGearBarButton() -> UIBarButtonItem {
         let barButton = UIBarButtonItem(
@@ -20,7 +20,7 @@ extension ChatViewController {
         return barButton
     }
     
-    func makeChatTableView() -> UITableView {
+    func makeConversationsTableView() -> UITableView {
         let tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self

@@ -1,5 +1,5 @@
 //
-//  ChatViewModel.swift
+//  ConversationsViewModel.swift
 //  ChatApp
 //
 //  Created by Тимур Таймасов on 27.09.2021.
@@ -8,19 +8,19 @@
 import Foundation
 import UIKit
 
-enum ChatSections: String, CaseIterable {
+enum ConversationsSections: String, CaseIterable {
     case online = "Online"
     case history = "History"
 }
 
-protocol ChatTableViewCompatible {
+protocol ConversationsTableViewCompatible {
     func numberOfSections() -> Int
     func numberOfRowsInSection(_ section: Int) -> Int
     func titleForHeaderInSection(_ section: Int) -> String?
     func conversation(forIndexPath indexPath: IndexPath) -> ConversationViewDataType?
 }
 
-protocol ChatViewModelPresentable {
+protocol ConversationsModelPresentable {
     var router: MainRouterProtocol? { get }
     var title: String { get }
     init(router: MainRouterProtocol)
@@ -29,9 +29,7 @@ protocol ChatViewModelPresentable {
     func gearBarButtonPressed()
 }
 
-typealias ChatViewModelProtocol = ChatViewModelPresentable & ChatTableViewCompatible & UISearchResultsUpdating
-
-final class ChatViewModel: NSObject, ChatViewModelPresentable {
+final class ConversationsViewModel: NSObject, ConversationsModelPresentable {
     
     var router: MainRouterProtocol?
     var title = "Tinkoff Chat"
@@ -53,23 +51,23 @@ final class ChatViewModel: NSObject, ChatViewModelPresentable {
     }
 }
 
-// MARK: - ChatTableViewCompatible Methods
-extension ChatViewModel: ChatTableViewCompatible {
+// MARK: - ConversationsTableViewCompatible Methods
+extension ConversationsViewModel: ConversationsTableViewCompatible {
     func numberOfSections() -> Int {
         return conversations?.keys.count ?? 0
     }
     
     func numberOfRowsInSection(_ section: Int) -> Int {
-        let key = ChatSections.allCases[section].rawValue
+        let key = ConversationsSections.allCases[section].rawValue
         return conversations?[key]?.count ?? 0
     }
     
     func titleForHeaderInSection(_ section: Int) -> String? {
-        return ChatSections.allCases[section].rawValue.capitalized
+        return ConversationsSections.allCases[section].rawValue.capitalized
     }
     
     func conversation(forIndexPath indexPath: IndexPath) -> ConversationViewDataType? {
-        let key = ChatSections.allCases[indexPath.section].rawValue
+        let key = ConversationsSections.allCases[indexPath.section].rawValue
         guard let conversation = conversations?[key]?[indexPath.row] else {
             Log.error("No conversation for indexPath: \(indexPath)")
             return nil
@@ -79,14 +77,14 @@ extension ChatViewModel: ChatTableViewCompatible {
 }
 
 // MARK: - UISearchResultsUpdating
-extension ChatViewModel: UISearchResultsUpdating {
+extension ConversationsViewModel: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         
     }
 }
 
 // MARK: - Data Mock
-extension ChatViewModel {
+extension ConversationsViewModel {
     func randomText() -> String {
       let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
         return String((0...Int.random(in: 0...100)).map{ _ in letters.randomElement()! })
@@ -116,9 +114,9 @@ extension ChatViewModel {
         
         return Dictionary(grouping: conversations, by: {
             if $0.isOnline {
-                return ChatSections.online.rawValue
+                return ConversationsSections.online.rawValue
             } else {
-                return ChatSections.history.rawValue
+                return ConversationsSections.history.rawValue
             }
         })
     }
