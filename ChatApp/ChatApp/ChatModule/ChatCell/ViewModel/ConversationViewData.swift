@@ -8,41 +8,33 @@
 import UIKit
 
 /*
- 👉 Модель представления Conversation в ChatCell
+ 👉 Модель представления Conversation
  */
 
 protocol ConversationViewDataType {
-    var profileImage: UIImage? { get }
+    var profileImageURL: String? { get }
     var isOnline: Bool { get }
-    var userName: String { get }
-    var lastMessage: String { get }
+    var userName: String? { get }
+    var lastMessage: String? { get }
     var messageDate: String { get }
     var hasUnreadMessages: Bool { get }
 }
 
 struct ConversationViewData: ConversationViewDataType {
-    var profileImage: UIImage? {
-        // Тут над как-то получить пикчу потом
-        return nil
+    var profileImageURL: String? {
+        return conversation.profileImageURL
     }
     
     var isOnline: Bool {
         return conversation.isOnline
     }
     
-    var userName: String {
-        guard let userName = conversation.userName else {
-            Log.error("Conversation returns nil for username")
-            return ""
-        }
-        return userName
+    var userName: String? {
+        return conversation.userName
     }
     
-    var lastMessage: String {
-        guard let lastMessage = conversation.lastMessage else {
-            return "Новых сообщений нет!"
-        }
-        return lastMessage
+    var lastMessage: String? {
+        return conversation.lastMessage
     }
     
     var messageDate: String {
@@ -52,8 +44,8 @@ struct ConversationViewData: ConversationViewDataType {
 //        let dateStr = conversation.messageDate
 //        let timeStr = conversation.messageTime
         
-        // Пока что ставим моковую дату
-        let date = Date().addingTimeInterval(-15000)
+        // Пока что ставим рандомную моковую дату
+        let date = Date().addingTimeInterval(TimeInterval(Int.random(in: -100000...0)))
         return date.timeSince()
     }
     

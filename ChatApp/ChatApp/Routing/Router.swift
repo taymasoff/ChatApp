@@ -31,11 +31,11 @@ class MainRouter: MainRouterProtocol {
     /// Инициализировать первый экран приложения
     func initiateFirstViewController() {
         if let navigationController = navigationController {
-            guard let toDoViewController = moduleBuilder?.createChatModule(router: self) else {
+            guard let chatViewController = moduleBuilder?.createChatModule(router: self) else {
                 Log.error("Cannot create Chat Module")
                 return
             }
-            navigationController.viewControllers = [toDoViewController]
+            navigationController.viewControllers = [chatViewController]
         }
     }
     

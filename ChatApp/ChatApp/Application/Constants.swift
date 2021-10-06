@@ -10,32 +10,14 @@ import UIKit
 // MARK: - Colors
 
 enum AppColors: String {
-    case appMain
-    case appGray
-    case appYellow
-    case dmGray
-    case dmGreen
-    case statusGreen
-    case barItemGray
-    
-    var rawValue: String {
-        switch self {
-        case .appMain:
-            return "appMain"
-        case .appGray:
-            return "appGray"
-        case .appYellow:
-            return "appYellow"
-        case .dmGray:
-            return "dmGray"
-        case .dmGreen:
-            return "dmGreen"
-        case .statusGreen:
-            return "statusGreen"
-        case .barItemGray:
-            return "barItemGray"
-        }
-    }
+    case appMain = "appMain"
+    case appGray = "appGray"
+    case appYellow = "appYellow"
+    case dmGray = "dmGray"
+    case dmGreen = "dmGreen"
+    case statusGreen = "statusGreen"
+    case barItemGray = "barItemGray"
+    case footerGray = "footerGray"
 }
 
 // MARK: - Fonts
@@ -137,6 +119,8 @@ struct AppAssets {
             return UIColor(named: name.rawValue) ?? .systemGreen
         case .barItemGray:
             return UIColor(named: name.rawValue) ?? .lightGray
+        case .footerGray:
+            return UIColor(named: name.rawValue) ?? .gray
         }
     }
 }

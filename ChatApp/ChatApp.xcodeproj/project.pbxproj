@@ -309,8 +309,8 @@
 		22E69D312701E29A009CAAC0 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				222A55B0270C055D0047CA24 /* ConversationViewData.swift */,
 				22E69D342701E2D8009CAAC0 /* ChatCellViewModel.swift */,
+				222A55B0270C055D0047CA24 /* ConversationViewData.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";

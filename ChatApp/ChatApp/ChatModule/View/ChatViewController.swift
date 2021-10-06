@@ -28,7 +28,7 @@ class ChatViewController: UIViewController {
         
         updateProfileBarButton(with: "Marina Dudarenko")
         
-        navigationItem.title = "Tinkoff Chat"
+        navigationItem.title = viewModel.title
         navigationItem.leftBarButtonItem = gearBarButton
         navigationItem.rightBarButtonItem = profileBarButton
     }
@@ -37,7 +37,7 @@ class ChatViewController: UIViewController {
         super.viewDidLoad()
         
         chatTableView.register(ChatCell.self, forCellReuseIdentifier: ChatCell.identifier)
-        chatTableView.estimatedRowHeight = 50
+        chatTableView.rowHeight = 80
         
         setupGestureRecognizers()
     }
@@ -74,7 +74,7 @@ class ChatViewController: UIViewController {
 // MARK: - UITableView Delegate & Data Source
 extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return ChatSections.allCases.count
+        return viewModel.numberOfSections()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -82,7 +82,7 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return ChatSections.allCases[section].rawValue.capitalized
+        return viewModel.titleForHeaderInSection(section)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

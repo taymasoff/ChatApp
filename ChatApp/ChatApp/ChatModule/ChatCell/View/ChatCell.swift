@@ -12,19 +12,22 @@ class ChatCell: UITableViewCell {
     // MARK: - Properties
     static let identifier = "ConversationsChatCell"
     
+    private var viewModel: ChatCellViewModelProtocol!
+    
     var profileImageView: UIImageView!
     var nameLabel: UILabel!
     var lastMessageLabel: UILabel!
     var dateLabel: UILabel!
     var onlineIndicatorView: UIView!
     
-    var cellHorizontalStackView: UIStackView!
-    var textVerticalStackView: UIStackView!
-    var nameDateHorizontalStackView: UIStackView!
+    var allTextContainer: UIView!
+    var nameDateContainer: UIView!
     
     // MARK: - Initializers
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        viewModel = ChatCellViewModel()
         
         setupSubviews()
         setupSubviewsHierarchy()
@@ -35,45 +38,51 @@ class ChatCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Subview Setup Methods
-    private func setupSubviews() {
-        cellHorizontalStackView = makeCellHorizontalStackView()
-        textVerticalStackView = makeTextVerticalStackView()
-        nameDateHorizontalStackView = makeNameDateHorizontalStackView()
-        profileImageView = makeProfileImageView()
-        nameLabel = makeNameLabel()
-        lastMessageLabel = makeLastMessageLabel()
-        dateLabel = makeDateLabel()
-        onlineIndicatorView = makeOnlineIndicatorView()
-    }
-    
-    private func setupSubviewsHierarchy() {
-        contentView.addSubview(cellHorizontalStackView)
-        cellHorizontalStackView.addSubview(profileImageView)
-        cellHorizontalStackView.addSubview(textVerticalStackView)
-        textVerticalStackView.addSubview(nameDateHorizontalStackView)
-        nameDateHorizontalStackView.addSubview(nameLabel)
-        nameDateHorizontalStackView.addSubview(dateLabel)
-        textVerticalStackView.addSubview(nameDateHorizontalStackView)
-        textVerticalStackView.addSubview(lastMessageLabel)
-    }
-    
-    private func setupSubviewsLayout() {
-        profileImageView.snp.makeConstraints { make in
-            make.size.equalTo(contentView.snp.width).dividedBy(6)
-        }
-    }
     
     // MARK: - Internal Methods
     func configure(_ conversation: ConversationViewDataType) {
-        nameLabel.text = conversation.userName
-        lastMessageLabel.text = conversation.lastMessage
-        dateLabel.text = conversation.messageDate
-        
-        if let profileImage = conversation.profileImage {
-            profileImageView.image = profileImage
-        } else {
-            profileImageView.addProfilePlaceholder(fullName: conversation.userName)
+        viewModel.configure(conversation)
+        bindViewModel()
+    }
+    
+    private func bindViewModel() {
+        viewModel.profileImage.bind { [unowned self] image in
+            profileImageView.subviews.forEach { $0.removeFromSuperview() }
+            if let profileImage = image {
+                profileImageView.image = profileImage
+            } else {
+                profileImageView.addProfilePlaceholder(fullName: viewModel.name.value)
+            }
+        }
+        viewModel.name.bind { [unowned self] name in
+            nameLabel.text = name
+        }
+        viewModel.date.bind { [unowned self] date in
+            dateLabel.text = date
+        }
+        viewModel.lastMessage.bind { [unowned self] message in
+            if let message = message {
+                lastMessageLabel.text = message
+                lastMessageLabel.textColor = AppAssets.colors(.footerGray)
+            } else {
+                lastMessageLabel.text = "No messages yet"
+                lastMessageLabel.textColor = .systemBlue
+            }
+        }
+        viewModel.hasUnreadMessages.bind { [unowned self] hasUnread in
+            changeLastMessageLabelState(hasUnread ?? false)
+        }
+        viewModel.isOnline.bind { [unowned self] isOnline in
+            onlineIndicatorView.isHidden = !(isOnline ?? false)
+        }
+    }
+    
+    private func changeLastMessageLabelState(_ hasUnread: Bool) {
+        switch hasUnread {
+        case true:
+            lastMessageLabel.font = AppAssets.font(.sfProText, type: .bold, size: 13)
+        case false:
+            lastMessageLabel.font = AppAssets.font(.sfProText, type: .regular, size: 13)
         }
     }
 }

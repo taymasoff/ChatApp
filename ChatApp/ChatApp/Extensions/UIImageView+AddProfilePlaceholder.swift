@@ -59,7 +59,7 @@ extension UIImageView {
         
         label.snp.makeConstraints { make in
             make.center.equalToSuperview()
-            make.size.equalToSuperview().dividedBy(1.35)
+            make.size.equalToSuperview().dividedBy(1.45)
         }
     }
     
