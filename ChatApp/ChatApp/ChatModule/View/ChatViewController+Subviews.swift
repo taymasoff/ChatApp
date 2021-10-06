@@ -20,19 +20,6 @@ extension ChatViewController {
         return barButton
     }
     
-    func makeSearchBar() -> UISearchBar {
-        let searchBar = UISearchBar()
-        searchBar.backgroundImage = UIImage()
-        searchBar.placeholder = "Search"
-        view.addSubview(searchBar)
-        
-        searchBar.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(0)
-            make.left.right.equalToSuperview().inset(10)
-        }
-        return searchBar
-    }
-    
     func makeChatTableView() -> UITableView {
         let tableView = UITableView()
         tableView.delegate = self
@@ -40,10 +27,18 @@ extension ChatViewController {
         view.addSubview(tableView)
         
         tableView.snp.makeConstraints { make in
-            make.top.equalTo(searchBar.snp.bottom)
-            make.left.right.bottom.equalToSuperview()
+            make.top.left.right.bottom.equalToSuperview()
         }
         
         return tableView
+    }
+    
+    func setupSearchController() {
+        let searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = self.viewModel
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Search"
+        self.navigationItem.searchController = searchController
+        self.definesPresentationContext = true
     }
 }

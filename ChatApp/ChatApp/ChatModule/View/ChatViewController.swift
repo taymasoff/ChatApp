@@ -15,7 +15,6 @@ class ChatViewController: UIViewController {
     
     var profileBarButton: UIBarButtonItem!
     var gearBarButton: UIBarButtonItem!
-    var searchBar: UISearchBar!
     var chatTableView: UITableView!
     
     // MARK: - UIViewController Lifecycle Methods
@@ -23,7 +22,6 @@ class ChatViewController: UIViewController {
         super.loadView()
         
         gearBarButton = makeGearBarButton()
-        searchBar = makeSearchBar()
         chatTableView = makeChatTableView()
         
         updateProfileBarButton(with: "Marina Dudarenko")
@@ -39,17 +37,28 @@ class ChatViewController: UIViewController {
         chatTableView.register(ChatCell.self, forCellReuseIdentifier: ChatCell.identifier)
         chatTableView.rowHeight = 80
         
+        setupSearchController()
+        
         setupGestureRecognizers()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
+        navigationItem.hidesSearchBarWhenScrolling = false
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        navigationItem.hidesSearchBarWhenScrolling = true
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.navigationBar.prefersLargeTitles = false
+        navigationItem.largeTitleDisplayMode = .never
     }
     
     

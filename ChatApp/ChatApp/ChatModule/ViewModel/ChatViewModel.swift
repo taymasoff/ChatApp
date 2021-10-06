@@ -29,15 +29,16 @@ protocol ChatViewModelPresentable {
     func gearBarButtonPressed()
 }
 
-typealias ChatViewModelProtocol = ChatViewModelPresentable & ChatTableViewCompatible
+typealias ChatViewModelProtocol = ChatViewModelPresentable & ChatTableViewCompatible & UISearchResultsUpdating
 
-final class ChatViewModel: ChatViewModelPresentable {
+final class ChatViewModel: NSObject, ChatViewModelPresentable {
     
     var router: MainRouterProtocol?
     var title = "Tinkoff Chat"
     var conversations: [String : [Conversation]]?
     
     init(router: MainRouterProtocol) {
+        super.init()
         self.router = router
         
         conversations = makeConversationsDictionary(40) // 👈 если нужно изменить количество моковых данных
@@ -74,6 +75,13 @@ extension ChatViewModel: ChatTableViewCompatible {
             return nil
         }
         return ConversationViewData(conversation: conversation)
+    }
+}
+
+// MARK: - UISearchResultsUpdating
+extension ChatViewModel: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        
     }
 }
 
