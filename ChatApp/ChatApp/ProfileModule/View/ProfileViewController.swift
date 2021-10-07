@@ -41,11 +41,6 @@ final class ProfileViewController: UIViewController {
         showProfileView(animated: true)
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        self.removeKeyboardObserver()
-    }
-    
     // MARK: - Private Methods
     
     fileprivate func bindWithViewModel() {
@@ -187,17 +182,6 @@ private extension ProfileViewController {
                          selector: #selector(keyboardWillHide),
                          name: UIResponder.keyboardWillHideNotification,
                          object: nil)
-    }
-
-    func removeKeyboardObserver(){
-        NotificationCenter.default
-            .removeObserver(self,
-                            name: UIResponder.keyboardWillShowNotification,
-                            object: nil)
-        NotificationCenter.default
-            .removeObserver(self,
-                            name: UIResponder.keyboardWillHideNotification,
-                            object: nil)
     }
 
     @objc

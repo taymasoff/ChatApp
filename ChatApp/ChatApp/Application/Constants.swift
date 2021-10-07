@@ -47,17 +47,8 @@ enum AppImages: String {
     case gear
     case yellowCircle
     case camera
-    
-    var rawValue: String {
-        switch self {
-        case .gear:
-            return "gear"
-        case .yellowCircle:
-            return "yellowCircle"
-        case .camera:
-            return "camera"
-        }
-    }
+    case send
+    case add
 }
 
 // MARK: - Функции получения

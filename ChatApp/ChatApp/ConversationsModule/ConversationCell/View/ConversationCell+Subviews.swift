@@ -70,7 +70,7 @@ extension ConversationCell {
         return label
     }
     
-    // MARK: - Subview Setup Methods
+    // MARK: - Subviews Setup Methods
     func setupSubviews() {
         cellContainer = makeCellContainer()
         allTextContainer = makeAllTextContainer()

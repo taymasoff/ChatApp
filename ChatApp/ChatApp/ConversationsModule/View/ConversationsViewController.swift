@@ -52,7 +52,6 @@ class ConversationsViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         navigationItem.hidesSearchBarWhenScrolling = true
-        
     }
     
     override func viewWillDisappear(_ animated: Bool) {

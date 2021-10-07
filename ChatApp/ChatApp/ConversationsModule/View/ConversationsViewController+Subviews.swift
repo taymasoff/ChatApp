@@ -24,6 +24,7 @@ extension ConversationsViewController {
         let tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.keyboardDismissMode = .onDrag
         view.addSubview(tableView)
         
         tableView.snp.makeConstraints { make in
@@ -40,6 +41,5 @@ extension ConversationsViewController {
         searchController.searchBar.placeholder = "Search"
         self.navigationItem.searchController = searchController
         self.definesPresentationContext = true
-        conversationsTableView.keyboardDismissMode = .onDrag
     }
 }
