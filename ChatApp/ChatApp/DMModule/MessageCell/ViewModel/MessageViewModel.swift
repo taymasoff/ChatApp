@@ -6,3 +6,38 @@
 //
 
 import Foundation
+
+protocol MessageCellViewModelProtocol {
+    var text: Dynamic<String?> { get set }
+    var time: Dynamic<String?> { get set }
+    var isSender: Dynamic<Bool?> { get set }
+    
+    init(with message: Message?)
+}
+
+final class MessageCellViewModel: MessageCellViewModelProtocol {
+    
+    private var message: Message?
+    
+    var text: Dynamic<String?> = Dynamic(nil)
+    var time: Dynamic<String?> = Dynamic(nil)
+    var isSender: Dynamic<Bool?> = Dynamic(nil)
+    
+    init(with message: Message? = nil) {
+        self.message = message
+        updateValuesWithModel(message)
+    }
+    
+    func updateValuesWithModel(_ model: Message?) {
+        text.value = message?.text
+        time.value = message?.time
+        switch message?.sender {
+        case .user:
+            isSender.value = true
+        case .friend:
+            isSender.value = false
+        case .none:
+            isSender.value = nil
+        }
+    }
+}

@@ -18,6 +18,7 @@ enum AppColors: String {
     case statusGreen = "statusGreen"
     case barItemGray = "barItemGray"
     case footerGray = "footerGray"
+    case timeGray = "timeGray"
 }
 
 // MARK: - Fonts
@@ -112,6 +113,8 @@ struct AppAssets {
             return UIColor(named: name.rawValue) ?? .lightGray
         case .footerGray:
             return UIColor(named: name.rawValue) ?? .gray
+        case .timeGray:
+            return UIColor(named: name.rawValue) ?? .darkGray
         }
     }
 }

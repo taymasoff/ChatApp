@@ -103,8 +103,8 @@ extension ConversationsViewController: UITableViewDataSource, UITableViewDelegat
     
     // Scroll Animation
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        cell.transform = CGAffineTransform(scaleX: 0.9, y: 0.5)
-        UIView.animate(withDuration: 0.4, delay: 0, options: [.allowUserInteraction]) {
+        cell.transform = CGAffineTransform(scaleX: 0.95, y: 0.8)
+        UIView.animate(withDuration: 0.3, delay: 0, options: [.allowUserInteraction]) {
             cell.transform = CGAffineTransform.identity
         }
     }

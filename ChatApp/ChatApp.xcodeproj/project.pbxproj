@@ -17,6 +17,7 @@
 		222A55B3270C06C10047CA24 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222A55B2270C06C10047CA24 /* Conversation.swift */; };
 		222A55B6270C0FA90047CA24 /* Date+TimeSince.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222A55B5270C0FA90047CA24 /* Date+TimeSince.swift */; };
 		2286F4DC270EF27700ED809E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2286F4DB270EF27700ED809E /* Message.swift */; };
+		2286F4E3270F064600ED809E /* Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2286F4E2270F064600ED809E /* Protocol.swift */; };
 		22B50F7726FB01810099436A /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B50F7626FB01810099436A /* Log.swift */; };
 		22CC53B926FAC8220036F6F9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CC53B826FAC8220036F6F9 /* AppDelegate.swift */; };
 		22CC53BB26FAC8220036F6F9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CC53BA26FAC8220036F6F9 /* SceneDelegate.swift */; };
@@ -60,6 +61,7 @@
 		222A55B2270C06C10047CA24 /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		222A55B5270C0FA90047CA24 /* Date+TimeSince.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+TimeSince.swift"; sourceTree = "<group>"; };
 		2286F4DB270EF27700ED809E /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		2286F4E2270F064600ED809E /* Protocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocol.swift; sourceTree = "<group>"; };
 		22B50F7626FB01810099436A /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		22CC53B526FAC8220036F6F9 /* ChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		22CC53B826FAC8220036F6F9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -243,6 +245,7 @@
 			children = (
 				22D104C3270529D1006CF686 /* ImagePickerManager.swift */,
 				22D104C5270535D3006CF686 /* Dynamic.swift */,
+				2286F4E2270F064600ED809E /* Protocol.swift */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -527,6 +530,7 @@
 				22CC53BB26FAC8220036F6F9 /* SceneDelegate.swift in Sources */,
 				221729F2270D9F1B0022D174 /* DMViewController+Subviews.swift in Sources */,
 				221729EA270D93DF0022D174 /* MessageCell+Subviews.swift in Sources */,
+				2286F4E3270F064600ED809E /* Protocol.swift in Sources */,
 				22D104AC27024EBF006CF686 /* ConversationsViewController+Subviews.swift in Sources */,
 				221729EE270D94040022D174 /* MessageViewModel.swift in Sources */,
 				22E69D2C2701E0EF009CAAC0 /* ProfileViewModel.swift in Sources */,
