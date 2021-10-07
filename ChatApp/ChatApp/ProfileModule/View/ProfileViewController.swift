@@ -18,7 +18,7 @@ final class ProfileViewController: UIViewController {
     var profileView: ProfileView!
     
     // MARK: - Lifecycle Methods
-    
+
     override func loadView() {
         super.loadView()
         profileView = makeProfileView()

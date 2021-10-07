@@ -7,11 +7,13 @@
 
 import Foundation
 
+/// Отправитель сообщения: сам пользователь или собеседник
 enum MessageSender: CaseIterable {
     case friend
     case user
 }
 
+/// Модель сообщения
 struct Message {
     var text: String?
     var time: String?
@@ -19,6 +21,7 @@ struct Message {
     var sender: MessageSender?
 }
 
+/// Модель сгруппированных сообщений. Используется для группировки по секциям.
 struct GroupedMessages {
     var groupName: String
     var messages: [Message]

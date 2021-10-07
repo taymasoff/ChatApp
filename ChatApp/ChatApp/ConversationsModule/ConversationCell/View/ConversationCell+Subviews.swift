@@ -97,6 +97,7 @@ extension ConversationCell {
     func setupSubviewsLayout() {
         nameLabel.setContentHuggingPriority(UILayoutPriority(200), for: .horizontal)
         
+        // MARK: Layout Profile Image View
         profileImageView.snp.makeConstraints { make in
             make.left.top.bottom.equalToSuperview().inset(15)
             layoutSubviews()
@@ -109,37 +110,44 @@ extension ConversationCell {
         let xCoord = profileImageRadius * sin(135 * (Double.pi / 180))
         let yCoord = profileImageRadius * cos(135 * (Double.pi / 180))
         
+        // MARK: Layout Online Indicator View
         onlineIndicatorView.snp.makeConstraints { make in
             make.size.equalTo(14)
             make.centerX.equalTo(profileImageView.snp.centerX).offset(xCoord)
             make.centerY.equalTo(profileImageView.snp.centerY).offset(yCoord)
         }
         
+        // MARK: Layout All Text Container
         allTextContainer.snp.makeConstraints { make in
             make.left.equalTo(profileImageView.snp.right).offset(10)
             make.right.equalToSuperview().inset(10)
             make.top.bottom.equalToSuperview().inset(12)
         }
         
+        // MARK: Layout Name Date Container
         nameDateContainer.snp.makeConstraints { make in
             make.left.top.right.equalToSuperview()
             make.bottom.equalTo(lastMessageLabel.snp.top)
         }
         
+        // MARK: Layout Last Message Label
         lastMessageLabel.snp.makeConstraints { make in
             make.left.right.equalToSuperview()
             make.bottom.lessThanOrEqualToSuperview()
         }
         
+        // MARK: Layout Name Label
         nameLabel.snp.makeConstraints { make in
             make.left.top.bottom.equalToSuperview()
             make.right.equalTo(dateLabel.snp.left)
         }
         
+        // MARK: Layout Date Label
         dateLabel.snp.makeConstraints { make in
             make.top.right.bottom.equalToSuperview()
         }
         
+        // MARK: Layout Cell Container
         cellContainer.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }

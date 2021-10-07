@@ -22,7 +22,8 @@ class ModuleBuilder: ModuleBuilderProtocol {
         return vc
     }
     
-    func createDMModule(router: MainRouterProtocol, withViewModel viewModel: DMViewModelProtocol? = nil) -> UIViewController {
+    func createDMModule(router: MainRouterProtocol,
+                        withViewModel viewModel: DMViewModelProtocol? = nil) -> UIViewController {
         let vc = DMViewController()
         if let viewModel = viewModel {
             vc.viewModel = viewModel

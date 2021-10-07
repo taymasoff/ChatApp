@@ -42,6 +42,11 @@ final class DMViewController: UIViewController {
         addKeyboardObserver()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        tableView.scrollToBottom(animated: false)
+    }
+    
     private func configureTableView() {
         tableView.register(MessageCell.self,
                            forCellReuseIdentifier: MessageCell.identifier)
@@ -110,9 +115,7 @@ extension DMViewController: UITableViewDataSource, UITableViewDelegate {
 }
 
 // MARK: - UITextField Delegate
-extension DMViewController: UITextFieldDelegate {
-    
-}
+extension DMViewController: UITextFieldDelegate { }
 
 // MARK: - KeyboardObservers
 /*
@@ -140,7 +143,7 @@ private extension DMViewController {
             
             footerView.snp.updateConstraints { make in
                 make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
-                    .offset(-keyboardSize.height)
+                    .offset(-keyboardSize.height + view.safeAreaInsets.bottom)
             }
             
             UIView.animate(withDuration: duration) {

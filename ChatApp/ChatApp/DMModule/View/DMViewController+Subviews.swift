@@ -82,29 +82,34 @@ extension DMViewController {
     }
     
     func setupSubviewsLayout() {
+        // MARK: Layout Table View
         tableView.snp.makeConstraints { make in
             make.top.left.right.equalToSuperview()
             make.bottom.equalTo(footerView.snp.top)
         }
-        
+
+        // MARK: Layout Footer View
         footerView.snp.makeConstraints { make in
             make.height.equalTo(80)
             make.left.right.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
         
+        // MARK: Layout New Message TextField
         newMessageTextField.snp.makeConstraints { make in
             make.top.bottom.equalToSuperview().inset(20)
             make.left.equalTo(addButton.snp.right).offset(13)
             make.right.equalTo(sendButton.snp.left).offset(-13)
         }
         
+        // MARK: Layout New Message' Add Button
         addButton.snp.makeConstraints { make in
             make.bottom.top.equalTo(newMessageTextField).inset(10)
             make.width.equalTo(addButton.snp.height)
             make.left.equalToSuperview().inset(13)
         }
-        
+
+        // MARK: Layout New Message' Send Button
         sendButton.snp.makeConstraints { make in
             make.bottom.top.equalTo(newMessageTextField).inset(10)
             make.width.equalTo(addButton.snp.height)

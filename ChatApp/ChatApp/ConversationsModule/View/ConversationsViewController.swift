@@ -36,7 +36,8 @@ class ConversationsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        conversationsTableView.register(ConversationCell.self, forCellReuseIdentifier: ConversationCell.identifier)
+        conversationsTableView.register(ConversationCell.self,
+                                        forCellReuseIdentifier: ConversationCell.identifier)
         conversationsTableView.rowHeight = 80
         
         setupSearchController()
@@ -68,7 +69,7 @@ class ConversationsViewController: UIViewController {
     
     @objc
     func gearBarButtonPressed() {
-        
+        viewModel.gearBarButtonPressed()
     }
 }
 // MARK: - UITableView Delegate & Data Source
@@ -86,14 +87,20 @@ extension ConversationsViewController: UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ConversationCell.identifier,
-                                                 for: indexPath) as? ConversationCell
-        guard let conversation = viewModel.conversation(forIndexPath: indexPath) else {
-            Log.error("Cell at \(indexPath) didn't recieve proper data")
+        let cell = tableView
+            .dequeueReusableCell(withIdentifier: ConversationCell.identifier,
+                                 for: indexPath) as? ConversationCell
+        
+        guard let cell = cell else {
+            Log.error("Не удалось найти ConversationCell по идентификатору \(ConversationCell.identifier). Возможно введен не верный ID.")
             return UITableViewCell()
         }
-        cell?.configure(conversation)
-        return cell ?? UITableViewCell()
+        
+        let conversationCellViewModel = viewModel.conversationCellViewModel(forIndexPath: indexPath)
+    
+        cell.configure(with: conversationCellViewModel)
+    
+        return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

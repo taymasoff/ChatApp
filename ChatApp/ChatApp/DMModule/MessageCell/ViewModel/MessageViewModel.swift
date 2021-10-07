@@ -16,19 +16,15 @@ protocol MessageCellViewModelProtocol {
 }
 
 final class MessageCellViewModel: MessageCellViewModelProtocol {
-    
-    private var message: Message?
-    
     var text: Dynamic<String?> = Dynamic(nil)
     var time: Dynamic<String?> = Dynamic(nil)
     var isSender: Dynamic<Bool?> = Dynamic(nil)
     
     init(with message: Message? = nil) {
-        self.message = message
-        updateValuesWithModel(message)
+        updateValues(with: message)
     }
     
-    func updateValuesWithModel(_ model: Message?) {
+    private func updateValues(with message: Message?) {
         text.value = message?.text
         time.value = message?.time
         switch message?.sender {

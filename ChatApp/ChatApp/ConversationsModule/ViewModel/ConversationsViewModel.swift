@@ -17,7 +17,7 @@ protocol ConversationsTableViewCompatible {
     func numberOfSections() -> Int
     func numberOfRowsInSection(_ section: Int) -> Int
     func titleForHeaderInSection(_ section: Int) -> String?
-    func conversation(forIndexPath indexPath: IndexPath) -> ConversationViewDataType?
+    func conversationCellViewModel(forIndexPath indexPath: IndexPath) -> ConversationCellViewModelProtocol?
     func didSelectRowAt(_ indexPath: IndexPath)
 }
 
@@ -67,13 +67,10 @@ extension ConversationsViewModel: ConversationsTableViewCompatible {
         return ConversationsSections.allCases[section].rawValue.capitalized
     }
     
-    func conversation(forIndexPath indexPath: IndexPath) -> ConversationViewDataType? {
+    func conversationCellViewModel(forIndexPath indexPath: IndexPath) -> ConversationCellViewModelProtocol? {
         let key = ConversationsSections.allCases[indexPath.section].rawValue
-        guard let conversation = conversations?[key]?[indexPath.row] else {
-            Log.error("No conversation for indexPath: \(indexPath)")
-            return nil
-        }
-        return ConversationViewData(conversation: conversation)
+        let conversation = conversations?[key]?[indexPath.row]
+        return ConversationCellViewModel(with: conversation)
     }
     
     func didSelectRowAt(_ indexPath: IndexPath) {
@@ -89,7 +86,7 @@ extension ConversationsViewModel: ConversationsTableViewCompatible {
 // MARK: - UISearchResultsUpdating
 extension ConversationsViewModel: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        
+        //
     }
 }
 

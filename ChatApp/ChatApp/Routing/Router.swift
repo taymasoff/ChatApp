@@ -14,7 +14,8 @@ protocol RouterProtocol {
 
 protocol MainRouterProtocol: RouterProtocol {
     func initiateFirstViewController()
-    func showDMViewController(animated: Bool, withViewModel viewModel: DMViewModelProtocol?)
+    func showDMViewController(animated: Bool,
+                              withViewModel viewModel: DMViewModelProtocol?)
     func presentProfileViewController()
     func popToRoot(animated: Bool)
 }
@@ -43,7 +44,8 @@ class MainRouter: MainRouterProtocol {
     /// - Parameter animated: включена ли анимация перехода (да по умолчанию)
     func showDMViewController(animated: Bool = true, withViewModel viewModel: DMViewModelProtocol? = nil) {
         if let navigationController = navigationController {
-            guard let dmViewController = moduleBuilder?.createDMModule(router: self, withViewModel: viewModel) else {
+            guard let dmViewController = moduleBuilder?
+                    .createDMModule(router: self, withViewModel: viewModel) else {
                 Log.error("Cannot create DM Module")
                 return
             }
@@ -56,7 +58,8 @@ class MainRouter: MainRouterProtocol {
     /// - Parameter animated: включена ли анимация перехода (да по умолчанию)
     func presentProfileViewController() {
         if let navigationController = navigationController {
-            guard let profileViewController = moduleBuilder?.createProfileModule(router: self) else {
+            guard let profileViewController = moduleBuilder?
+                    .createProfileModule(router: self) else {
                 Log.error("Cannot create Profile Module")
                 return
             }

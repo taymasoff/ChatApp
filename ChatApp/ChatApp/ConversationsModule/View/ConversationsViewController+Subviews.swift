@@ -12,11 +12,12 @@ extension ConversationsViewController {
     
     func makeGearBarButton() -> UIBarButtonItem {
         let barButton = UIBarButtonItem(
-            image: AppAssets.image(.gear),
+            image: AppAssets.image(.gear)?.resize(to: CGSize(width: 30, height: 30)),
             style: .plain,
             target: self,
             action: #selector(gearBarButtonPressed))
         barButton.tintColor = AppAssets.colors(.barItemGray)
+        
         return barButton
     }
     

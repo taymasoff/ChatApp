@@ -13,11 +13,12 @@
 		221729F2270D9F1B0022D174 /* DMViewController+Subviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221729F1270D9F1B0022D174 /* DMViewController+Subviews.swift */; };
 		221729F4270DA4B00022D174 /* UIViewController+SetNavTitleWithImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221729F3270DA4B00022D174 /* UIViewController+SetNavTitleWithImage.swift */; };
 		222A55AC270BFC500047CA24 /* ConversationCell+Subviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222A55AB270BFC500047CA24 /* ConversationCell+Subviews.swift */; };
-		222A55B1270C055D0047CA24 /* ConversationViewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222A55B0270C055D0047CA24 /* ConversationViewData.swift */; };
 		222A55B3270C06C10047CA24 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222A55B2270C06C10047CA24 /* Conversation.swift */; };
 		222A55B6270C0FA90047CA24 /* Date+TimeSince.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222A55B5270C0FA90047CA24 /* Date+TimeSince.swift */; };
 		2286F4DC270EF27700ED809E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2286F4DB270EF27700ED809E /* Message.swift */; };
 		2286F4E3270F064600ED809E /* Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2286F4E2270F064600ED809E /* Protocol.swift */; };
+		2286F4E7270F7FFA00ED809E /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2286F4E6270F7FFA00ED809E /* UIImage+Resize.swift */; };
+		2286F4E9270F842800ED809E /* UITableView+ScrollToBottom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2286F4E8270F842800ED809E /* UITableView+ScrollToBottom.swift */; };
 		22B50F7726FB01810099436A /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B50F7626FB01810099436A /* Log.swift */; };
 		22CC53B926FAC8220036F6F9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CC53B826FAC8220036F6F9 /* AppDelegate.swift */; };
 		22CC53BB26FAC8220036F6F9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CC53BA26FAC8220036F6F9 /* SceneDelegate.swift */; };
@@ -57,11 +58,12 @@
 		221729F1270D9F1B0022D174 /* DMViewController+Subviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DMViewController+Subviews.swift"; sourceTree = "<group>"; };
 		221729F3270DA4B00022D174 /* UIViewController+SetNavTitleWithImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+SetNavTitleWithImage.swift"; sourceTree = "<group>"; };
 		222A55AB270BFC500047CA24 /* ConversationCell+Subviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConversationCell+Subviews.swift"; sourceTree = "<group>"; };
-		222A55B0270C055D0047CA24 /* ConversationViewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationViewData.swift; sourceTree = "<group>"; };
 		222A55B2270C06C10047CA24 /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		222A55B5270C0FA90047CA24 /* Date+TimeSince.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+TimeSince.swift"; sourceTree = "<group>"; };
 		2286F4DB270EF27700ED809E /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		2286F4E2270F064600ED809E /* Protocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocol.swift; sourceTree = "<group>"; };
+		2286F4E6270F7FFA00ED809E /* UIImage+Resize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
+		2286F4E8270F842800ED809E /* UITableView+ScrollToBottom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+ScrollToBottom.swift"; sourceTree = "<group>"; };
 		22B50F7626FB01810099436A /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		22CC53B526FAC8220036F6F9 /* ChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		22CC53B826FAC8220036F6F9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -236,6 +238,8 @@
 				22D104BC2704DCDA006CF686 /* UIImageView+AddProfilePlaceholder.swift */,
 				222A55B5270C0FA90047CA24 /* Date+TimeSince.swift */,
 				221729F3270DA4B00022D174 /* UIViewController+SetNavTitleWithImage.swift */,
+				2286F4E6270F7FFA00ED809E /* UIImage+Resize.swift */,
+				2286F4E8270F842800ED809E /* UITableView+ScrollToBottom.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -363,7 +367,6 @@
 			isa = PBXGroup;
 			children = (
 				22E69D342701E2D8009CAAC0 /* ConversationCellViewModel.swift */,
-				222A55B0270C055D0047CA24 /* ConversationViewData.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -525,12 +528,12 @@
 				221729E8270D93D60022D174 /* MessageCell.swift in Sources */,
 				22E69D332701E2C1009CAAC0 /* ConversationCell.swift in Sources */,
 				22E69D182701D9A4009CAAC0 /* Router.swift in Sources */,
-				222A55B1270C055D0047CA24 /* ConversationViewData.swift in Sources */,
 				22D104B22704A12C006CF686 /* ProfileView.swift in Sources */,
 				22CC53BB26FAC8220036F6F9 /* SceneDelegate.swift in Sources */,
 				221729F2270D9F1B0022D174 /* DMViewController+Subviews.swift in Sources */,
 				221729EA270D93DF0022D174 /* MessageCell+Subviews.swift in Sources */,
 				2286F4E3270F064600ED809E /* Protocol.swift in Sources */,
+				2286F4E7270F7FFA00ED809E /* UIImage+Resize.swift in Sources */,
 				22D104AC27024EBF006CF686 /* ConversationsViewController+Subviews.swift in Sources */,
 				221729EE270D94040022D174 /* MessageViewModel.swift in Sources */,
 				22E69D2C2701E0EF009CAAC0 /* ProfileViewModel.swift in Sources */,
@@ -538,6 +541,7 @@
 				22E69D352701E2D8009CAAC0 /* ConversationCellViewModel.swift in Sources */,
 				22D104B72704D55E006CF686 /* BlurredView.swift in Sources */,
 				22B50F7726FB01810099436A /* Log.swift in Sources */,
+				2286F4E9270F842800ED809E /* UITableView+ScrollToBottom.swift in Sources */,
 				2286F4DC270EF27700ED809E /* Message.swift in Sources */,
 				22E69D1B2701DA27009CAAC0 /* ModuleBuilder.swift in Sources */,
 				22E69D252701E0B7009CAAC0 /* DMViewModel.swift in Sources */,

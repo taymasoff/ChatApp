@@ -9,13 +9,13 @@ import UIKit
 
 final class MessageCell: UITableViewCell, ConfigurableView {
     
+    /// Направление расположения текстовых "баблов" в ячейке
     enum Direction {
         case left
         case right
     }
     
     // MARK: - Properties
-    
     static let identifier = "MessageCell"
     
     static var textPadding: Int = 6
@@ -45,7 +45,7 @@ final class MessageCell: UITableViewCell, ConfigurableView {
     }
     
     // MARK: - Configuration
-    func configure(with model: MessageCellViewModel?) {
+    func configure(with model: MessageCellViewModelProtocol?) {
         
         viewModel = model
         bindWithViewModel()

@@ -12,7 +12,7 @@ protocol DMTableViewCompatible {
     func numberOfSections() -> Int
     func numberOfRowsInSection(_ section: Int) -> Int
     func titleForHeaderInSection(_ section: Int) -> String?
-    func messageCellViewModel(forIndexPath indexPath: IndexPath) -> MessageCellViewModel?
+    func messageCellViewModel(forIndexPath indexPath: IndexPath) -> MessageCellViewModelProtocol?
 }
 
 protocol DMViewModelPresentable {
@@ -52,23 +52,23 @@ final class DMViewModel: DMViewModelPresentable {
     
     private func observeImageURL() {
         self.chatBuddyImageURL.bind { [unowned self] url in
-            if let _ = url {
-                // получаем пикчу, пока мок
-                let mockImages: [UIImage?] = [UIImage(named: "ArthurBell"), UIImage(named: "JaneWarren"), nil]
-                chatBuddyImage.value = mockImages.randomElement()!
-            }
+            // Тут получаем пикчу, пока мок
+            let mockImages: [UIImage?] = [UIImage(named: "ArthurBell"),
+                                          UIImage(named: "JaneWarren"), nil]
+            chatBuddyImage.value = mockImages.randomElement()!
         }
     }
     
     func sendMessagePressed() {
-        
+        Log.info("Send Message Pressed")
     }
     
     func addButtonPressed() {
-        
+        Log.info("Add Message Pressed")
     }
 }
 
+// MARK: - DMTableViewCompatibleMethods
 extension DMViewModel: DMTableViewCompatible {
     func numberOfSections() -> Int {
         return groupedMessages?.count ?? 0
@@ -85,9 +85,8 @@ extension DMViewModel: DMTableViewCompatible {
         return date
     }
     
-    func messageCellViewModel(forIndexPath indexPath: IndexPath) -> MessageCellViewModel? {
+    func messageCellViewModel(forIndexPath indexPath: IndexPath) -> MessageCellViewModelProtocol? {
         let message = groupedMessages?[indexPath.section].messages[indexPath.row]
-        
         return MessageCellViewModel(with: message)
     }
 }

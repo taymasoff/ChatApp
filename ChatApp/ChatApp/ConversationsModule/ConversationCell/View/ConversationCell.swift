@@ -7,14 +7,12 @@
 
 import UIKit
 
-class ConversationCell: UITableViewCell {
+class ConversationCell: UITableViewCell, ConfigurableView {
     
     // MARK: - Properties
     static let identifier = "ConversationCell"
     
-    lazy var viewModel: ConversationCellViewModelProtocol = {
-        return ConversationCellViewModel()
-    }()
+    var viewModel: ConversationCellViewModelProtocol?
     
     var profileImageView: UIImageView!
     var nameLabel: UILabel!
@@ -43,27 +41,27 @@ class ConversationCell: UITableViewCell {
     
     
     // MARK: - Internal Methods
-    func configure(_ conversation: ConversationViewDataType) {
-        viewModel.configure(conversation)
-        bindViewModel()
+    func configure(with model: ConversationCellViewModelProtocol?) {
+        viewModel = model
+        bindWithViewModel()
     }
     
-    private func bindViewModel() {
-        viewModel.profileImage.bind { [unowned self] image in
+    private func bindWithViewModel() {
+        viewModel?.profileImage.bind { [unowned self] image in
             profileImageView.subviews.forEach { $0.removeFromSuperview() }
             if let profileImage = image {
                 profileImageView.image = profileImage
             } else {
-                profileImageView.addProfilePlaceholder(fullName: viewModel.name.value)
+                profileImageView.addProfilePlaceholder(fullName: viewModel?.name.value)
             }
         }
-        viewModel.name.bind { [unowned self] name in
+        viewModel?.name.bind { [unowned self] name in
             nameLabel.text = name
         }
-        viewModel.date.bind { [unowned self] date in
+        viewModel?.date.bind { [unowned self] date in
             dateLabel.text = date
         }
-        viewModel.lastMessage.bind { [unowned self] message in
+        viewModel?.lastMessage.bind { [unowned self] message in
             if let message = message {
                 lastMessageLabel.text = message
                 lastMessageLabel.textColor = AppAssets.colors(.footerGray)
@@ -72,10 +70,10 @@ class ConversationCell: UITableViewCell {
                 lastMessageLabel.textColor = .systemBlue
             }
         }
-        viewModel.hasUnreadMessages.bind { [unowned self] hasUnread in
+        viewModel?.hasUnreadMessages.bind { [unowned self] hasUnread in
             changeLastMessageLabelState(hasUnread ?? false)
         }
-        viewModel.isOnline.bind { [unowned self] isOnline in
+        viewModel?.isOnline.bind { [unowned self] isOnline in
             onlineIndicatorView.isHidden = !(isOnline ?? false)
         }
     }

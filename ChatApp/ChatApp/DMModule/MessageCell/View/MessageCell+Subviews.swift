@@ -10,6 +10,7 @@ import SnapKit
 
 extension MessageCell {
     
+    // MARK: - Create Subviews
     func makeBgBubbleView() -> UIView {
         let view = UIView()
         view.layer.cornerRadius = 12
@@ -36,6 +37,7 @@ extension MessageCell {
         return label
     }
     
+    // MARK: - Setup Subviews Methods
     func setupSubviews() {
         bgBubbleView = makeBgBubbleView()
         textView = makeTextView()
@@ -49,6 +51,7 @@ extension MessageCell {
     }
     
     func setConstantConstraints() {
+        // MARK: Layout BubbleView
         bgBubbleView.snp.makeConstraints { make in
             // Делаем минимальную ширину и высоту, чтобы все выглядело прилично, когда сообщение пустое или состоит из одного пробела
             make.width.greaterThanOrEqualTo(80)
@@ -59,6 +62,7 @@ extension MessageCell {
             make.bottom.greaterThanOrEqualTo(textView).inset(-MessageCell.textPadding)
         }
         
+        // MARK: Layout TimeLabel
         timeLabel.snp.makeConstraints { make in
             make.top.equalTo(textView.snp.bottom)
             make.right.equalTo(bgBubbleView).inset(MessageCell.timePadding)
@@ -66,6 +70,7 @@ extension MessageCell {
     }
     
     // Вряд ли когда либо будет динамически меняться отправитель сообщения, но на всякий случай пусть будет так)
+    // MARK: Layout TextView
     func setupSubviewsLayout(direction: Direction) {
         
         let insetFromScreen = contentView.bounds.size.width * CGFloat((1 - MessageCell.messageToScreenRatio))
@@ -73,12 +78,14 @@ extension MessageCell {
         switch direction {
         case .left:
             textView.snp.remakeConstraints { make in
-                make.left.top.bottom.equalTo(contentView).inset(MessageCell.textPadding + MessageCell.bubbleMargin)
+                make.left.top.equalTo(contentView).inset(MessageCell.textPadding + MessageCell.bubbleMargin)
+                make.bottom.equalTo(contentView).inset(MessageCell.textPadding + MessageCell.bubbleMargin + MessageCell.timePadding * 2)
                 make.right.lessThanOrEqualTo(contentView).inset(insetFromScreen)
             }
         case .right:
             textView.snp.remakeConstraints { make in
-                make.right.top.bottom.equalTo(contentView).inset(MessageCell.textPadding + MessageCell.bubbleMargin)
+                make.right.top.equalTo(contentView).inset(MessageCell.textPadding + MessageCell.bubbleMargin)
+                make.bottom.equalTo(contentView).inset(MessageCell.textPadding + MessageCell.bubbleMargin + MessageCell.timePadding * 2)
                 make.left.greaterThanOrEqualTo(contentView).inset(insetFromScreen)
             }
         }

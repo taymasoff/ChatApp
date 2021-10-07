@@ -16,10 +16,10 @@ protocol ConversationCellViewModelProtocol {
     var isOnline: Dynamic<Bool?> { get set }
     var hasUnreadMessages: Dynamic<Bool?> { get set }
     
-    func configure(_ conversation: ConversationViewDataType)
+    init(with conversation: Conversation?)
 }
 
-class ConversationCellViewModel: ConversationCellViewModelProtocol {
+final class ConversationCellViewModel: ConversationCellViewModelProtocol {
     var profileImage: Dynamic<UIImage?> = Dynamic(nil)
     var profileImageURL: Dynamic<String?> = Dynamic(nil)
     var name: Dynamic<String?> = Dynamic(nil)
@@ -28,15 +28,24 @@ class ConversationCellViewModel: ConversationCellViewModelProtocol {
     var isOnline: Dynamic<Bool?> = Dynamic(nil)
     var hasUnreadMessages: Dynamic<Bool?> = Dynamic(nil)
     
-    func configure(_ conversation: ConversationViewDataType) {
-        name.value = conversation.userName
-        lastMessage.value = conversation.lastMessage
-        date.value = conversation.messageDate + " →"
-        isOnline.value = conversation.isOnline
-        hasUnreadMessages.value = conversation.hasUnreadMessages
-        profileImageURL.value = conversation.profileImageURL
+    init(with conversation: Conversation? = nil) {
+        updateValues(with: conversation)
+    }
+    
+    private func updateValues(with conversation: Conversation?) {
+        profileImageURL.value = conversation?.profileImageURL
+        isOnline.value = conversation?.isOnline
+        name.value = conversation?.userName
+        lastMessage.value = conversation?.lastMessage
         
-        let mockImages: [UIImage?] = [UIImage(named: "ArthurBell"), UIImage(named: "JaneWarren"), nil]
+        // Тут преобразовываем дату и время из модели, пока мок
+        let mockDate = Date().addingTimeInterval(TimeInterval(Int.random(in: -100000...0)))
+        date.value = mockDate.timeSince()
+        
+        hasUnreadMessages.value = conversation?.hasUnreadMessages
+        
+        let mockImages: [UIImage?] = [UIImage(named: "ArthurBell"),
+                                      UIImage(named: "JaneWarren"), nil]
         profileImage.value = mockImages.randomElement()!
     }
 }
