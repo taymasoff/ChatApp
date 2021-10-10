@@ -10,7 +10,9 @@ import UIKit
 class ImagePickerManager: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     var picker = UIImagePickerController()
-    var alert = UIAlertController(title: "Choose Image", message: nil, preferredStyle: .actionSheet)
+    var alert = UIAlertController(title: "Choose Image",
+                                  message: nil,
+                                  preferredStyle: .actionSheet)
     var viewController: UIViewController?
     var pickImageCallback : ((UIImage) -> ())?
     
@@ -47,18 +49,15 @@ class ImagePickerManager: NSObject, UIImagePickerControllerDelegate, UINavigatio
     func openCamera() {
         alert.dismiss(animated: true, completion: nil)
         
-        if (UIImagePickerController.isSourceTypeAvailable(.camera)) {
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
             picker.sourceType = .camera
             self.viewController?.present(picker, animated: true, completion: nil)
         } else {
-            let alertController: UIAlertController = {
-                let controller = UIAlertController(title: "Ошибка",
-                                                   message: "Камера не обнаружена!",
-                                                   preferredStyle: .alert)
-                let action = UIAlertAction(title: "OK", style: .default)
-                controller.addAction(action)
-                return controller
-            }()
+            let alertController = UIAlertController(title: "Ошибка",
+                                                    message: "Камера не обнаружена!",
+                                                    preferredStyle: .alert)
+            let action = UIAlertAction(title: "OK", style: .default)
+            alertController.addAction(action)
             viewController?.present(alertController, animated: true)
         }
     }
@@ -78,14 +77,12 @@ class ImagePickerManager: NSObject, UIImagePickerControllerDelegate, UINavigatio
                                didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         picker.dismiss(animated: true, completion: nil)
         guard let image = info[.originalImage] as? UIImage else {
-            let alertController: UIAlertController = {
-                let controller = UIAlertController(title: "Ошибка",
-                                                   message: "Не получилось получить изображение",
-                                                   preferredStyle: .alert)
-                let action = UIAlertAction(title: "OK", style: .default)
-                controller.addAction(action)
-                return controller
-            }()
+            let alertController = UIAlertController(title: "Ошибка",
+                                                    message: "Не получилось получить изображение",
+                                                    preferredStyle: .alert)
+            let action = UIAlertAction(title: "OK", style: .default)
+            alertController.addAction(action)
+            viewController?.present(alertController, animated: true)
             viewController?.present(alertController, animated: true)
             return
         }
