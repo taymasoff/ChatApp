@@ -45,19 +45,7 @@ enum AppFonts {
     case sfProText
 }
 
-enum FontTypes: String {
-    case regular
-    case bold
-    case semibold
-    
-    var rawValue: String {
-        switch self {
-        case .regular: return "Regular"
-        case .bold: return "Bold"
-        case .semibold: return "Semibold"
-        }
-    }
-}
+typealias FontTypes = UIFont.Weight
 
 // MARK: - Images
 
@@ -98,23 +86,9 @@ struct AppAssets {
     static func font(_ font: AppFonts, type: FontTypes, size: CGFloat) -> UIFont {
         switch font {
         case .sfProDisplay:
-            guard let pickedFont = UIFont(name: "SFProDisplay-\(type.rawValue)", size: size) else {
-                if type == .bold || type == .semibold {
-                    return UIFont.boldSystemFont(ofSize: size)
-                } else {
-                    return UIFont.systemFont(ofSize: size)
-                }
-            }
-            return pickedFont
+            return UIFont.systemFont(ofSize: size, weight: type)
         case .sfProText:
-            guard let pickedFont = UIFont(name: "SFProText-\(type.rawValue)", size: size) else {
-                if type == .bold || type == .semibold {
-                    return UIFont.boldSystemFont(ofSize: size)
-                } else {
-                    return UIFont.systemFont(ofSize: size)
-                }
-            }
-            return pickedFont
+            return UIFont.systemFont(ofSize: size, weight: type)
         }
     }
     

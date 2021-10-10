@@ -13,10 +13,6 @@
 		22CC53BD26FAC8220036F6F9 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CC53BC26FAC8220036F6F9 /* ChatViewController.swift */; };
 		22CC53C226FAC8260036F6F9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 22CC53C126FAC8260036F6F9 /* Assets.xcassets */; };
 		22CC53C526FAC8260036F6F9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 22CC53C326FAC8260036F6F9 /* LaunchScreen.storyboard */; };
-		22D104A42702498F006CF686 /* SF-Pro-Display-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 22D104A32702498F006CF686 /* SF-Pro-Display-Bold.otf */; };
-		22D104A6270249A4006CF686 /* SF-Pro-Display-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 22D104A5270249A4006CF686 /* SF-Pro-Display-Semibold.otf */; };
-		22D104A9270249B6006CF686 /* SF-Pro-Text-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 22D104A7270249B6006CF686 /* SF-Pro-Text-Bold.otf */; };
-		22D104AA270249B6006CF686 /* SF-Pro-Text-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 22D104A8270249B6006CF686 /* SF-Pro-Text-Semibold.otf */; };
 		22D104AC27024EBF006CF686 /* ChatViewController+Subviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D104AB27024EBF006CF686 /* ChatViewController+Subviews.swift */; };
 		22D104AE27025E6B006CF686 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D104AD27025E6B006CF686 /* Constants.swift */; };
 		22D104B22704A12C006CF686 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D104B12704A12C006CF686 /* ProfileView.swift */; };
@@ -33,8 +29,6 @@
 		22E69D2C2701E0EF009CAAC0 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E69D2B2701E0EF009CAAC0 /* ProfileViewModel.swift */; };
 		22E69D332701E2C1009CAAC0 /* ChatCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E69D322701E2C1009CAAC0 /* ChatCell.swift */; };
 		22E69D352701E2D8009CAAC0 /* ChatCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E69D342701E2D8009CAAC0 /* ChatCellViewModel.swift */; };
-		22E69D3A2701EC18009CAAC0 /* SF-Pro-Display-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 22E69D392701EC18009CAAC0 /* SF-Pro-Display-Regular.otf */; };
-		22E69D3C2701EC25009CAAC0 /* SF-Pro-Text-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 22E69D3B2701EC25009CAAC0 /* SF-Pro-Text-Regular.otf */; };
 		6AB9E66E2FE3AEB3F44AE343 /* Pods_ChatApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02B3F92A3AD20A17B61C1BF3 /* Pods_ChatApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -48,10 +42,6 @@
 		22CC53C126FAC8260036F6F9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		22CC53C426FAC8260036F6F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		22CC53C626FAC8260036F6F9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		22D104A32702498F006CF686 /* SF-Pro-Display-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Bold.otf"; sourceTree = "<group>"; };
-		22D104A5270249A4006CF686 /* SF-Pro-Display-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Semibold.otf"; sourceTree = "<group>"; };
-		22D104A7270249B6006CF686 /* SF-Pro-Text-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Bold.otf"; sourceTree = "<group>"; };
-		22D104A8270249B6006CF686 /* SF-Pro-Text-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Semibold.otf"; sourceTree = "<group>"; };
 		22D104AB27024EBF006CF686 /* ChatViewController+Subviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatViewController+Subviews.swift"; sourceTree = "<group>"; };
 		22D104AD27025E6B006CF686 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		22D104B12704A12C006CF686 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
@@ -68,8 +58,6 @@
 		22E69D2B2701E0EF009CAAC0 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		22E69D322701E2C1009CAAC0 /* ChatCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCell.swift; sourceTree = "<group>"; };
 		22E69D342701E2D8009CAAC0 /* ChatCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCellViewModel.swift; sourceTree = "<group>"; };
-		22E69D392701EC18009CAAC0 /* SF-Pro-Display-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Regular.otf"; sourceTree = "<group>"; };
-		22E69D3B2701EC25009CAAC0 /* SF-Pro-Text-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Regular.otf"; sourceTree = "<group>"; };
 		444A44EF379D39E27847B025 /* Pods-ChatApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatApp.debug.xcconfig"; path = "Target Support Files/Pods-ChatApp/Pods-ChatApp.debug.xcconfig"; sourceTree = "<group>"; };
 		FF7F6A44DD7E6D65C0DF1039 /* Pods-ChatApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatApp.release.xcconfig"; path = "Target Support Files/Pods-ChatApp/Pods-ChatApp.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -117,7 +105,6 @@
 		22B50F7A26FB0E860099436A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				22E69D382701EBAD009CAAC0 /* Fonts */,
 				22CC53C126FAC8260036F6F9 /* Assets.xcassets */,
 			);
 			path = Resources;
@@ -295,19 +282,6 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
-		22E69D382701EBAD009CAAC0 /* Fonts */ = {
-			isa = PBXGroup;
-			children = (
-				22E69D392701EC18009CAAC0 /* SF-Pro-Display-Regular.otf */,
-				22E69D3B2701EC25009CAAC0 /* SF-Pro-Text-Regular.otf */,
-				22D104A32702498F006CF686 /* SF-Pro-Display-Bold.otf */,
-				22D104A5270249A4006CF686 /* SF-Pro-Display-Semibold.otf */,
-				22D104A7270249B6006CF686 /* SF-Pro-Text-Bold.otf */,
-				22D104A8270249B6006CF686 /* SF-Pro-Text-Semibold.otf */,
-			);
-			path = Fonts;
-			sourceTree = "<group>";
-		};
 		D7A6C4DCD4ACFC2AE5C4C0B4 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -377,13 +351,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				22D104A6270249A4006CF686 /* SF-Pro-Display-Semibold.otf in Resources */,
-				22D104A9270249B6006CF686 /* SF-Pro-Text-Bold.otf in Resources */,
 				22CC53C526FAC8260036F6F9 /* LaunchScreen.storyboard in Resources */,
-				22D104A42702498F006CF686 /* SF-Pro-Display-Bold.otf in Resources */,
-				22D104AA270249B6006CF686 /* SF-Pro-Text-Semibold.otf in Resources */,
-				22E69D3A2701EC18009CAAC0 /* SF-Pro-Display-Regular.otf in Resources */,
-				22E69D3C2701EC25009CAAC0 /* SF-Pro-Text-Regular.otf in Resources */,
 				22CC53C226FAC8260036F6F9 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
