@@ -47,7 +47,7 @@ class ChatViewController: UIViewController {
     // MARK: - Objc Action Methods
     @objc
     func profileBarButtonPressed() {
-        self.viewModel.router?.showProfileViewController(animated: true)
+        viewModel.router?.showProfileViewController(animated: true)
     }
     
     @objc

@@ -38,7 +38,7 @@ private extension ProfileView {
     func makeProfileImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.isUserInteractionEnabled = true
-        self.addSubview(imageView)
+        addSubview(imageView)
         imageView.snp.makeConstraints { [unowned self] make in
             make.size.equalTo(self.frame.size.width / 2)
             make.centerY.equalTo(self.snp.top)
@@ -55,7 +55,7 @@ private extension ProfileView {
         let label = UILabel()
         label.font = AppAssets.font(.sfProDisplay, type: .semibold, size: 26)
         label.textAlignment = .center
-        self.addSubview(label)
+        addSubview(label)
         label.snp.makeConstraints { make in
             make.left.right.equalToSuperview().inset(20)
             make.top.equalTo(profileImageView.snp.bottom).offset(40)
@@ -67,7 +67,7 @@ private extension ProfileView {
         let textView = UITextView()
         textView.backgroundColor = .clear
         textView.font = AppAssets.font(.sfProText, type: .regular, size: 20)
-        self.addSubview(textView)
+        addSubview(textView)
         textView.snp.makeConstraints { make in
             make.left.right.equalToSuperview().inset(40)
             make.top.equalTo(userNameLabel.snp.bottom).offset(40)
@@ -81,7 +81,7 @@ private extension ProfileView {
         button.backgroundColor = .systemBlue
         button.setImage(AppAssets.image(.camera), for: .normal)
         // Если добавить к ImageView, то углы срежутся, поэтому поверх
-        self.addSubview(button)
+        addSubview(button)
         // Формула для нахождения точки на окружности
         let radius = profileImageView.frame.size.width / 2
         let xCoord = radius * sin(45 * (Double.pi / 180))

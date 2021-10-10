@@ -22,14 +22,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         guard let windowScene = scene as? UIWindowScene else { return }
         window = UIWindow(windowScene: windowScene)
-            window?.backgroundColor = AppAssets.colors(.appMain)
-            let navController = UINavigationController()
-            let moduleBuilder = ModuleBuilder()
-            let router = MainRouter(navigationController: navController,
-                                    moduleBuilder: moduleBuilder)
-            router.initiateFirstViewController()
-            window?.rootViewController = navController
-            window?.makeKeyAndVisible()
+        window?.backgroundColor = AppAssets.colors(.appMain)
+        let navController = UINavigationController()
+        let moduleBuilder = ModuleBuilder()
+        let router = MainRouter(navigationController: navController,
+                                moduleBuilder: moduleBuilder)
+        router.initiateFirstViewController()
+        window?.rootViewController = navController
+        window?.makeKeyAndVisible()
     }
 }
 

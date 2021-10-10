@@ -44,7 +44,7 @@ final class ProfileViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.addKeyboardObserver()
+        addKeyboardObserver()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -53,13 +53,8 @@ final class ProfileViewController: UIViewController {
         // 🖊 Значения разные, потому что между этими методами VC вызывает layoutSubviews(), в котором перерисовываются фреймы
         
         let blurredView = BlurredView()
-        self.view.insertSubview(blurredView, at: 0)
+        view.insertSubview(blurredView, at: 0)
         showProfileView(animated: true)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        self.removeKeyboardObserver()
     }
     
     // MARK: - Private Methods
@@ -105,7 +100,7 @@ final class ProfileViewController: UIViewController {
         swipeDown.direction = .down
         
         profileView.addGestureRecognizer(swipeDown)
-        self.view.addGestureRecognizer(UITapGestureRecognizer(
+        view.addGestureRecognizer(UITapGestureRecognizer(
             target: self,
             action: #selector(didTapOutsideProfileView)))
     }
@@ -140,7 +135,7 @@ final class ProfileViewController: UIViewController {
                 self.view.layoutIfNeeded()
             }
         } else {
-            self.view.layoutIfNeeded()
+            view.layoutIfNeeded()
         }
     }
     
@@ -204,17 +199,6 @@ extension ProfileViewController {
                          selector: #selector(keyboardWillHide),
                          name: UIResponder.keyboardWillHideNotification,
                          object: nil)
-    }
-
-    func removeKeyboardObserver(){
-        NotificationCenter.default
-            .removeObserver(self,
-                            name: UIResponder.keyboardWillShowNotification,
-                            object: nil)
-        NotificationCenter.default
-            .removeObserver(self,
-                            name: UIResponder.keyboardWillHideNotification,
-                            object: nil)
     }
 
     @objc
