@@ -15,31 +15,40 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: - UIApplicationDelegate Lifecycle Methods
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        Log.info("App just Launched")
+        setupNavigationBarAppearance()
+        
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.backgroundColor = AppAssets.colors(.appMain)
+        let navController = UINavigationController()
+        let moduleBuilder = ModuleBuilder()
+        let router = MainRouter(navigationController: navController,
+                                moduleBuilder: moduleBuilder)
+        router.initiateFirstViewController()
+        window.rootViewController = navController
+        window.makeKeyAndVisible()
+        self.window = window
         
         return true
     }
     
-    // Методы жизненного цикла приложения были заменены на методы жизненного цикла UIScene
-    // Методы ниже не работают с iOS 13
-    func applicationDidBecomeActive(_ application: UIApplication) {
-        Log.info("App has become Active")
-    }
-    
-    func applicationWillResignActive(_ application: UIApplication) {
-        Log.info("App is about to leave an Active state and become Inactive")
-    }
-    
-    func applicationDidEnterBackground(_ application: UIApplication) {
-        Log.info("App is now in Background state")
-    }
-    
-    func applicationWillEnterForeground(_ application: UIApplication) {
-        Log.info("App is entering Foreground state")
-    }
-    
-    func applicationWillTerminate(_ application: UIApplication) {
-        Log.info("App is about to Terminate")
+    /// Настраивает дефолтное отображение UINavigationBar в приложении
+    func setupNavigationBarAppearance() {
+        if #available(iOS 13.0, *) {
+            let appearance = UINavigationBarAppearance()
+            appearance.backgroundColor = AppAssets.colors(.appGray)
+            appearance.titleTextAttributes = [.foregroundColor: UIColor.black, .font: AppAssets.font(.sfProText, type: .regular, size: 20)]
+            appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.black, .font: AppAssets.font(.sfProDisplay, type: .bold, size: 34)]
+
+            UINavigationBar.appearance().tintColor = .systemBlue
+            UINavigationBar.appearance().isTranslucent = false
+            UINavigationBar.appearance().standardAppearance = appearance
+            UINavigationBar.appearance().compactAppearance = appearance
+            UINavigationBar.appearance().scrollEdgeAppearance = appearance
+        } else {
+            UINavigationBar.appearance().tintColor = .systemBlue
+            UINavigationBar.appearance().barTintColor = AppAssets.colors(.appGray)
+            UINavigationBar.appearance().isTranslucent = false
+        }
     }
     
     // MARK: UISceneSession Lifecycle
