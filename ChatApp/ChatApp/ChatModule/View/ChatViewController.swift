@@ -12,6 +12,7 @@ class ChatViewController: UIViewController {
     
     // MARK: - Properties
     var viewModel: ChatViewModelProtocol!
+    lazy var nameFormatter = PersonNameComponentsFormatter()
     
     var profileBarButton: UIBarButtonItem!
     var gearBarButton: UIBarButtonItem!
@@ -79,7 +80,8 @@ private extension ChatViewController {
         imageView.snp.makeConstraints { make in
             make.size.equalTo(40)
         }
-        imageView.addProfilePlaceholder(fullName: fullName)
+        imageView.addProfilePlaceholder(fullName: fullName,
+                                        formattedBy: nameFormatter)
         imageView.addAction(target: self,
                             action: #selector(profileBarButtonPressed))
         profileBarButton = UIBarButtonItem(customView: imageView)

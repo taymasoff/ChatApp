@@ -17,8 +17,8 @@ extension UIImageView {
     
     /// Добавляет желтый фон с инициалами на родительский ImageView
     /// - Parameter fullName: Имя Фамилия
-    func addProfilePlaceholder(fullName: String?) {
-        let formatter = PersonNameComponentsFormatter()
+    func addProfilePlaceholder(fullName: String?,
+                               formattedBy formatter: PersonNameComponentsFormatter = PersonNameComponentsFormatter()) {
         guard let fullName = fullName,
               let components = formatter.personNameComponents(from: fullName) else {
                   Log.error("Невозможно получить инициалы из строки: \(fullName ?? "")")
@@ -33,12 +33,13 @@ extension UIImageView {
     
     /// Добавляет желтый фон с инициалами на родительский ImageView
     /// - Parameter initials: Инициалы (Например: "ОТ")
-    func addProfilePlaceholder(initials: String) {
-        guard initials.count == 2 else {
-            Log.error("Введены неверные инициалы \(initials). \nВведите 2 буквы или воспользуйтесь функцией со входным значением fullName")
-            showPlaceholder("?")
-            return
-        }
+    func addProfilePlaceholder(initials: String?) {
+        guard let initials = initials,
+              initials.count >= 1 && initials.count < 5 else {
+                  Log.error("Введены пустые инициалы, или размер не соответствует формуле 1<=X<5 ")
+                  showPlaceholder("?")
+                  return
+              }
         showPlaceholder(initials)
     }
     

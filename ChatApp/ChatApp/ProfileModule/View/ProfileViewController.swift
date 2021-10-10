@@ -13,6 +13,7 @@ final class ProfileViewController: UIViewController {
     // MARK: - Properties
     
     var viewModel: ProfileViewModelProtocol!
+    lazy var nameFormatter = PersonNameComponentsFormatter()
     
     var profileView: ProfileView!
     
@@ -78,8 +79,10 @@ final class ProfileViewController: UIViewController {
                 }
                 self.profileView.profileImageView.image = image
             } else {
-                self.profileView.profileImageView
-                    .addProfilePlaceholder(fullName: viewModel?.userName.value)
+                self.profileView.profileImageView.addProfilePlaceholder(
+                    fullName: viewModel?.userName.value,
+                    formattedBy: nameFormatter
+                )
             }
         })
     }
