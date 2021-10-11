@@ -8,37 +8,17 @@
 import Foundation
 import UIKit
 
-protocol DMTableViewCompatible {
-    func numberOfSections() -> Int
-    func numberOfRowsInSection(_ section: Int) -> Int
-    func titleForHeaderInSection(_ section: Int) -> String?
-    func messageCellViewModel(forIndexPath indexPath: IndexPath) -> MessageCellViewModelProtocol?
-}
-
-protocol DMViewModelPresentable {
-    var router: RouterProtocol { get }
-    var chatBuddyName: Dynamic<String?> { get set }
-    var chatBuddyImageURL: Dynamic<String?> { get set }
-    var chatBuddyImage: Dynamic<UIImage?> { get }
+/// Вью-модель экрана чата с собеседником
+final class DMViewModel: Routable {
     
-    var groupedMessages: [GroupedMessages]? { get }
-    
-    init(router: RouterProtocol, chatBuddyName: String?, chatBuddyImageURL: String?)
-    
-    func sendMessagePressed()
-    func addButtonPressed()
-}
-
-final class DMViewModel: DMViewModelPresentable {
-    
-    var router: RouterProtocol
+    let router: MainRouterProtocol
     var chatBuddyName: Dynamic<String?> = Dynamic(nil)
     var chatBuddyImageURL: Dynamic<String?> = Dynamic(nil)
     var chatBuddyImage: Dynamic<UIImage?> = Dynamic(nil)
     
     var groupedMessages: [GroupedMessages]?
     
-    init(router: RouterProtocol,
+    init(router: MainRouterProtocol,
          chatBuddyName: String? = nil,
          chatBuddyImageURL: String? = nil) {
         self.router = router
@@ -68,8 +48,8 @@ final class DMViewModel: DMViewModelPresentable {
     }
 }
 
-// MARK: - DMTableViewCompatibleMethods
-extension DMViewModel: DMTableViewCompatible {
+// MARK: - TableView Methods
+extension DMViewModel {
     func numberOfSections() -> Int {
         return groupedMessages?.count ?? 0
     }
@@ -85,7 +65,7 @@ extension DMViewModel: DMTableViewCompatible {
         return date
     }
     
-    func messageCellViewModel(forIndexPath indexPath: IndexPath) -> MessageCellViewModelProtocol? {
+    func messageCellViewModel(forIndexPath indexPath: IndexPath) -> MessageCellViewModel? {
         let message = groupedMessages?[indexPath.section].messages[indexPath.row]
         return MessageCellViewModel(with: message)
     }

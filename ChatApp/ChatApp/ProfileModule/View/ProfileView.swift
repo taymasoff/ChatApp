@@ -7,7 +7,9 @@
 
 import UIKit
 import SnapKit
+import Rswift
 
+/// Popup вью профиля
 class ProfileView: UIView {
     var profileImageView: UIImageView!
     var userNameLabel: UILabel!
@@ -24,7 +26,7 @@ class ProfileView: UIView {
     }
     
     private func createSubviews() {
-        backgroundColor = AppAssets.colors(.appMain)
+        backgroundColor = R.color.appMain()
         profileImageView = makeProfileImageView()
         userNameLabel = makeUserNameLabel()
         userDescription = makeUserDescription()
@@ -33,12 +35,11 @@ class ProfileView: UIView {
 }
 
 // MARK: - ProfileView Subviews Setup
-
 private extension ProfileView {
     func makeProfileImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.isUserInteractionEnabled = true
-        self.addSubview(imageView)
+        addSubview(imageView)
         imageView.snp.makeConstraints { [unowned self] make in
             make.size.equalTo(self.frame.size.width / 2)
             make.centerY.equalTo(self.snp.top)
@@ -53,9 +54,9 @@ private extension ProfileView {
     
     func makeUserNameLabel() -> UILabel {
         let label = UILabel()
-        label.font = AppAssets.font(.sfProDisplay, type: .semibold, size: 26)
+        label.font = UIFont.systemFont(ofSize: 26, weight: .semibold)
         label.textAlignment = .center
-        self.addSubview(label)
+        addSubview(label)
         label.snp.makeConstraints { make in
             make.left.right.equalToSuperview().inset(20)
             make.top.equalTo(profileImageView.snp.bottom).offset(40)
@@ -66,8 +67,8 @@ private extension ProfileView {
     func makeUserDescription() -> UITextView {
         let textView = UITextView()
         textView.backgroundColor = .clear
-        textView.font = AppAssets.font(.sfProText, type: .regular, size: 20)
-        self.addSubview(textView)
+        textView.font = UIFont.systemFont(ofSize: 20, weight: .regular)
+        addSubview(textView)
         textView.snp.makeConstraints { make in
             make.left.right.equalToSuperview().inset(40)
             make.top.equalTo(userNameLabel.snp.bottom).offset(40)
@@ -79,9 +80,9 @@ private extension ProfileView {
     func makeSetImageButton() -> UIButton {
         let button = UIButton(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
         button.backgroundColor = .systemBlue
-        button.setImage(AppAssets.image(.camera), for: .normal)
+        button.setImage(R.image.camera(), for: .normal)
         // Если добавить к ImageView, то углы срежутся, поэтому поверх
-        self.addSubview(button)
+        addSubview(button)
         // Формула для нахождения точки на окружности
         let radius = profileImageView.frame.size.width / 2
         let xCoord = radius * sin(45 * (Double.pi / 180))

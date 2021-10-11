@@ -7,15 +7,8 @@
 
 import Foundation
 
-protocol MessageCellViewModelProtocol {
-    var text: Dynamic<String?> { get set }
-    var time: Dynamic<String?> { get set }
-    var isSender: Dynamic<Bool?> { get set }
-    
-    init(with message: Message?)
-}
-
-final class MessageCellViewModel: MessageCellViewModelProtocol {
+/// Вью-модель ячейки сообщения
+final class MessageCellViewModel {
     var text: Dynamic<String?> = Dynamic(nil)
     var time: Dynamic<String?> = Dynamic(nil)
     var isSender: Dynamic<Bool?> = Dynamic(nil)

@@ -6,23 +6,24 @@
 //
 
 import UIKit
+import SnapKit
+import Rswift
 
-class ConversationCell: UITableViewCell, ConfigurableView {
+/// Ячейка диалога
+final class ConversationCell: UITableViewCell, ReuseIdentifiable, Configurable {
     
     // MARK: - Properties
-    static let identifier = "ConversationCell"
+    fileprivate var profileImageView: UIImageView!
+    fileprivate var nameLabel: UILabel!
+    fileprivate var lastMessageLabel: UILabel!
+    fileprivate var dateLabel: UILabel!
+    fileprivate var onlineIndicatorView: UIView!
     
-    var viewModel: ConversationCellViewModelProtocol?
+    fileprivate var allTextContainer: UIView!
+    fileprivate var nameDateContainer: UIView!
+    fileprivate var cellContainer: UIView!
     
-    var profileImageView: UIImageView!
-    var nameLabel: UILabel!
-    var lastMessageLabel: UILabel!
-    var dateLabel: UILabel!
-    var onlineIndicatorView: UIView!
-    
-    var allTextContainer: UIView!
-    var nameDateContainer: UIView!
-    var cellContainer: UIView!
+    var viewModel: ConversationCellViewModel?
     
     // MARK: - Initializers
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -41,12 +42,18 @@ class ConversationCell: UITableViewCell, ConfigurableView {
     
     
     // MARK: - Internal Methods
-    func configure(with model: ConversationCellViewModelProtocol?) {
-        viewModel = model
-        bindWithViewModel()
+    private func changeLastMessageLabelState(_ hasUnread: Bool) {
+        switch hasUnread {
+        case true:
+            lastMessageLabel.font = UIFont.systemFont(ofSize: 13, weight: .bold)
+        case false:
+            lastMessageLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+        }
     }
-    
-    private func bindWithViewModel() {
+}
+
+extension ConversationCell: ViewModelBindable {
+    func bindWithViewModel() {
         viewModel?.profileImage.bind { [unowned self] image in
             profileImageView.subviews.forEach { $0.removeFromSuperview() }
             if let profileImage = image {
@@ -64,7 +71,7 @@ class ConversationCell: UITableViewCell, ConfigurableView {
         viewModel?.lastMessage.bind { [unowned self] message in
             if let message = message {
                 lastMessageLabel.text = message
-                lastMessageLabel.textColor = AppAssets.colors(.footerGray)
+                lastMessageLabel.textColor = R.color.footerGray()
             } else {
                 lastMessageLabel.text = "No messages yet"
                 lastMessageLabel.textColor = .systemBlue
@@ -75,15 +82,6 @@ class ConversationCell: UITableViewCell, ConfigurableView {
         }
         viewModel?.isOnline.bind { [unowned self] isOnline in
             onlineIndicatorView.isHidden = !(isOnline ?? false)
-        }
-    }
-    
-    private func changeLastMessageLabelState(_ hasUnread: Bool) {
-        switch hasUnread {
-        case true:
-            lastMessageLabel.font = AppAssets.font(.sfProText, type: .bold, size: 13)
-        case false:
-            lastMessageLabel.font = AppAssets.font(.sfProText, type: .regular, size: 13)
         }
     }
 }
@@ -115,7 +113,7 @@ extension ConversationCell {
                            options: animationOptions,
                            animations: { [weak self] in
                 self?.cellContainer.transform = .init(scaleX: 0.93, y: 0.9)
-                self?.contentView.backgroundColor = AppAssets.colors(.appYellow)
+                self?.contentView.backgroundColor = R.color.appYellow()
                 self?.cellContainer.layer.cornerRadius = 15
                 
             }, completion: completion)
@@ -130,6 +128,154 @@ extension ConversationCell {
                 self?.cellContainer.layer.cornerRadius = 0
                 self?.contentView.backgroundColor = .white
             }, completion: completion)
+        }
+    }
+}
+
+// MARK: - Setup Subviews
+private extension ConversationCell {
+    
+    // MARK: - Create Subviews
+    func makeCellContainer() -> UIView {
+        let view = UIView()
+        view.backgroundColor = .white
+        return view
+    }
+    
+    func makeAllTextContainer() -> UIView {
+        let view = UIView()
+        view.backgroundColor = .clear
+        return view
+    }
+    
+    func makeNameDateContainer() -> UIView {
+        let view = UIView()
+        view.backgroundColor = .clear
+        return view
+    }
+    
+    func makeProfileImageView() -> UIImageView {
+        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+        imageView.clipsToBounds = true
+        return imageView
+    }
+    
+    func makeOnlineIndicatorView() -> UIView {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 14, height: 14))
+        view.backgroundColor = R.color.statusGreen()
+        view.layer.borderWidth = 1
+        view.layer.borderColor = UIColor.white.cgColor
+        view.layer.cornerRadius = 7
+        return view
+    }
+    
+    func makeNameLabel() -> UILabel {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
+        label.textColor = .black
+        label.textAlignment = .left
+        label.numberOfLines = 1
+        return label
+    }
+    
+    func makeDateLabel() -> UILabel {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+        label.textColor = R.color.footerGray()
+        label.textAlignment = .right
+        label.numberOfLines = 1
+        return label
+    }
+    
+    func makeLastMessageLabel() -> UILabel {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+        label.textColor = R.color.footerGray()
+        label.textAlignment = .left
+        label.numberOfLines = 2
+        return label
+    }
+    
+    // MARK: - Subviews Setup Methods
+    func setupSubviews() {
+        cellContainer = makeCellContainer()
+        allTextContainer = makeAllTextContainer()
+        nameDateContainer = makeNameDateContainer()
+        
+        profileImageView = makeProfileImageView()
+        nameLabel = makeNameLabel()
+        lastMessageLabel = makeLastMessageLabel()
+        dateLabel = makeDateLabel()
+        onlineIndicatorView = makeOnlineIndicatorView()
+    }
+    
+    func setupSubviewsHierarchy() {
+        contentView.addSubview(cellContainer)
+        cellContainer.addSubview(profileImageView)
+        cellContainer.addSubview(allTextContainer)
+        nameDateContainer.addSubview(nameLabel)
+        nameDateContainer.addSubview(dateLabel)
+        allTextContainer.addSubview(nameDateContainer)
+        allTextContainer.addSubview(lastMessageLabel)
+        cellContainer.addSubview(onlineIndicatorView)
+    }
+    
+    func setupSubviewsLayout() {
+        nameLabel.setContentHuggingPriority(UILayoutPriority(200), for: .horizontal)
+        
+        // MARK: Layout Profile Image View
+        profileImageView.snp.makeConstraints { make in
+            make.left.top.bottom.equalToSuperview().inset(15)
+            layoutSubviews()
+            make.width.equalTo(profileImageView.snp.height)
+        }
+        
+        let profileImageRadius = profileImageView.frame.width / 2
+        profileImageView.layer.cornerRadius = profileImageRadius
+        
+        let xCoord = profileImageRadius * sin(135 * (Double.pi / 180))
+        let yCoord = profileImageRadius * cos(135 * (Double.pi / 180))
+        
+        // MARK: Layout Online Indicator View
+        onlineIndicatorView.snp.makeConstraints { make in
+            make.size.equalTo(14)
+            make.centerX.equalTo(profileImageView.snp.centerX).offset(xCoord)
+            make.centerY.equalTo(profileImageView.snp.centerY).offset(yCoord)
+        }
+        
+        // MARK: Layout All Text Container
+        allTextContainer.snp.makeConstraints { make in
+            make.left.equalTo(profileImageView.snp.right).offset(10)
+            make.right.equalToSuperview().inset(10)
+            make.top.bottom.equalToSuperview().inset(12)
+        }
+        
+        // MARK: Layout Name Date Container
+        nameDateContainer.snp.makeConstraints { make in
+            make.left.top.right.equalToSuperview()
+            make.bottom.equalTo(lastMessageLabel.snp.top)
+        }
+        
+        // MARK: Layout Last Message Label
+        lastMessageLabel.snp.makeConstraints { make in
+            make.left.right.equalToSuperview()
+            make.bottom.lessThanOrEqualToSuperview()
+        }
+        
+        // MARK: Layout Name Label
+        nameLabel.snp.makeConstraints { make in
+            make.left.top.bottom.equalToSuperview()
+            make.right.equalTo(dateLabel.snp.left)
+        }
+        
+        // MARK: Layout Date Label
+        dateLabel.snp.makeConstraints { make in
+            make.top.right.bottom.equalToSuperview()
+        }
+        
+        // MARK: Layout Cell Container
+        cellContainer.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
         }
     }
 }

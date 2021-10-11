@@ -7,6 +7,13 @@
 
 import Foundation
 
+/// Список секций диалогов
+enum ConversationsSections: String, CaseIterable {
+    case online = "Online"
+    case history = "History"
+}
+
+/// Модель диалога
 struct Conversation: Codable {
     var profileImageURL: String?
     var isOnline: Bool

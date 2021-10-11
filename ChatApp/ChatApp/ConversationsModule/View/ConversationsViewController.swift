@@ -7,17 +7,24 @@
 
 import UIKit
 import SnapKit
+import Rswift
 
-typealias ConversationsViewModelProtocol = ConversationsModelPresentable & ConversationsTableViewCompatible & UISearchResultsUpdating
-
-class ConversationsViewController: UIViewController {
+/// Контроллер экрана диалогов
+final class ConversationsViewController: UIViewController, ViewModelBased {
     
     // MARK: - Properties
-    var viewModel: ConversationsViewModelProtocol!
+    fileprivate var profileBarButton: UIBarButtonItem!
+    fileprivate var gearBarButton: UIBarButtonItem!
+    fileprivate var conversationsTableView: UITableView!
     
-    var profileBarButton: UIBarButtonItem!
-    var gearBarButton: UIBarButtonItem!
-    var conversationsTableView: UITableView!
+    var viewModel: ConversationsViewModel?
+    fileprivate lazy var nameFormatter = PersonNameComponentsFormatter()
+    
+    // MARK: - Initializers
+    convenience init(with viewModel: ConversationsViewModel) {
+        self.init()
+        self.viewModel = viewModel
+    }
     
     // MARK: - UIViewController Lifecycle Methods
     override func loadView() {
@@ -28,7 +35,7 @@ class ConversationsViewController: UIViewController {
         
         updateProfileBarButton(with: "Marina Dudarenko")
         
-        navigationItem.title = viewModel.title
+        navigationItem.title = viewModel?.title
         navigationItem.leftBarButtonItem = gearBarButton
         navigationItem.rightBarButtonItem = profileBarButton
     }
@@ -37,7 +44,7 @@ class ConversationsViewController: UIViewController {
         super.viewDidLoad()
         
         conversationsTableView.register(ConversationCell.self,
-                                        forCellReuseIdentifier: ConversationCell.identifier)
+                                        forCellReuseIdentifier: ConversationCell.reuseID)
         conversationsTableView.rowHeight = 80
         
         setupSearchController()
@@ -61,42 +68,45 @@ class ConversationsViewController: UIViewController {
         navigationItem.largeTitleDisplayMode = .never
     }
     
-    // MARK: - Objc Action Methods
+    // MARK: - Private Methods
     @objc
-    func profileBarButtonPressed() {
-        viewModel.profileBarButtonPressed()
+    private func profileBarButtonPressed() {
+        viewModel?.profileBarButtonPressed()
     }
     
     @objc
-    func gearBarButtonPressed() {
-        viewModel.gearBarButtonPressed()
+    private func gearBarButtonPressed() {
+        viewModel?.gearBarButtonPressed()
     }
 }
 // MARK: - UITableView Delegate & Data Source
 extension ConversationsViewController: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return viewModel.numberOfSections()
+        return viewModel?.numberOfSections() ?? 0
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.numberOfRowsInSection(section)
+        return viewModel?.numberOfRowsInSection(section) ?? 0
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return viewModel.titleForHeaderInSection(section)
+        return viewModel?.titleForHeaderInSection(section)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView
-            .dequeueReusableCell(withIdentifier: ConversationCell.identifier,
+            .dequeueReusableCell(withIdentifier: ConversationCell.reuseID,
                                  for: indexPath) as? ConversationCell
         
         guard let cell = cell else {
-            Log.error("Не удалось найти ConversationCell по идентификатору \(ConversationCell.identifier). Возможно введен не верный ID.")
+            Log.error("Не удалось найти ConversationCell по идентификатору \(ConversationCell.reuseID). Возможно введен не верный ID.")
             return UITableViewCell()
         }
         
-        let conversationCellViewModel = viewModel.conversationCellViewModel(forIndexPath: indexPath)
+        guard let conversationCellViewModel = viewModel?.conversationCellViewModel(forIndexPath: indexPath) else {
+            Log.error("Не удалось создать ConversationCellViewModel по indexPath: \(indexPath).")
+            return UITableViewCell()
+        }
     
         cell.configure(with: conversationCellViewModel)
     
@@ -104,7 +114,7 @@ extension ConversationsViewController: UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        viewModel.didSelectRowAt(indexPath)
+        viewModel?.didSelectRowAt(indexPath)
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
@@ -119,7 +129,6 @@ extension ConversationsViewController: UITableViewDataSource, UITableViewDelegat
 
 // MARK: - Update Bar Button Items Methods
 // Обновляет ProfileBarButtonItem картинкой, или плейсхолдером с инициалами
-
 private extension ConversationsViewController {
     func updateProfileBarButton(with image: UIImage?) {
         guard let image = image else {
@@ -142,9 +151,46 @@ private extension ConversationsViewController {
         imageView.snp.makeConstraints { make in
             make.size.equalTo(40)
         }
-        imageView.addProfilePlaceholder(fullName: fullName)
+        imageView.addProfilePlaceholder(fullName: fullName,
+                                        formattedBy: nameFormatter)
         imageView.addAction(target: self,
                             action: #selector(profileBarButtonPressed))
         profileBarButton = UIBarButtonItem(customView: imageView)
+    }
+}
+
+// MARK: - Setup Subviews
+private extension ConversationsViewController {
+    func makeGearBarButton() -> UIBarButtonItem {
+        let barButton = UIBarButtonItem(
+            image: R.image.gear()?.resize(to: CGSize(width: 30, height: 30)),
+            style: .plain,
+            target: self,
+            action: #selector(gearBarButtonPressed))
+        barButton.tintColor = R.color.barItemGray()
+        return barButton
+    }
+    
+    func makeConversationsTableView() -> UITableView {
+        let tableView = UITableView()
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.keyboardDismissMode = .onDrag
+        view.addSubview(tableView)
+        
+        tableView.snp.makeConstraints { make in
+            make.top.left.right.bottom.equalToSuperview()
+        }
+        
+        return tableView
+    }
+    
+    func setupSearchController() {
+        let searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = self.viewModel
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Search"
+        self.navigationItem.searchController = searchController
+        self.definesPresentationContext = true
     }
 }

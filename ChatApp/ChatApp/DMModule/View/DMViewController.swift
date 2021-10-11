@@ -6,23 +6,32 @@
 //
 
 import UIKit
+import SnapKit
+import Rswift
 
-typealias DMViewModelProtocol = DMViewModelPresentable & DMTableViewCompatible
+/// Контроллер экрана чата с собеседником
+final class DMViewController: UIViewController, ViewModelBased {
 
-final class DMViewController: UIViewController {
+    // MARK: - Properties
+    fileprivate var tableView: UITableView!
+    fileprivate var footerView: UIView!
+    fileprivate var newMessageTextField: UITextField!
+    fileprivate var addButton: UIButton!
+    fileprivate var sendButton: UIButton!
     
-    var viewModel: DMViewModelProtocol!
+    var viewModel: DMViewModel?
     
-    var tableView: UITableView!
-    var footerView: UIView!
-    var newMessageTextField: UITextField!
-    var addButton: UIButton!
-    var sendButton: UIButton!
+    // MARK: - Initializers
+    convenience init(with viewModel: DMViewModel) {
+        self.init()
+        self.viewModel = viewModel
+    }
     
+    // MARK: - Lifecycle Methods
     override func loadView() {
         super.loadView()
         
-        view.backgroundColor = AppAssets.colors(.appGray)
+        view.backgroundColor = R.color.appGray()
         
         setupSubviews()
         setupSubviewsHierarchy()
@@ -32,9 +41,9 @@ final class DMViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        bindViewModel()
         clearBackButtonText()
         configureTableView()
+        bindWithViewModel()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -47,9 +56,10 @@ final class DMViewController: UIViewController {
         tableView.scrollToBottom(animated: false)
     }
     
+    // MARK: - Private Methods
     private func configureTableView() {
         tableView.register(MessageCell.self,
-                           forCellReuseIdentifier: MessageCell.identifier)
+                           forCellReuseIdentifier: MessageCell.reuseID)
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = calculateEstimatedRowHeight()
     }
@@ -58,13 +68,6 @@ final class DMViewController: UIViewController {
         let backButton = UIBarButtonItem()
         backButton.title = ""
         self.navigationController?.navigationBar.topItem?.backBarButtonItem = backButton
-    }
-    
-    private func bindViewModel() {
-        viewModel.chatBuddyImage.bind { [unowned self] image in
-            setNavTitleWithImage(title: viewModel.chatBuddyName.value,
-                                 image: image)
-        }
     }
     
     private func calculateEstimatedRowHeight() -> CGFloat {
@@ -83,31 +86,44 @@ final class DMViewController: UIViewController {
     }
 }
 
+// MARK: - ViewModelBindable
+extension DMViewController: ViewModelBindable {
+    func bindWithViewModel() {
+        viewModel?.chatBuddyImage.bind { [unowned self] image in
+            setNavTitleWithImage(title: viewModel?.chatBuddyName.value,
+                                 image: image)
+        }
+    }
+}
+
 // MARK: - UITableView Delegate & Data Source
 extension DMViewController: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return viewModel.numberOfSections()
+        return viewModel?.numberOfSections() ?? 0
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.numberOfRowsInSection(section)
+        return viewModel?.numberOfRowsInSection(section) ?? 0
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return viewModel.titleForHeaderInSection(section)
+        return viewModel?.titleForHeaderInSection(section) ?? ""
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: MessageCell.identifier,
+        let cell = tableView.dequeueReusableCell(withIdentifier: MessageCell.reuseID,
                                                  for: indexPath) as? MessageCell
         
         guard let cell = cell else {
-            Log.error("Не удалось найти MessageCell по идентификатору \(MessageCell.identifier). Возможно введен не верный ID.")
+            Log.error("Не удалось найти MessageCell по идентификатору \(MessageCell.reuseID). Возможно введен не верный ID.")
             return UITableViewCell()
         }
         
-        let messageCellViewModel = viewModel.messageCellViewModel(forIndexPath: indexPath)
-    
+        guard let messageCellViewModel = viewModel?.messageCellViewModel(forIndexPath: indexPath) else {
+            Log.error("Не удалось создать MessageCellViewModel по indexPath: \(indexPath).")
+            return UITableViewCell()
+        }
+        
         cell.configure(with: messageCellViewModel)
         
         return cell
@@ -163,6 +179,117 @@ private extension DMViewController {
             UIView.animate(withDuration: duration) {
                 self.view.layoutIfNeeded()
             }
+        }
+    }
+}
+
+// MARK: - Setup Subviews
+private extension DMViewController {
+    
+    // MARK: - Create Subviews
+    func makeTableView() -> UITableView {
+        let tableView = UITableView()
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.keyboardDismissMode = .onDrag
+        tableView.separatorStyle = .none
+        
+        return tableView
+    }
+    
+    func makeFooterContainer() -> UIView {
+        let footerView = UIView()
+        footerView.backgroundColor = R.color.appGray()
+    
+        return footerView
+    }
+    
+    func makeAddButton() -> UIButton {
+        let button = UIButton(type: .custom)
+        button.setImage(R.image.add(), for: .normal)
+        button.tintColor = .systemBlue
+        button.addTarget(self,
+                         action: #selector(addButtonPressed),
+                         for: .touchUpInside)
+        return button
+    }
+    
+    func makeNewMessageTextField() -> UITextField {
+        let textField = UITextField()
+        textField.placeholder = "Type your message..."
+        textField.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+        textField.textAlignment = .left
+        textField.borderStyle = .roundedRect
+        textField.autocorrectionType = .default
+        textField.keyboardType = .default
+        textField.returnKeyType = .send
+        textField.clearButtonMode = .whileEditing
+        textField.contentVerticalAlignment = .center
+        textField.delegate = self
+        
+        return textField
+    }
+    
+    func makeSendButton() -> UIButton {
+        let button = UIButton(type: .custom)
+        button.setImage(R.image.send(), for: .normal)
+        button.tintColor = .systemBlue
+        button.addTarget(self,
+                         action: #selector(sendMessagePressed),
+                         for: .touchUpInside)
+        return button
+    }
+    
+    // MARK: - Subviews Setup Methods
+    func setupSubviews() {
+        footerView = makeFooterContainer()
+        tableView = makeTableView()
+        addButton = makeAddButton()
+        newMessageTextField = makeNewMessageTextField()
+        sendButton = makeSendButton()
+    }
+    
+    func setupSubviewsHierarchy() {
+        view.addSubview(tableView)
+        view.addSubview(footerView)
+        footerView.addSubview(newMessageTextField)
+        footerView.addSubview(addButton)
+        footerView.addSubview(sendButton)
+    }
+    
+    func setupSubviewsLayout() {
+        // MARK: Layout Table View
+        tableView.snp.makeConstraints { make in
+            make.top.left.right.equalToSuperview()
+            make.bottom.equalTo(footerView.snp.top)
+        }
+
+        // MARK: Layout Footer View
+        footerView.snp.makeConstraints { make in
+            make.height.equalTo(80)
+            make.left.right.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+        }
+        
+        // MARK: Layout New Message TextField
+        newMessageTextField.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview().inset(20)
+            make.left.equalTo(addButton.snp.right).offset(13)
+            make.right.equalTo(sendButton.snp.left).offset(-13)
+        }
+        
+        // MARK: Layout New Message' Add Button
+        addButton.snp.makeConstraints { make in
+            make.bottom.top.equalTo(newMessageTextField).inset(10)
+            make.width.equalTo(addButton.snp.height)
+            make.left.equalToSuperview().inset(13)
+        }
+
+        // MARK: Layout New Message' Send Button
+        sendButton.snp.makeConstraints { make in
+            make.bottom.top.equalTo(newMessageTextField).inset(10)
+            make.width.equalTo(addButton.snp.height)
+            make.right.equalToSuperview().inset(20)
         }
     }
 }

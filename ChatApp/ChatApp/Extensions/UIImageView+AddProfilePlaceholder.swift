@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import Rswift
 
 /*
  👉 Добавляет в UIImageView желтый фон с инициалами, как в приложении тинькова.
@@ -17,8 +18,8 @@ extension UIImageView {
     
     /// Добавляет желтый фон с инициалами на родительский ImageView
     /// - Parameter fullName: Имя Фамилия
-    func addProfilePlaceholder(fullName: String?) {
-        let formatter = PersonNameComponentsFormatter()
+    func addProfilePlaceholder(fullName: String?,
+                               formattedBy formatter: PersonNameComponentsFormatter = PersonNameComponentsFormatter()) {
         guard let fullName = fullName,
               let components = formatter.personNameComponents(from: fullName) else {
                   Log.error("Невозможно получить инициалы из строки: \(fullName ?? "")")
@@ -33,20 +34,21 @@ extension UIImageView {
     
     /// Добавляет желтый фон с инициалами на родительский ImageView
     /// - Parameter initials: Инициалы (Например: "ОТ")
-    func addProfilePlaceholder(initials: String) {
-        guard initials.count == 2 else {
-            Log.error("Введены неверные инициалы \(initials). \nВведите 2 буквы или воспользуйтесь функцией со входным значением fullName")
-            showPlaceholder("?")
-            return
-        }
+    func addProfilePlaceholder(initials: String?) {
+        guard let initials = initials,
+              initials.count >= 1 && initials.count < 5 else {
+                  Log.error("Введены пустые инициалы, или размер не соответствует формуле 1<=X<5 ")
+                  showPlaceholder("?")
+                  return
+              }
         showPlaceholder(initials)
     }
     
     private func showPlaceholder(_ initials: String) {
-        self.image = AppAssets.image(.yellowCircle)
+        self.image = R.image.yellowCircle()
         let label = UILabel()
         // Тут магия по уменьшению шрифта так, чтобы он вписывался в лейбу
-        label.font = AppAssets.font(.sfProDisplay, type: .semibold, size: 120)
+        label.font = UIFont.systemFont(ofSize: 120, weight: .semibold)
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.1
         // Не знаю почему, но если поставить количество строк 1 и не выставить lineBreakMode шрифт не уменьшается меньше определенного значения

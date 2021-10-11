@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Отправитель сообщения: сам пользователь или собеседник
+/// Список отправитель сообщения: сам пользователь или собеседник
 enum MessageSender: CaseIterable {
     case friend
     case user

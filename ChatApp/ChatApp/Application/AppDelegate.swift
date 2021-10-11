@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Rswift
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,30 +17,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         setupNavigationBarAppearance()
-        
-        let window = UIWindow(frame: UIScreen.main.bounds)
-        window.backgroundColor = AppAssets.colors(.appMain)
-        let navController = UINavigationController()
-        let moduleBuilder = ModuleBuilder()
-        let router = MainRouter(navigationController: navController,
-                                moduleBuilder: moduleBuilder)
-        router.initiateFirstViewController()
-        window.rootViewController = navController
-        window.makeKeyAndVisible()
-        self.window = window
-        
+        initWindowAndFirstScreen()
         return true
     }
     
+    
+    private func initWindowAndFirstScreen() {
+        if #available(iOS 13, *) {} else {
+            let window = UIWindow(frame: UIScreen.main.bounds)
+            window.backgroundColor = R.color.appMain()
+            let navController = UINavigationController()
+            let router = MainRouter(navigationController: navController)
+            router.initiateFirstViewController()
+            window.rootViewController = navController
+            window.makeKeyAndVisible()
+            self.window = window
+        }
+    }
+    
     /// Настраивает дефолтное отображение UINavigationBar в приложении
-    func setupNavigationBarAppearance() {
+    private func setupNavigationBarAppearance() {
         if #available(iOS 13.0, *) {
             let appearance = UINavigationBarAppearance()
-            appearance.backgroundColor = AppAssets.colors(.appGray)
+            appearance.backgroundColor = R.color.appGray()
             appearance.titleTextAttributes = [.foregroundColor: UIColor.black,
-                                                .font: AppAssets.font(.sfProDisplay, type: .semibold, size: 18)]
+                                              .font: UIFont.systemFont(ofSize: 18, weight: .semibold)]
             appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.black,
-                                                    .font: AppAssets.font(.sfProDisplay, type: .bold, size: 30)]
+                                                    .font: UIFont.systemFont(ofSize: 30, weight: .bold)]
 
             UINavigationBar.appearance().tintColor = .systemBlue
             UINavigationBar.appearance().isTranslucent = false
@@ -48,7 +52,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             UINavigationBar.appearance().scrollEdgeAppearance = appearance
         } else {
             UINavigationBar.appearance().tintColor = .systemBlue
-            UINavigationBar.appearance().barTintColor = AppAssets.colors(.appGray)
+            UINavigationBar.appearance().barTintColor = R.color.appGray()
             UINavigationBar.appearance().isTranslucent = false
         }
     }

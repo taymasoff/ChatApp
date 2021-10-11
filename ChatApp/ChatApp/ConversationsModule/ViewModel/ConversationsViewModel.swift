@@ -8,43 +8,25 @@
 import Foundation
 import UIKit
 
-enum ConversationsSections: String, CaseIterable {
-    case online = "Online"
-    case history = "History"
-}
-
-protocol ConversationsTableViewCompatible {
-    func numberOfSections() -> Int
-    func numberOfRowsInSection(_ section: Int) -> Int
-    func titleForHeaderInSection(_ section: Int) -> String?
-    func conversationCellViewModel(forIndexPath indexPath: IndexPath) -> ConversationCellViewModelProtocol?
-    func didSelectRowAt(_ indexPath: IndexPath)
-}
-
-protocol ConversationsModelPresentable {
-    var router: MainRouterProtocol? { get }
-    var title: String { get }
-    init(router: MainRouterProtocol)
+/// Вью-модель экрана диалогов
+final class ConversationsViewModel: NSObject, Routable {
     
-    func profileBarButtonPressed()
-    func gearBarButtonPressed()
-}
-
-final class ConversationsViewModel: NSObject, ConversationsModelPresentable {
-    
-    var router: MainRouterProtocol?
+    // MARK: - Properties
+    let router: MainRouterProtocol
     var title = "Tinkoff Chat"
     var conversations: [String : [Conversation]]?
     
+    // MARK: - Initializer
     init(router: MainRouterProtocol) {
-        super.init()
         self.router = router
+        super.init()
         
         conversations = makeConversationsDictionary(40) // 👈 если нужно изменить количество моковых данных
     }
     
+    // MARK: - Private Methods
     func profileBarButtonPressed() {
-        router?.presentProfileViewController()
+        router.presentProfileViewController()
     }
     
     func gearBarButtonPressed() {
@@ -52,8 +34,8 @@ final class ConversationsViewModel: NSObject, ConversationsModelPresentable {
     }
 }
 
-// MARK: - ConversationsTableViewCompatible Methods
-extension ConversationsViewModel: ConversationsTableViewCompatible {
+// MARK: - TableView Methods
+extension ConversationsViewModel {
     func numberOfSections() -> Int {
         return conversations?.keys.count ?? 0
     }
@@ -67,7 +49,7 @@ extension ConversationsViewModel: ConversationsTableViewCompatible {
         return ConversationsSections.allCases[section].rawValue.capitalized
     }
     
-    func conversationCellViewModel(forIndexPath indexPath: IndexPath) -> ConversationCellViewModelProtocol? {
+    func conversationCellViewModel(forIndexPath indexPath: IndexPath) -> ConversationCellViewModel? {
         let key = ConversationsSections.allCases[indexPath.section].rawValue
         let conversation = conversations?[key]?[indexPath.row]
         return ConversationCellViewModel(with: conversation)
@@ -76,10 +58,10 @@ extension ConversationsViewModel: ConversationsTableViewCompatible {
     func didSelectRowAt(_ indexPath: IndexPath) {
         let key = ConversationsSections.allCases[indexPath.section].rawValue
         let conversation = conversations?[key]?[indexPath.row]
-        let dmViewModel = DMViewModel(router: router!,
+        let dmViewModel = DMViewModel(router: router,
                                       chatBuddyName: conversation?.userName,
                                       chatBuddyImageURL: conversation?.profileImageURL)
-        router?.showDMViewController(animated: true, withViewModel: dmViewModel)
+        router.showDMViewController(animated: true, withViewModel: dmViewModel)
     }
 }
 

@@ -7,21 +7,10 @@
 
 import UIKit
 
-protocol ProfileViewModelProtocol {
-    var router: RouterProtocol { get }
-    init(router: RouterProtocol)
+/// Вью-модель профиля
+final class ProfileViewModel {
     
-    var userName: Dynamic<String?> { get set }
-    var userDescription: Dynamic<String?> { get set }
-    var userAvatar: Dynamic<UIImage?> { get set }
-    
-    func editProfileImagePressed(sender: UIViewController)
-    func didDismissProfileView()
-}
-
-final class ProfileViewModel: ProfileViewModelProtocol {
-    
-    var router: RouterProtocol
+    let router: RouterProtocol
     
     var userName: Dynamic<String?> = Dynamic(nil)
     var userDescription: Dynamic<String?> = Dynamic(nil)

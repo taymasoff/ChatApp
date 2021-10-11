@@ -7,19 +7,8 @@
 
 import UIKit
 
-protocol ConversationCellViewModelProtocol {
-    var profileImage: Dynamic<UIImage?> { get set }
-    var profileImageURL: Dynamic<String?> { get set }
-    var name: Dynamic<String?> { get set }
-    var lastMessage: Dynamic<String?> { get set }
-    var date: Dynamic<String?> { get set }
-    var isOnline: Dynamic<Bool?> { get set }
-    var hasUnreadMessages: Dynamic<Bool?> { get set }
-    
-    init(with conversation: Conversation?)
-}
-
-final class ConversationCellViewModel: ConversationCellViewModelProtocol {
+/// Вью-модель ячейки диалога
+final class ConversationCellViewModel {
     var profileImage: Dynamic<UIImage?> = Dynamic(nil)
     var profileImageURL: Dynamic<String?> = Dynamic(nil)
     var name: Dynamic<String?> = Dynamic(nil)

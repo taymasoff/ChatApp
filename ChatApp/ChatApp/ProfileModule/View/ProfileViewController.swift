@@ -8,17 +8,23 @@
 import UIKit
 import SnapKit
 
-final class ProfileViewController: UIViewController {
+/// Контроллер экрана профиля
+final class ProfileViewController: UIViewController, ViewModelBased {
     
     // MARK: - Properties
-    
-    var viewModel: ProfileViewModelProtocol!
-    
     lazy var blurredView = BlurredView()
     var profileView: ProfileView!
     
+    var viewModel: ProfileViewModel?
+    lazy var nameFormatter = PersonNameComponentsFormatter()
+    
+    // MARK: - Initializers
+    convenience init(with viewModel: ProfileViewModel) {
+        self.init()
+        self.viewModel = viewModel
+    }
+    
     // MARK: - Lifecycle Methods
-
     override func loadView() {
         super.loadView()
         profileView = makeProfileView()
@@ -33,7 +39,7 @@ final class ProfileViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.addKeyboardObserver()
+        addKeyboardObserver()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -42,32 +48,8 @@ final class ProfileViewController: UIViewController {
     }
     
     // MARK: - Private Methods
-    
-    fileprivate func bindWithViewModel() {
-        viewModel?.userName.bind(listener: { [unowned self] name in
-            self.profileView.userNameLabel.text = name
-        })
-        viewModel?.userDescription.bind(listener: { [unowned self] description in
-            self.profileView.userDescription.text = description
-        })
-        viewModel?.userAvatar.bind(listener: { [unowned self] image in
-            if let image = image {
-                // Удаляем инициалы с ProfileImageView если они там есть
-                if let initialsLabel = self.profileView.profileImageView.subviews.last as? UILabel {
-                    initialsLabel.removeFromSuperview()
-                }
-                self.profileView.profileImageView.image = image
-            } else {
-                self.profileView.profileImageView
-                    .addProfilePlaceholder(fullName: viewModel?.userName.value)
-            }
-        })
-    }
-    
-    
-    // MARK: - Gesture Recognizer Setup
-    
-    fileprivate func setupGestureRecognizers() {
+    // MARK: Gesture Recognizer Setup
+    private func setupGestureRecognizers() {
         profileView.setImageButton.addTarget(
             self,
             action: #selector(editProfileImagePressed),
@@ -83,12 +65,10 @@ final class ProfileViewController: UIViewController {
         swipeDown.direction = .down
         
         profileView.addGestureRecognizer(swipeDown)
-        self.view.addGestureRecognizer(UITapGestureRecognizer(
+        view.addGestureRecognizer(UITapGestureRecognizer(
             target: self,
             action: #selector(didTapOutsideProfileView)))
     }
-    
-    // MARK: - Objc Action Methods
     
     @objc
     fileprivate func editProfileImagePressed() {
@@ -98,12 +78,12 @@ final class ProfileViewController: UIViewController {
     @objc
     fileprivate func didTapOutsideProfileView() {
         dismissProfileView(animated: true)
-        viewModel.didDismissProfileView()
+        viewModel?.didDismissProfileView()
     }
     @objc
     fileprivate func didSwipeProfileViewDown() {
         dismissProfileView(animated: true)
-        viewModel.didDismissProfileView()
+        viewModel?.didDismissProfileView()
     }
     
     // MARK: - Show/Hide Profile View Animations
@@ -118,7 +98,7 @@ final class ProfileViewController: UIViewController {
                 self.view.layoutIfNeeded()
             }
         } else {
-            self.view.layoutIfNeeded()
+            view.layoutIfNeeded()
         }
     }
     
@@ -143,8 +123,33 @@ final class ProfileViewController: UIViewController {
     }
 }
 
-// MARK: - ProfileViewController Subviews Setup
+// MARK: - ViewModelBindable
+extension ProfileViewController: ViewModelBindable {
+    func bindWithViewModel() {
+        viewModel?.userName.bind(listener: { [unowned self] name in
+            self.profileView.userNameLabel.text = name
+        })
+        viewModel?.userDescription.bind(listener: { [unowned self] description in
+            self.profileView.userDescription.text = description
+        })
+        viewModel?.userAvatar.bind(listener: { [unowned self] image in
+            if let image = image {
+                // Удаляем инициалы с ProfileImageView если они там есть
+                if let initialsLabel = self.profileView.profileImageView.subviews.last as? UILabel {
+                    initialsLabel.removeFromSuperview()
+                }
+                self.profileView.profileImageView.image = image
+            } else {
+                self.profileView.profileImageView.addProfilePlaceholder(
+                    fullName: viewModel?.userName.value,
+                    formattedBy: nameFormatter
+                )
+            }
+        })
+    }
+}
 
+// MARK: - ProfileViewController Subviews Setup
 private extension ProfileViewController {
     func makeProfileView() -> ProfileView {
         let profileView = ProfileView(frame: view.frame)
