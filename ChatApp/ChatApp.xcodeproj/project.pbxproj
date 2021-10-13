@@ -46,6 +46,9 @@
 		22FFB22A2716550B001884BA /* UIColor+makeColorLigherDarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FFB2292716550B001884BA /* UIColor+makeColorLigherDarker.swift */; };
 		22FFB22D27165C47001884BA /* ThemeSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FFB22C27165C47001884BA /* ThemeSettings.swift */; };
 		22FFB22F2716845D001884BA /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FFB22E2716845D001884BA /* ThemeManager.swift */; };
+		22FFB2352716963F001884BA /* ThemesViewControllerObjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FFB2342716963F001884BA /* ThemesViewControllerObjc.m */; };
+		22FFB23B2716AE4B001884BA /* ThemeObjcModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FFB23A2716AE4B001884BA /* ThemeObjcModel.m */; };
+		22FFB23D2716C0C4001884BA /* ThemesViewControllerObjc.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 22FFB23C2716C0C4001884BA /* ThemesViewControllerObjc.storyboard */; };
 		6AB9E66E2FE3AEB3F44AE343 /* Pods_ChatApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02B3F92A3AD20A17B61C1BF3 /* Pods_ChatApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -92,6 +95,12 @@
 		22FFB2292716550B001884BA /* UIColor+makeColorLigherDarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+makeColorLigherDarker.swift"; sourceTree = "<group>"; };
 		22FFB22C27165C47001884BA /* ThemeSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeSettings.swift; sourceTree = "<group>"; };
 		22FFB22E2716845D001884BA /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
+		22FFB2322716963E001884BA /* ChatApp-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ChatApp-Bridging-Header.h"; sourceTree = "<group>"; };
+		22FFB2332716963F001884BA /* ThemesViewControllerObjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ThemesViewControllerObjc.h; sourceTree = "<group>"; };
+		22FFB2342716963F001884BA /* ThemesViewControllerObjc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ThemesViewControllerObjc.m; sourceTree = "<group>"; };
+		22FFB2392716AE4B001884BA /* ThemeObjcModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ThemeObjcModel.h; sourceTree = "<group>"; };
+		22FFB23A2716AE4B001884BA /* ThemeObjcModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ThemeObjcModel.m; sourceTree = "<group>"; };
+		22FFB23C2716C0C4001884BA /* ThemesViewControllerObjc.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ThemesViewControllerObjc.storyboard; sourceTree = "<group>"; };
 		444A44EF379D39E27847B025 /* Pods-ChatApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatApp.debug.xcconfig"; path = "Target Support Files/Pods-ChatApp/Pods-ChatApp.debug.xcconfig"; sourceTree = "<group>"; };
 		FF7F6A44DD7E6D65C0DF1039 /* Pods-ChatApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatApp.release.xcconfig"; path = "Target Support Files/Pods-ChatApp/Pods-ChatApp.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -168,6 +177,7 @@
 		22B50F7926FB0E760099436A /* Application */ = {
 			isa = PBXGroup;
 			children = (
+				22FFB2322716963E001884BA /* ChatApp-Bridging-Header.h */,
 				22CC53B826FAC8220036F6F9 /* AppDelegate.swift */,
 				22CC53BA26FAC8220036F6F9 /* SceneDelegate.swift */,
 				2247F96E2712A4F800BFFC69 /* R.generated.swift */,
@@ -372,6 +382,7 @@
 		22FFB21227149A4A001884BA /* ThemesModule */ = {
 			isa = PBXGroup;
 			children = (
+				22FFB231271695FE001884BA /* Objc */,
 				22FFB23027168AA0001884BA /* Model */,
 				22FFB21327149A53001884BA /* View */,
 				22FFB21427149A58001884BA /* ViewModel */,
@@ -403,6 +414,18 @@
 				22FFB22C27165C47001884BA /* ThemeSettings.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		22FFB231271695FE001884BA /* Objc */ = {
+			isa = PBXGroup;
+			children = (
+				22FFB2332716963F001884BA /* ThemesViewControllerObjc.h */,
+				22FFB2342716963F001884BA /* ThemesViewControllerObjc.m */,
+				22FFB2392716AE4B001884BA /* ThemeObjcModel.h */,
+				22FFB23A2716AE4B001884BA /* ThemeObjcModel.m */,
+				22FFB23C2716C0C4001884BA /* ThemesViewControllerObjc.storyboard */,
+			);
+			path = Objc;
 			sourceTree = "<group>";
 		};
 		D7A6C4DCD4ACFC2AE5C4C0B4 /* Pods */ = {
@@ -449,6 +472,7 @@
 				TargetAttributes = {
 					22CC53B426FAC8220036F6F9 = {
 						CreatedOnToolsVersion = 13.0;
+						LastSwiftMigration = 1300;
 					};
 				};
 			};
@@ -476,6 +500,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				22CC53C526FAC8260036F6F9 /* LaunchScreen.storyboard in Resources */,
+				22FFB23D2716C0C4001884BA /* ThemesViewControllerObjc.storyboard in Resources */,
 				22CC53C226FAC8260036F6F9 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -560,6 +585,7 @@
 				22FFB22A2716550B001884BA /* UIColor+makeColorLigherDarker.swift in Sources */,
 				22D104BD2704DCDA006CF686 /* UIImageView+AddProfilePlaceholder.swift in Sources */,
 				222A55B6270C0FA90047CA24 /* Date+TimeSince.swift in Sources */,
+				22FFB2352716963F001884BA /* ThemesViewControllerObjc.m in Sources */,
 				22CC53B926FAC8220036F6F9 /* AppDelegate.swift in Sources */,
 				221729E8270D93D60022D174 /* MessageCell.swift in Sources */,
 				22E69D332701E2C1009CAAC0 /* ConversationCell.swift in Sources */,
@@ -580,6 +606,7 @@
 				22D104C4270529D1006CF686 /* ImagePickerManager.swift in Sources */,
 				22E69D352701E2D8009CAAC0 /* ConversationCellViewModel.swift in Sources */,
 				22FFB22D27165C47001884BA /* ThemeSettings.swift in Sources */,
+				22FFB23B2716AE4B001884BA /* ThemeObjcModel.m in Sources */,
 				22D104B72704D55E006CF686 /* BlurredView.swift in Sources */,
 				22B50F7726FB01810099436A /* Log.swift in Sources */,
 				2286F4E9270F842800ED809E /* UITableView+ScrollToBottom.swift in Sources */,
@@ -611,7 +638,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -672,7 +699,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -724,6 +751,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = JWKUVZUV6F;
@@ -744,6 +772,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.taymasoff.ChatApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "ChatApp/Application/ChatApp-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -755,6 +785,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = JWKUVZUV6F;
@@ -775,6 +806,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.taymasoff.ChatApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "ChatApp/Application/ChatApp-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

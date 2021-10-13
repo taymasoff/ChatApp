@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Rswift
 
 protocol RouterProtocol {
     var navigationController: UINavigationController? { get }
@@ -16,6 +17,7 @@ protocol MainRouterProtocol: RouterProtocol {
     func showDMViewController(animated: Bool,
                               withViewModel viewModel: DMViewModel?)
     func presentThemesViewController(onThemeChanged: @escaping (UIColor) -> Void)
+    func presentThemesViewControllerObjc(delegate: ThemesViewControllerDelegate)
     func presentProfileViewController()
     func popToRoot(animated: Bool)
     func presentAlert(_ alert: UIAlertController, animated: Bool)
@@ -65,6 +67,21 @@ class MainRouter: MainRouterProtocol {
             themesViewController.modalPresentationStyle = .overCurrentContext
             navigationController.present(themesViewController,
                                          animated: false,
+                                         completion: nil)
+        }
+    }
+    
+    /// Инициализировать и представить модально экран тем на ObjectiveC
+    func presentThemesViewControllerObjc(delegate: ThemesViewControllerDelegate) {
+        if let navigationController = navigationController {
+            guard let themesNavController = R.storyboard
+                    .themesViewControllerObjc
+                    .instantiateInitialViewController() else { return }
+            if let themesVC = themesNavController.topViewController as? ThemesViewControllerObjc {
+                themesVC.setDelegate(delegate)
+            }
+            navigationController.present(themesNavController,
+                                         animated: true,
                                          completion: nil)
         }
     }
