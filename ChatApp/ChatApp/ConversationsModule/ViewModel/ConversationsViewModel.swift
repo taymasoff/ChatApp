@@ -30,7 +30,11 @@ final class ConversationsViewModel: NSObject, Routable {
     }
     
     func gearBarButtonPressed() {
-        // Обработка нажатия на левый BarButton
+        router.presentThemesViewController(onThemeChanged: logThemeChanging)
+    }
+    
+    func logThemeChanging(_ color: UIColor) {
+        Log.info("Получен выбранный пользователем цвет -> \(color.description)")
     }
 }
 

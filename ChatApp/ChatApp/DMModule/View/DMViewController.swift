@@ -31,7 +31,7 @@ final class DMViewController: UIViewController, ViewModelBased {
     override func loadView() {
         super.loadView()
         
-        view.backgroundColor = R.color.appGray()
+        view.backgroundColor = ThemeManager.currentTheme.settings.mainColor
         
         setupSubviews()
         setupSubviewsHierarchy()
@@ -66,6 +66,7 @@ final class DMViewController: UIViewController, ViewModelBased {
     
     private func clearBackButtonText() {
         let backButton = UIBarButtonItem()
+        backButton.tintColor = ThemeManager.currentTheme.settings.tintColor
         backButton.title = ""
         self.navigationController?.navigationBar.topItem?.backBarButtonItem = backButton
     }
@@ -128,6 +129,13 @@ extension DMViewController: UITableViewDataSource, UITableViewDelegate {
         
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = UITableViewHeaderFooterView()
+        view.contentView.backgroundColor = ThemeManager.currentTheme.settings.mainColor
+        view.textLabel?.textColor = ThemeManager.currentTheme.settings.titleTextColor
+        return view
+    }
 }
 
 // MARK: - UITextField Delegate
@@ -157,9 +165,8 @@ private extension DMViewController {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue,
            let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double {
             
-            footerView.snp.updateConstraints { make in
-                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
-                    .offset(-keyboardSize.height + view.safeAreaInsets.bottom)
+            newMessageTextField.snp.updateConstraints { make in
+                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(10).offset(-keyboardSize.height)
             }
             
             UIView.animate(withDuration: duration) {
@@ -172,8 +179,8 @@ private extension DMViewController {
     func keyboardWillHide(notification: NSNotification) {
         if let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double {
             
-            footerView.snp.updateConstraints { make in
-                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            newMessageTextField.snp.updateConstraints { make in
+                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(10)
             }
             
             UIView.animate(withDuration: duration) {
@@ -193,21 +200,25 @@ private extension DMViewController {
         tableView.dataSource = self
         tableView.keyboardDismissMode = .onDrag
         tableView.separatorStyle = .none
-        
+        tableView.backgroundColor = .clear
         return tableView
     }
     
     func makeFooterContainer() -> UIView {
         let footerView = UIView()
-        footerView.backgroundColor = R.color.appGray()
-    
+        footerView.backgroundColor = ThemeManager.currentTheme.settings.backGroundColor
+        // Скругляем верхние углы
+        footerView.layer.cornerRadius = 10
+        footerView.layer.maskedCorners = [.layerMaxXMinYCorner,
+                                          .layerMinXMinYCorner]
         return footerView
     }
     
     func makeAddButton() -> UIButton {
         let button = UIButton(type: .custom)
-        button.setImage(R.image.add(), for: .normal)
-        button.tintColor = .systemBlue
+        let tintedImage = R.image.add()?.withRenderingMode(.alwaysTemplate)
+        button.setImage(tintedImage, for: .normal)
+        button.tintColor = ThemeManager.currentTheme.settings.tintColor
         button.addTarget(self,
                          action: #selector(addButtonPressed),
                          for: .touchUpInside)
@@ -232,8 +243,9 @@ private extension DMViewController {
     
     func makeSendButton() -> UIButton {
         let button = UIButton(type: .custom)
-        button.setImage(R.image.send(), for: .normal)
-        button.tintColor = .systemBlue
+        let tintedImage = R.image.send()?.withRenderingMode(.alwaysTemplate)
+        button.setImage(tintedImage, for: .normal)
+        button.tintColor = ThemeManager.currentTheme.settings.tintColor
         button.addTarget(self,
                          action: #selector(sendMessagePressed),
                          for: .touchUpInside)
@@ -266,16 +278,18 @@ private extension DMViewController {
 
         // MARK: Layout Footer View
         footerView.snp.makeConstraints { make in
-            make.height.equalTo(80)
             make.left.right.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            make.bottom.equalToSuperview()
+            make.top.equalTo(newMessageTextField.snp.top).inset(-20)
+            
         }
         
         // MARK: Layout New Message TextField
         newMessageTextField.snp.makeConstraints { make in
-            make.top.bottom.equalToSuperview().inset(20)
             make.left.equalTo(addButton.snp.right).offset(13)
             make.right.equalTo(sendButton.snp.left).offset(-13)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(10)
+            make.height.equalTo(newMessageTextField.intrinsicContentSize.height + 6)
         }
         
         // MARK: Layout New Message' Add Button
