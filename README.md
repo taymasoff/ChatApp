@@ -14,11 +14,24 @@
   <summary>Home Work #2</summary>
 
    Сверстал экран профиля пользователя с помощью SnapKit, организовал роутинг в приложении без сториборда
-  <img src="https://i.imgur.com/NFspJe4.gif" height="500"/>
+
+  <img src="https://i.imgur.com/NFspJe4.gif" height="400"/>
 </details>
 <details> 
   <summary>Home Work #3</summary>
 
    Сверстал экраны переписок и чата, сделал генератор моковых данных, для заполнения таблиц
-  <img src="https://i.imgur.com/4cdA3Sb.gif" height="500"/>
+
+  <img src="https://i.imgur.com/ZXOr5xh.gif" height="400"/>
+</details>
+<details> 
+  <summary>Home Work #4</summary>
+
+Сделал экраны выбора тем в 2 вариантах, с возможностью выбора необходимого контроллера через Action Sheet.
+
+Видео демки:
+
+  <a href="https://youtu.be/M7g0nDZKkV0"><img src="https://i.imgur.com/gGFpo7P.png" height="350"/></a>
+<a href="https://youtu.be/PyaeWkAmtQI"><img src="https://i.imgur.com/gnCcIAd.png" height="350"/></a>
+
 </details>
