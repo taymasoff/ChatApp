@@ -16,6 +16,7 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
     fileprivate var profileBarButton: UIBarButtonItem!
     fileprivate var gearBarButton: UIBarButtonItem!
     fileprivate var conversationsTableView: UITableView!
+    fileprivate var searchController: UISearchController!
     
     var viewModel: ConversationsViewModel?
     fileprivate lazy var nameFormatter = PersonNameComponentsFormatter()
@@ -32,6 +33,7 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
         
         gearBarButton = makeGearBarButton()
         conversationsTableView = makeConversationsTableView()
+        searchController = makeSearchController()
         
         updateProfileBarButton(with: "Marina Dudarenko")
         
@@ -47,19 +49,16 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
                                         forCellReuseIdentifier: ConversationCell.reuseID)
         conversationsTableView.rowHeight = 80
         
-        setupSearchController()
+        navigationItem.searchController = searchController
+        navigationController?.navigationItem.hidesSearchBarWhenScrolling = true
+        // Для корректного отображения SearchController'а
+        extendedLayoutIncludesOpaqueBars = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
-        navigationItem.hidesSearchBarWhenScrolling = false
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        navigationItem.hidesSearchBarWhenScrolling = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -185,12 +184,13 @@ private extension ConversationsViewController {
         return tableView
     }
     
-    func setupSearchController() {
+    func makeSearchController() -> UISearchController {
         let searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self.viewModel
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "Search"
         self.navigationItem.searchController = searchController
         self.definesPresentationContext = true
+        return searchController
     }
 }
