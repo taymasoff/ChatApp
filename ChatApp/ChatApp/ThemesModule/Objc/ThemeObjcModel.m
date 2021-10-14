@@ -39,24 +39,32 @@
     return _theme3;
 }
 
+#pragma mark Setters
 - (void) setTheme1:(UIColor *)theme {
-    [theme retain];
-    [_theme1 release];
-    _theme1 = theme;
+    if (_theme1 != theme) {
+        UIColor *oldValue = _theme1;
+        _theme1 = [theme retain];
+        [oldValue release];
+    }
 }
 
 - (void) setTheme2:(UIColor *)theme {
-    [theme retain];
-    [_theme2 release];
-    _theme2 = theme;
+    if (_theme2 != theme) {
+        UIColor *oldValue = _theme2;
+        _theme2 = [theme retain];
+        [oldValue release];
+    }
 }
 
 - (void) setTheme3:(UIColor *)theme {
-    [theme retain];
-    [_theme3 release];
-    _theme3 = theme;
+    if (_theme3 != theme) {
+        UIColor *oldValue = _theme3;
+        _theme3 = [theme retain];
+        [oldValue release];
+    }
 }
 
+#pragma mark Dealloc
 - (void) dealloc {
     [_theme1 release];
     [_theme2 release];

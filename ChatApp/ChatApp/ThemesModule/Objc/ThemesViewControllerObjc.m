@@ -18,6 +18,7 @@
 
 @implementation ThemesViewControllerObjc
 
+#pragma mark DelegateSetter
 - (void)setDelegate:(id <ThemesViewControllerDelegate>)passedDelegate {
     if (delegate != passedDelegate) {
         [passedDelegate retain];
@@ -38,11 +39,7 @@
     themeButton3.layer.cornerRadius = 14;
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-}
-
+#pragma mark ActionMethods
 - (IBAction)themeButton1Pressed:(UIButton *)sender {
     self.view.backgroundColor = model.theme1;
     [self themeIsPicked:model.theme1];
@@ -58,29 +55,25 @@
     [self themeIsPicked:model.theme3];
 }
 
-- (void)themeIsPicked:(UIColor *)theme {
-    [delegate themesViewController:self didSelectTheme:theme];
-}
-
 - (IBAction)closeButtonPressed:(UIBarButtonItem *)sender {
     [self dismissViewControllerAnimated:true completion:nil];
 }
 
+#pragma mark Private Methods
+- (void)themeIsPicked:(UIColor *)theme {
+    [delegate themesViewController:self didSelectTheme:theme];
+}
+
+
 - (void)dealloc {
-    
-    [themeButton1 release];
-    [themeButton2 release];
-    [themeButton3 release];
-    [themeButton1 release];
-    [themeButton2 release];
-    [themeButton3 release];
     themeButton1 = nil;
     themeButton2 = nil;
     themeButton3 = nil;
     [model release];
     model = nil;
-    delegate = nil;
     [delegate release];
+    delegate = nil;
+
     [super dealloc];
 }
 
