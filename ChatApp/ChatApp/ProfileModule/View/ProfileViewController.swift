@@ -33,6 +33,8 @@ final class ProfileViewController: UIViewController, ViewModelBased {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        profileView.userNameTextField.delegate = self
+        profileView.userDescriptionTextView.delegate = self
         setupGestureRecognizers()
         bindWithViewModel()
     }
@@ -70,6 +72,7 @@ final class ProfileViewController: UIViewController, ViewModelBased {
             action: #selector(didTapOutsideProfileView)))
     }
     
+    // MARK: Action Methods
     @objc
     fileprivate func editProfileImagePressed() {
         viewModel?.editProfileImagePressed(sender: self)
@@ -86,8 +89,88 @@ final class ProfileViewController: UIViewController, ViewModelBased {
         viewModel?.didDismissProfileView()
     }
     
-    // MARK: - Show/Hide Profile View Animations
-    private func showProfileView(animated: Bool) {
+    // MARK: UserDescriptionTextView Placeholder Management
+    fileprivate func showUserDescriptionPlaceholder() {
+        profileView.userDescriptionTextView.text = "Tell us about yourself..."
+        profileView.userDescriptionTextView.textColor = ThemeManager.currentTheme.settings.subtitleTextColor
+    }
+    
+    fileprivate func removeUserDescriptionPlaceholder() {
+        profileView.userDescriptionTextView.text = nil
+        profileView.userDescriptionTextView.textColor = ThemeManager.currentTheme.settings.titleTextColor
+    }
+}
+
+// MARK: - ViewModelBindable
+extension ProfileViewController: ViewModelBindable {
+    func bindWithViewModel() {
+        // MARK: Bind userName to userNameTextField
+        viewModel?.userName.bind(listener: { [unowned self] name in
+            self.profileView.userNameTextField.text = name
+            // Обновляем плейсхолдер аватарки с инициалами нашего имени,
+            // если userAvatar все еще nil
+            if self.viewModel?.userAvatar.value == nil {
+                self.profileView.profileImageView.addProfilePlaceholder(fullName: name)
+            }
+        })
+        // MARK: Bind userDescription to userDescriptionTextField
+        viewModel?.userDescription.bind(listener: { [unowned self] description in
+            if let description = description {
+                self.profileView.userDescriptionTextView.text = description
+            } else {
+                self.showUserDescriptionPlaceholder()
+            }
+        })
+        // MARK: Bind userAvatar to profileImageView
+        viewModel?.userAvatar.bind(listener: { [unowned self] image in
+            if let image = image {
+                // Если у нас был установлен placeholder,
+                // удаляем его лейбл с инициалами
+                if let initialsLabel = self.profileView.profileImageView.subviews.last as? UILabel {
+                    initialsLabel.removeFromSuperview()
+                }
+                self.profileView.profileImageView.image = image
+            } else {
+                self.profileView.profileImageView.addProfilePlaceholder(
+                    fullName: viewModel?.userName.value,
+                    formattedBy: nameFormatter
+                )
+            }
+        })
+    }
+}
+
+// MARK: - UITextFieldDelegate
+extension ProfileViewController: UITextFieldDelegate {
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        viewModel?.userName.value = textField.text
+    }
+}
+
+// MARK: - UITextViewDelegate
+extension ProfileViewController: UITextViewDelegate {
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        // Если был Placeholder - убираем его
+        if profileView.userDescriptionTextView.textColor ==
+            ThemeManager.currentTheme.settings.subtitleTextColor {
+            removeUserDescriptionPlaceholder()
+        }
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        viewModel?.userDescription.value = textView.text
+        // Если текст пустой - ставим Placeholder
+        if textView.text.isEmpty {
+            showUserDescriptionPlaceholder()
+        }
+    }
+}
+
+// MARK: - Show/Hide Profile View Animations
+private extension ProfileViewController {
+    func showProfileView(animated: Bool) {
         profileView.snp.remakeConstraints { make in
             make.bottom.right.left.equalToSuperview()
             make.height.equalToSuperview().multipliedBy(0.7)
@@ -101,7 +184,8 @@ final class ProfileViewController: UIViewController, ViewModelBased {
         }
     }
     
-    private func dismissProfileView(animated: Bool) {
+    
+    func dismissProfileView(animated: Bool) {
         view.endEditing(true) // Убираем клавиатуру если она есть
         profileView.snp.remakeConstraints { make in
             make.right.left.equalToSuperview()
@@ -119,32 +203,6 @@ final class ProfileViewController: UIViewController, ViewModelBased {
         } else {
             dismiss(animated: false, completion: nil)
         }
-    }
-}
-
-// MARK: - ViewModelBindable
-extension ProfileViewController: ViewModelBindable {
-    func bindWithViewModel() {
-        viewModel?.userName.bind(listener: { [unowned self] name in
-            self.profileView.userNameLabel.text = name
-        })
-        viewModel?.userDescription.bind(listener: { [unowned self] description in
-            self.profileView.userDescription.text = description
-        })
-        viewModel?.userAvatar.bind(listener: { [unowned self] image in
-            if let image = image {
-                // Удаляем инициалы с ProfileImageView если они там есть
-                if let initialsLabel = self.profileView.profileImageView.subviews.last as? UILabel {
-                    initialsLabel.removeFromSuperview()
-                }
-                self.profileView.profileImageView.image = image
-            } else {
-                self.profileView.profileImageView.addProfilePlaceholder(
-                    fullName: viewModel?.userName.value,
-                    formattedBy: nameFormatter
-                )
-            }
-        })
     }
 }
 
@@ -193,12 +251,14 @@ private extension ProfileViewController {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue,
            let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double {
             
-            profileView.snp.updateConstraints { make in
-                make.bottom.equalToSuperview().offset(-keyboardSize.height)
-            }
-            
-            UIView.animate(withDuration: duration) {
-                self.view.layoutIfNeeded()
+            if !profileView.userNameTextField.isEditing {
+                profileView.snp.updateConstraints { make in
+                    make.bottom.equalToSuperview().offset(-keyboardSize.height)
+                }
+                
+                UIView.animate(withDuration: duration) {
+                    self.view.layoutIfNeeded()
+                }
             }
         }
     }
