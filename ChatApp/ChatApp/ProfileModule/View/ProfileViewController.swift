@@ -48,28 +48,56 @@ final class ProfileViewController: UIViewController, ViewModelBased {
         view.insertSubview(blurredView, at: 0)
         showProfileView(animated: true)
     }
-    
+
     // MARK: - Private Methods
     // MARK: Gesture Recognizer Setup
     private func setupGestureRecognizers() {
         profileView.setImageButton.addTarget(
             self,
             action: #selector(editProfileImagePressed),
-            for: .touchUpInside)
+            for: .touchUpInside
+        )
         
         profileView.addGestureRecognizer(UITapGestureRecognizer(
             target: profileView,
-            action: #selector(UIView.endEditing(_:))))
+            action: #selector(UIView.endEditing(_:)))
+        )
         
         let swipeDown = UISwipeGestureRecognizer(
             target: self,
-            action: #selector(didSwipeProfileViewDown))
+            action: #selector(didSwipeProfileViewDown)
+        )
         swipeDown.direction = .down
         
         profileView.addGestureRecognizer(swipeDown)
         view.addGestureRecognizer(UITapGestureRecognizer(
             target: self,
-            action: #selector(didTapOutsideProfileView)))
+            action: #selector(didTapOutsideProfileView))
+        )
+        
+        profileView.profileImageUndoButton.addTarget(
+            self,
+            action: #selector(didTapProfileImageUndoButton),
+            for: .touchUpInside
+        )
+        
+        profileView.userNameUndoButton.addTarget(
+            self,
+            action: #selector(didTapUserNameUndoButton),
+            for: .touchUpInside
+        )
+        
+        profileView.userDescriptionUndoButton.addTarget(
+            self,
+            action: #selector(didTapUserDescriptionUndoButton),
+            for: .touchUpInside
+        )
+        
+        profileView.saveButton.addTarget(
+            self,
+            action: #selector(didTapSaveButton),
+            for: .touchUpInside
+        )
     }
     
     // MARK: Action Methods
@@ -87,6 +115,26 @@ final class ProfileViewController: UIViewController, ViewModelBased {
     fileprivate func didSwipeProfileViewDown() {
         dismissProfileView(animated: true)
         viewModel?.didDismissProfileView()
+    }
+    
+    @objc
+    fileprivate func didTapProfileImageUndoButton() {
+        //
+    }
+    
+    @objc
+    fileprivate func didTapUserNameUndoButton() {
+        //
+    }
+    
+    @objc
+    fileprivate func didTapUserDescriptionUndoButton() {
+        //
+    }
+    
+    @objc
+    fileprivate func didTapSaveButton() {
+        //
     }
     
     // MARK: UserDescriptionTextView Placeholder Management

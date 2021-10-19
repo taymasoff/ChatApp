@@ -215,7 +215,7 @@ private extension DMViewController {
     }
     
     func makeAddButton() -> UIButton {
-        let button = UIButton(type: .custom)
+        let button = UIButton(type: .system)
         let tintedImage = R.image.add()?.withRenderingMode(.alwaysTemplate)
         button.setImage(tintedImage, for: .normal)
         button.tintColor = ThemeManager.currentTheme.settings.tintColor
@@ -242,7 +242,7 @@ private extension DMViewController {
     }
     
     func makeSendButton() -> UIButton {
-        let button = UIButton(type: .custom)
+        let button = UIButton(type: .system)
         let tintedImage = R.image.send()?.withRenderingMode(.alwaysTemplate)
         button.setImage(tintedImage, for: .normal)
         button.tintColor = ThemeManager.currentTheme.settings.tintColor

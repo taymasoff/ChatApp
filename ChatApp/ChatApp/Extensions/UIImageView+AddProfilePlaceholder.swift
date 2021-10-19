@@ -74,7 +74,7 @@ extension UIImageView {
     ///   - target: target
     ///   - action: selector
     func addAction(target: Any?, action: Selector) {
-        let button = UIButton(type: .custom)
+        let button = UIButton(type: .system)
         button.addTarget(target, action: action, for: .touchUpInside)
         self.addSubview(button)
         button.snp.makeConstraints { make in

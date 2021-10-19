@@ -141,7 +141,7 @@ private extension ConversationsViewController {
             Log.error("No image was set. Updating Profile Bar Button with default image.")
             return updateProfileBarButton(with: "")
         }
-        let button = UIButton(type: .custom)
+        let button = UIButton(type: .system)
         button.setImage(image, for: .normal)
         button.addTarget(self,
                          action: #selector(profileBarButtonPressed),

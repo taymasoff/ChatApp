@@ -16,7 +16,9 @@ class ProfileView: UIView {
     var userDescriptionTextView: UITextView!
     var userNameUndoButton: UIButton!
     var userDescriptionUndoButton: UIButton!
+    var profileImageUndoButton: UIButton!
     var setImageButton: UIButton!
+    var saveButton: UIButton!
     private var nameContainerView = UIView()
     private var descriptionContainerView = UIView()
     
@@ -28,6 +30,7 @@ class ProfileView: UIView {
         
         hideNameUndoButton(animated: false)
         hideDescriptionUndoButton(animated: false)
+        hideProfileUndoButton(animated: false)
     }
     
     required init?(coder: NSCoder) {
@@ -106,6 +109,38 @@ extension ProfileView {
             userDescriptionUndoButton.alpha = 1.0
         }
     }
+    
+    func hideProfileUndoButton(animated: Bool = true) {
+        profileImageUndoButton.snp.updateConstraints { make in
+            make.height.equalTo(0)
+        }
+        if animated {
+            UIView.animate(withDuration: 0.5, animations: { [weak self] in
+                self?.profileImageUndoButton.alpha = 0.0
+                self?.layoutIfNeeded()
+            }, completion: { [weak self] _ in
+                self?.profileImageUndoButton.isHidden = true
+            })
+        } else {
+            profileImageUndoButton.alpha = 0.0
+            profileImageUndoButton.isHidden = true
+        }
+    }
+    
+    func showProfileUndoButton(animated: Bool = false) {
+        profileImageUndoButton.snp.updateConstraints { make in
+            make.height.equalTo(profileImageUndoButton.intrinsicContentSize.height)
+        }
+        self.profileImageUndoButton.isHidden = false
+        if animated {
+            UIView.animate(withDuration: 0.5, animations: { [weak self] in
+                self?.profileImageUndoButton.alpha = 1.0
+                self?.layoutIfNeeded()
+            })
+        } else {
+            profileImageUndoButton.alpha = 1.0
+        }
+    }
 }
 
 // MARK: - ProfileView Subviews Setup
@@ -116,7 +151,10 @@ private extension ProfileView {
         userNameUndoButton = makeUndoButton()
         userDescriptionTextView = makeUserDescriptionTextView()
         userDescriptionUndoButton = makeUndoButton()
+        profileImageUndoButton = makeUndoButton()
+        profileImageUndoButton.setTitle("Reset Photo", for: .normal)
         setImageButton = makeSetImageButton()
+        saveButton = makeSaveButton()
     }
     
     func setSubviewsHierarchy() {
@@ -128,6 +166,8 @@ private extension ProfileView {
         addSubview(descriptionContainerView)
         descriptionContainerView.addSubview(userDescriptionTextView)
         descriptionContainerView.addSubview(userDescriptionUndoButton)
+        addSubview(profileImageUndoButton)
+        addSubview(saveButton)
     }
     
     func setSubviewsLayout() {
@@ -175,11 +215,25 @@ private extension ProfileView {
             make.height.equalTo(userDescriptionUndoButton.intrinsicContentSize.height)
         }
         
+        // MARK: UserDescriptionUndoButton Layout
+        profileImageUndoButton.snp.makeConstraints { make in
+            make.centerX.equalTo(profileImageView)
+            make.top.equalTo(profileImageView.snp.bottom)
+            make.height.equalTo(profileImageUndoButton.intrinsicContentSize.height)
+        }
+        
         // MARK: DescriptionContainerView Layout
         descriptionContainerView.snp.makeConstraints { make in
             make.left.right.top.equalTo(userDescriptionTextView)
             make.bottom.equalTo(userDescriptionUndoButton)
+        }
+        
+        // MARK: SaveButton Layout
+        saveButton.snp.makeConstraints { make in
+            make.top.equalTo(descriptionContainerView.snp.bottom).offset(20)
+            make.left.right.equalToSuperview().inset(40)
             make.bottom.equalToSuperview().inset(60 + safeAreaInsets.bottom)
+            make.height.greaterThanOrEqualTo(50)
         }
         
         // MARK: SetImageButton Layout
@@ -238,12 +292,24 @@ private extension ProfileView {
     }
     
     private func makeUndoButton() -> UIButton {
-        let button = UIButton(type: .custom)
+        let button = UIButton(type: .system)
         button.setTitle("Undo Changes", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         button.backgroundColor = .clear
         button.setTitleColor(ThemeManager.currentTheme.settings.tintColor,
                              for: .normal)
+        return button
+    }
+    
+    private func makeSaveButton() -> UIButton {
+        let button = UIButton(type: .system)
+        button.setTitle("Save", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .regular)
+        button.layer.cornerRadius = 10
+        let buttonColor = ThemeManager.currentTheme.settings.tintColor
+        button.backgroundColor = buttonColor
+        let titleColor = UIColor.contrastingColor(to: buttonColor, for: .title)
+        button.setTitleColor(titleColor, for: .normal)
         return button
     }
 }
