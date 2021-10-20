@@ -11,17 +11,29 @@ import Rswift
 
 /// Popup вью профиля
 class ProfileView: UIView {
-    var profileImageView: UIImageView!
-    var userNameTextField: UITextField!
-    var userDescriptionTextView: UITextView!
-    var userNameUndoButton: UIButton!
-    var userDescriptionUndoButton: UIButton!
-    var profileImageUndoButton: UIButton!
-    var setImageButton: UIButton!
-    var saveButton: UIButton!
+    // MARK: - Properties
+    private(set) lazy var activityIndicator: UIActivityIndicatorView = {
+        let activity = UIActivityIndicatorView()
+        activity.hidesWhenStopped = true
+        activity.backgroundColor = ThemeManager.currentTheme.settings.tintColor
+        addSubview(activity)
+        activity.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+        return activity
+    }()
+    private(set) var profileImageView: UIImageView!
+    private(set) var userNameTextField: UITextField!
+    private(set) var userDescriptionTextView: UITextView!
+    private(set) var userNameUndoButton: UIButton!
+    private(set) var userDescriptionUndoButton: UIButton!
+    private(set) var profileImageUndoButton: UIButton!
+    private(set) var setImageButton: UIButton!
+    private(set) var saveButton: UIButton!
     private var nameContainerView = UIView()
     private var descriptionContainerView = UIView()
     
+    // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -37,6 +49,7 @@ class ProfileView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Setup
     private func setupSubviews() {
         createSubviews()
         setSubviewsHierarchy()

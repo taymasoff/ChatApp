@@ -18,8 +18,8 @@ enum AsyncHandler {
 
 // MARK: - Async File Manager Base
 protocol AsyncFMBase: FMBase {
-    var qos: QualityOfService { get }
-    var asyncHandler: AsyncHandler { get }
+    var qos: QualityOfService { get set }
+    var asyncHandler: AsyncHandler { get set }
 }
 
 // MARK: - Handler

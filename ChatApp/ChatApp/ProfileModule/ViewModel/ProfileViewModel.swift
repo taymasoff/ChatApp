@@ -17,6 +17,10 @@ final class ProfileViewModel: Routable {
     var userDescription: DynamicPreservable<String?>
     var userAvatar: DynamicPreservable<UIImage?>
     
+    private(set) var isLoading: Dynamic<Bool> = Dynamic(false)
+    private(set) var onError: Dynamic<String> = Dynamic("")
+    private(set) var onSuccess: Dynamic<String> = Dynamic("")
+    
     let persistenceManager: PersistenceManagerProtocol
     
     // MARK: - Init
@@ -40,16 +44,51 @@ final class ProfileViewModel: Routable {
     func didDismissProfileView() {
         // Action on dismiss
     }
-}
-
-// MARK: - Load/Save UI Data
-extension ProfileViewModel {
-    // MARK: LoadLastUIStateFromStorage
+    
+    // MARK: - LoadLastUIStateFromStorage
     func loadLastUIStateFromPersistentStorage() {
         loadUserName()
         loadUserDescription()
         loadUserAvatar()
     }
+    
+    // MARK: Save Changed UI To Persistent Storage
+    func saveCurrentUIState() {
+        isLoading.value = true
+        let savingGroup = DispatchGroup()
+        
+        if userName.hasChanged() {
+            saveUserName(group: savingGroup) { text in
+                
+            }
+        } else {
+            Log.pm("Имя пользователя не изменилось, оставляю без изменений.")
+        }
+        
+        if userDescription.hasChanged() {
+            saveUserDescription(group: savingGroup) { text in
+                
+            }
+        } else {
+            Log.pm("Описание пользователя не изменилось, оставляю без изменений.")
+        }
+        
+        if userAvatar.value != nil, userAvatar.hasChanged() {
+            saveUserAvatar(group: savingGroup) { text in
+                
+            }
+        } else {
+            Log.pm("Аватарка пользователя не изменилась или пустая, оставляю без изменений.")
+        }
+        
+        savingGroup.notify(queue: .main) { [weak self] in
+            self?.isLoading.value = false
+        }
+    }
+}
+
+// MARK: - Load/Save UI Data
+private extension ProfileViewModel {
     
     // MARK: Load User Name
     func loadUserName() {
@@ -99,66 +138,63 @@ extension ProfileViewModel {
         }
     }
     
-    // MARK: Save All
-    func saveCurrentUIState() {
-        if userName.hasChanged() {
-            saveUserName()
-        } else {
-            Log.pm("Имя пользователя не изменилось, оставляю без изменений.")
-        }
-        
-        if userDescription.hasChanged() {
-            saveUserDescription()
-        } else {
-            Log.pm("Описание пользователя не изменилось, оставляю без изменений.")
-        }
-        
-        if userAvatar.value != nil, userAvatar.hasChanged() {
-            saveUserAvatar()
-        } else {
-            Log.pm("Аватарка пользователя не изменилась или пустая, оставляю без изменений.")
-        }
-    }
-    
     // MARK: SaveUserName to Persistent Storage
-    func saveUserName() {
+    func saveUserName(group: DispatchGroup? = nil,
+                      completion: @escaping (String) -> Void) {
+        guard let group = group else { return }
+        group.enter()
         persistenceManager.save(userName.value ?? "",
                                 key: userName.id) { [weak self] result in
             switch result {
             case .success(_):
-                Log.pm("Успешно сохранено: Имя пользователя. Имя файла: \(self?.userName.id ?? "Неизвестно")")
                 self?.userName.preserve()
+                let successMessage = "Имя пользователя успешно сохранено. Имя записи: \(self?.userName.id ?? "Неизвестно")"
+                Log.pm(successMessage)
+                completion(successMessage)
             case .failure(let error):
-                Log.pm("Не удалось сохранить: Имя пользователя: \(error)")
+                let failMessage = "Не удалось сохранить имя пользователя. Ошибка: \(error)"
+                Log.pm(failMessage)
+                completion(failMessage)
             }
+            group.leave()
         }
     }
     
     // MARK: SaveUserDescription to Persistent Storage
-    func saveUserDescription() {
+    func saveUserDescription(group: DispatchGroup? = nil,
+                             completion: @escaping (String) -> Void) {
         persistenceManager.save(userDescription.value ?? "",
                                 key: userDescription.id) { [weak self] result in
             switch result {
             case .success(_):
-                Log.pm("Успешно сохранено: Описание пользователя. Имя файла: \(self?.userDescription.id ?? "Неизвестно")")
                 self?.userDescription.preserve()
+                let successMessage = "Описание пользователя успешно сохранено. Имя записи: \(self?.userDescription.id ?? "Неизвестно")"
+                Log.pm(successMessage)
+                completion(successMessage)
             case .failure(let error):
-                Log.pm("Не удалось сохранить: Описание пользователя: \(error)")
+                let failMessage = "Не удалось сохранить описание пользователя: \(error)"
+                Log.pm(failMessage)
+                completion(failMessage)
             }
         }
     }
     
     // MARK: SaveUserAvatar to Persistent Storage
-    func saveUserAvatar() {
+    func saveUserAvatar(group: DispatchGroup? = nil,
+                        completion: @escaping (String) -> Void) {
         guard let avatar = userAvatar.value else { return }
         persistenceManager.save(avatar,
                                 key: userAvatar.id) { [weak self] result in
             switch result {
             case .success(_):
-                Log.pm("Успешно сохранено: Аватар пользователя. Имя файла: \(self?.userAvatar.id ?? "Неизвестно")")
                 self?.userAvatar.preserve()
+                let successMessage = "Аватар пользователя успешно сохранен. Имя файла: \(self?.userAvatar.id ?? "Неизвестно")"
+                Log.pm(successMessage)
+                completion(successMessage)
             case .failure(let error):
-                Log.pm("Не удалось сохранить: Аватар пользователя: \(error)")
+                let failMessage = "Не удалось сохранить аватар пользователя: \(error)"
+                Log.pm(failMessage)
+                completion(failMessage)
             }
         }
     }

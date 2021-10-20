@@ -45,7 +45,7 @@ final class ProfileViewController: UIViewController, ViewModelBased {
         super.viewWillAppear(animated)
         addKeyboardObserver()
     }
-
+    
     override func viewDidAppear(_ animated: Bool) {
         view.insertSubview(blurredView, at: 0)
         showProfileView(animated: true)
@@ -175,7 +175,7 @@ extension ProfileViewController: ViewModelBindable {
         })
         // MARK: Bind userDescription to userDescriptionTextField
         viewModel?.userDescription.bind(listener: { [unowned self] description in
-            if let description = description {
+            if let description = description, description != "" {
                 self.removeUserDescriptionPlaceholder()
                 self.profileView.userDescriptionTextView.text = description
             } else {
@@ -207,7 +207,7 @@ extension ProfileViewController: ViewModelBindable {
             }
         })
         // MARK: Bind userDescription Updates
-        viewModel?.userDescription.bindUpdates(updatesListener: { isChanged in
+        viewModel?.userDescription.bindUpdates(updatesListener: { [unowned self] isChanged in
             if isChanged {
                 self.profileView.showDescriptionUndoButton()
             } else {
@@ -215,11 +215,19 @@ extension ProfileViewController: ViewModelBindable {
             }
         })
         // MARK: Bind userAvatar Updates
-        viewModel?.userAvatar.bindUpdates(updatesListener: { isChanged in
+        viewModel?.userAvatar.bindUpdates(updatesListener: { [unowned self] isChanged in
             if isChanged {
                 self.profileView.showProfileUndoButton()
             } else {
                 self.profileView.hideProfileUndoButton()
+            }
+        })
+        
+        viewModel?.isLoading.bind(listener: { [unowned self] isLoading in
+            if isLoading {
+                self.profileView.activityIndicator.startAnimating()
+            } else {
+                self.profileView.activityIndicator.stopAnimating()
             }
         })
     }
@@ -284,8 +292,8 @@ private extension ProfileViewController {
         if animated {
             UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseIn) {
                 self.view.layoutIfNeeded()
-            } completion: { [unowned self] _ in
-                self.dismiss(animated: false, completion: nil)
+            } completion: { [weak self] _ in
+                self?.dismiss(animated: false, completion: nil)
             }
         } else {
             dismiss(animated: false, completion: nil)
@@ -311,6 +319,7 @@ private extension ProfileViewController {
                 .offset(profileView.profileImageView.frame.height/2)
                 .offset(profileView.frame.height)
         }
+        view.layoutIfNeeded()
         return profileView
     }
 }

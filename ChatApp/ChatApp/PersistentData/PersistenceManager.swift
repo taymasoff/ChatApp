@@ -15,6 +15,22 @@ import UIKit
 enum StorageType {
     case userDefaults(UserDefaults)
     case fileManger(AsyncFileManagerProtocol, FileManagerPreferences)
+    
+    // Поменять asyncHandler и QoS для FileManager'а
+    mutating func changeFMParameters(asyncHandler: AsyncHandler?, qos: QualityOfService?) {
+        switch self {
+        case .fileManger(var fm, let pref):
+            if let qos = qos {
+                fm.qos = qos
+            }
+            if let asyncHandler = asyncHandler {
+                fm.asyncHandler = asyncHandler
+            }
+            self = .fileManger(fm, pref)
+        default:
+            return
+        }
+    }
 }
 
 /// Пакет предпочитаемых настроек для работы с файловым менеджером
@@ -41,6 +57,7 @@ class PersistenceManager {
     init(storageType: StorageType = .userDefaults(UserDefaults.standard)) {
         self.storageType = storageType
     }
+    
 }
 
 // MARK: - PersistenceManagerProtocol

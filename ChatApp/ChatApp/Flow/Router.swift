@@ -92,7 +92,7 @@ class MainRouter: MainRouterProtocol {
             let fileManager = AsyncFileManager(fileManager: FileManager.default, asyncHandler: .gcd, qos: .userInitiated)
             let fileManagerPreferences = FileManagerPreferences(
                 preferredTextExtension: .txt,
-                preferredImageExtension: .png,
+                preferredImageExtension: .jpeg,
                 preferredDirectory: .userProfile
             )
             let persistenceManager = PersistenceManager(
