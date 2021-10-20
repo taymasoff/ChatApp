@@ -27,6 +27,7 @@
 		22C71C13271EEEDA005C4466 /* AsyncFileManagerProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C71C12271EEEDA005C4466 /* AsyncFileManagerProtocols.swift */; };
 		22C71C18271F003B005C4466 /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C71C17271F003B005C4466 /* PersistenceManager.swift */; };
 		22C71C1A271F047E005C4466 /* PersistenceManagerProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C71C19271F047E005C4466 /* PersistenceManagerProtocols.swift */; };
+		22C71C2027201763005C4466 /* DynamicPreservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C71C1F27201763005C4466 /* DynamicPreservable.swift */; };
 		22CC53B926FAC8220036F6F9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CC53B826FAC8220036F6F9 /* AppDelegate.swift */; };
 		22CC53BB26FAC8220036F6F9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CC53BA26FAC8220036F6F9 /* SceneDelegate.swift */; };
 		22CC53BD26FAC8220036F6F9 /* ConversationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CC53BC26FAC8220036F6F9 /* ConversationsViewController.swift */; };
@@ -83,6 +84,7 @@
 		22C71C12271EEEDA005C4466 /* AsyncFileManagerProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncFileManagerProtocols.swift; sourceTree = "<group>"; };
 		22C71C17271F003B005C4466 /* PersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceManager.swift; sourceTree = "<group>"; };
 		22C71C19271F047E005C4466 /* PersistenceManagerProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceManagerProtocols.swift; sourceTree = "<group>"; };
+		22C71C1F27201763005C4466 /* DynamicPreservable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicPreservable.swift; sourceTree = "<group>"; };
 		22CC53B526FAC8220036F6F9 /* ChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		22CC53B826FAC8220036F6F9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		22CC53BA26FAC8220036F6F9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -310,6 +312,7 @@
 				22FFB22E2716845D001884BA /* ThemeManager.swift */,
 				22D104C3270529D1006CF686 /* ImagePickerManager.swift */,
 				22D104C5270535D3006CF686 /* Dynamic.swift */,
+				22C71C1F27201763005C4466 /* DynamicPreservable.swift */,
 				2286F4E2270F064600ED809E /* Protocols.swift */,
 				22FFB22727162245001884BA /* StoredProperty.swift */,
 				22C71C16271EFC91005C4466 /* AsyncOperation */,
@@ -651,6 +654,7 @@
 				22FFB22627160E76001884BA /* UIColor+isLight.swift in Sources */,
 				22CC53BB26FAC8220036F6F9 /* SceneDelegate.swift in Sources */,
 				225D618A271D850F00A5D678 /* AsyncFileManager.swift in Sources */,
+				22C71C2027201763005C4466 /* DynamicPreservable.swift in Sources */,
 				2286F4E3270F064600ED809E /* Protocols.swift in Sources */,
 				2247F96F2712A4F800BFFC69 /* R.generated.swift in Sources */,
 				2286F4E7270F7FFA00ED809E /* UIImage+Resize.swift in Sources */,

@@ -36,7 +36,9 @@ final class ProfileViewController: UIViewController, ViewModelBased {
         profileView.userNameTextField.delegate = self
         profileView.userDescriptionTextView.delegate = self
         setupGestureRecognizers()
+        
         bindWithViewModel()
+        viewModel?.loadLastUIStateFromPersistentStorage()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -98,6 +100,10 @@ final class ProfileViewController: UIViewController, ViewModelBased {
             action: #selector(didTapSaveButton),
             for: .touchUpInside
         )
+        
+        profileView.userNameTextField.addTarget(self,
+                                                action: #selector(nameTextFieldDidChange),
+                                                for: .editingChanged)
     }
     
     // MARK: Action Methods
@@ -119,22 +125,28 @@ final class ProfileViewController: UIViewController, ViewModelBased {
     
     @objc
     fileprivate func didTapProfileImageUndoButton() {
-        //
+        viewModel?.userAvatar.restore()
+        profileView.hideProfileUndoButton()
     }
     
     @objc
     fileprivate func didTapUserNameUndoButton() {
-        //
+        viewModel?.userName.restore()
+        profileView.hideNameUndoButton()
     }
     
     @objc
     fileprivate func didTapUserDescriptionUndoButton() {
-        //
+        viewModel?.userDescription.restore()
+        profileView.hideDescriptionUndoButton()
     }
     
     @objc
     fileprivate func didTapSaveButton() {
-        //
+        viewModel?.saveCurrentUIState()
+        profileView.hideNameUndoButton()
+        profileView.hideDescriptionUndoButton()
+        profileView.hideProfileUndoButton()
     }
     
     // MARK: UserDescriptionTextView Placeholder Management
@@ -164,6 +176,7 @@ extension ProfileViewController: ViewModelBindable {
         // MARK: Bind userDescription to userDescriptionTextField
         viewModel?.userDescription.bind(listener: { [unowned self] description in
             if let description = description {
+                self.removeUserDescriptionPlaceholder()
                 self.profileView.userDescriptionTextView.text = description
             } else {
                 self.showUserDescriptionPlaceholder()
@@ -185,19 +198,48 @@ extension ProfileViewController: ViewModelBindable {
                 )
             }
         })
+        // MARK: Bind userName Updates
+        viewModel?.userName.bindUpdates(updatesListener: { [unowned self] isChanged in
+            if isChanged {
+                self.profileView.showNameUndoButton()
+            } else {
+                self.profileView.hideNameUndoButton()
+            }
+        })
+        // MARK: Bind userDescription Updates
+        viewModel?.userDescription.bindUpdates(updatesListener: { isChanged in
+            if isChanged {
+                self.profileView.showDescriptionUndoButton()
+            } else {
+                self.profileView.hideDescriptionUndoButton()
+            }
+        })
+        // MARK: Bind userAvatar Updates
+        viewModel?.userAvatar.bindUpdates(updatesListener: { isChanged in
+            if isChanged {
+                self.profileView.showProfileUndoButton()
+            } else {
+                self.profileView.hideProfileUndoButton()
+            }
+        })
     }
 }
 
 // MARK: - UITextFieldDelegate
 extension ProfileViewController: UITextFieldDelegate {
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
+
+    @objc // Потому что по умолчанию его нет
+    func nameTextFieldDidChange(_ textField: UITextField) {
         viewModel?.userName.value = textField.text
     }
 }
 
 // MARK: - UITextViewDelegate
 extension ProfileViewController: UITextViewDelegate {
+    
+    func textViewDidChange(_ textView: UITextView) {
+        viewModel?.userDescription.value = textView.text
+    }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
         // Если был Placeholder - убираем его
@@ -219,9 +261,8 @@ extension ProfileViewController: UITextViewDelegate {
 // MARK: - Show/Hide Profile View Animations
 private extension ProfileViewController {
     func showProfileView(animated: Bool) {
-        profileView.snp.remakeConstraints { make in
-            make.bottom.right.left.equalToSuperview()
-            make.height.equalToSuperview().multipliedBy(0.7)
+        profileView.snp.updateConstraints { make in
+            make.bottom.equalToSuperview()
         }
         if animated {
             UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseOut) {
@@ -235,12 +276,10 @@ private extension ProfileViewController {
     
     func dismissProfileView(animated: Bool) {
         view.endEditing(true) // Убираем клавиатуру если она есть
-        profileView.snp.remakeConstraints { make in
-            make.right.left.equalToSuperview()
-            make.height.equalToSuperview().multipliedBy(0.7)
-            
-            make.top.equalTo(view.snp.bottom)
+        profileView.snp.updateConstraints { make in
+            make.bottom.equalToSuperview()
                 .offset(profileView.profileImageView.frame.height/2)
+                .offset(profileView.frame.height)
         }
         if animated {
             UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseIn) {
@@ -268,8 +307,9 @@ private extension ProfileViewController {
         profileView.snp.makeConstraints { make in
             make.right.left.equalToSuperview()
             make.height.equalToSuperview().multipliedBy(0.7)
-            make.top.equalTo(view.snp.bottom)
+            make.bottom.equalToSuperview()
                 .offset(profileView.profileImageView.frame.height/2)
+                .offset(profileView.frame.height)
         }
         return profileView
     }

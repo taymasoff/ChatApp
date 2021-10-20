@@ -63,7 +63,7 @@ extension ProfileView {
         }
     }
     
-    func showNameUndoButton(animated: Bool = false) {
+    func showNameUndoButton(animated: Bool = true) {
         userNameUndoButton.snp.updateConstraints { make in
             make.height.equalTo(userNameUndoButton.intrinsicContentSize.height)
         }
@@ -95,7 +95,7 @@ extension ProfileView {
         }
     }
     
-    func showDescriptionUndoButton(animated: Bool = false) {
+    func showDescriptionUndoButton(animated: Bool = true) {
         userDescriptionUndoButton.snp.updateConstraints { make in
             make.height.equalTo(userDescriptionUndoButton.intrinsicContentSize.height)
         }
@@ -127,7 +127,7 @@ extension ProfileView {
         }
     }
     
-    func showProfileUndoButton(animated: Bool = false) {
+    func showProfileUndoButton(animated: Bool = true) {
         profileImageUndoButton.snp.updateConstraints { make in
             make.height.equalTo(profileImageUndoButton.intrinsicContentSize.height)
         }
