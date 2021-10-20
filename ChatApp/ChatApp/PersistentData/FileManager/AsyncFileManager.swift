@@ -40,8 +40,12 @@ class AsyncFileManager: AsyncFileManagerProtocol {
             let readOperation = FileReadOperation(fileManager: self,
                                                   fileName: name,
                                                   directory: directory)
-            operationQueue.addOperation(readOperation)
-            operationQueue.qualityOfService = qos
+            readOperation.qualityOfService = qos
+            if let operationQueue = operationQueue {
+                operationQueue.addOperation(readOperation)
+            } else {
+                readOperation.start()
+            }
             readOperation.onResult = { result in
                 completion(result)
             }
@@ -69,8 +73,12 @@ class AsyncFileManager: AsyncFileManagerProtocol {
             let writeOperation = FileWriteOperation(data: data,
                                                     fileName: name,
                                                     directory: directory)
-            operationQueue.addOperation(writeOperation)
-            operationQueue.qualityOfService = qos
+            writeOperation.qualityOfService = qos
+            if let operationQueue = operationQueue {
+                operationQueue.addOperation(writeOperation)
+            } else {
+                writeOperation.start()
+            }
             writeOperation.onResult = { result in
                 completion(result)
             }

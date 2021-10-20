@@ -36,7 +36,7 @@ struct FileManagerPreferences {
 
 /// Менеджер работы с локальными данными
 class PersistenceManager {
-    let storageType: StorageType
+    var storageType: StorageType
     
     init(storageType: StorageType = .userDefaults(UserDefaults.standard)) {
         self.storageType = storageType
@@ -44,7 +44,21 @@ class PersistenceManager {
 }
 
 // MARK: - PersistenceManagerProtocol
-extension PersistenceManager: PersistenceManagerProtocol {
+extension PersistenceManager: PersistenceManagerProtocol, FromDataConvertable, ToDataConvertable {
+    func removeRecord(key: String, completion: @escaping CompletionHandler<Bool>) {
+        switch storageType {
+        case .userDefaults(let defaults):
+            defaults.removeObject(forKey: key)
+        case .fileManger(let fm, let pref):
+            do {
+                try fm.deleteFile(key, at: pref.preferredDirectory)
+                completion(.success(true))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+    
     func fetchString(key: String, completion: @escaping CompletionHandler<String>) {
         switch storageType {
         // MARK: FetchString - UserDefaults

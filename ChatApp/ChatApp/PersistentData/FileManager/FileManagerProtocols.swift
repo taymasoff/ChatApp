@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - File Manager Protocol
-typealias FileManagerProtocol = FMBase & FMReadable & FMWritable & FMPathRecievable & FMFileStatusCheckable & FMListable
+typealias FileManagerProtocol = FMBase & FMReadable & FMWritable & FMPathRecievable & FMFileStatusCheckable & FMListable & FMDeletable
 
 // MARK: - File Manager Directories in Documents
 enum FMDirectory: String {
@@ -21,6 +21,7 @@ enum FMError: Error {
     case fileNotFound
     case cantWrite(String)
     case cantCreateFolders(String)
+    case cantDeleteFile
     case unexpected(String)
 }
 
@@ -43,6 +44,25 @@ extension FMBase {
                     "Can't create folders at path \(folderUrl.path)"
                 )
             }
+        }
+    }
+}
+
+protocol FMDeletable {
+    func deleteFile(_ fileName: String, at directory: FMDirectory) throws
+}
+
+extension FMDeletable where Self: FMPathRecievable {
+    func deleteFile(_ fileName: String, at directory: FMDirectory) throws {
+        let fullPath = getPath(forFileName: fileName, inDirectory: directory)
+        do {
+            if fileManager.fileExists(atPath: fullPath.path) {
+                try fileManager.removeItem(atPath: fullPath.path)
+            } else {
+                throw FMError.fileNotFound
+            }
+        } catch {
+            throw FMError.cantDeleteFile
         }
     }
 }

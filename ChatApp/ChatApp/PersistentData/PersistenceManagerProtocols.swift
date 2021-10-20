@@ -12,7 +12,7 @@ import Foundation
  */
 
 // MARK: - PersistenceManagerProtocol
-typealias PersistenceManagerProtocol = PMBase & PMSaveable & PMFetchable & FromDataConvertable & ToDataConvertable
+typealias PersistenceManagerProtocol = PMBase & PMSaveable & PMFetchable & PMRemovable
 
 // MARK: - Persistence Manager Error
 enum PMError: Error {
@@ -39,6 +39,10 @@ protocol PMFetchable: PMBase {
     func fetchString(key: String, completion: @escaping CompletionHandler<String>)
     func fetchImage(key: String, completion: @escaping CompletionHandler<UIImage>)
     func fetchModel<T: Decodable>(key: String, completion: @escaping CompletionHandler<T>)
+}
+
+protocol PMRemovable: PMBase {
+    func removeRecord(key: String, completion: @escaping CompletionHandler<Bool>)
 }
 
 // MARK: - Decoding Error

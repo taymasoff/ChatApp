@@ -13,7 +13,7 @@ typealias AsyncFileManagerProtocol = AsyncFMBase & FileManagerProtocol & FMAsync
 // MARK: - Async Handlers
 enum AsyncHandler {
     case gcd
-    case operation(OperationQueue)
+    case operation(OperationQueue? = nil)
 }
 
 // MARK: - Async File Manager Base
