@@ -61,6 +61,16 @@ class Log {
          }
     }
     
+    /// Вывод сообщения PersistentManager'а в консоль
+    /// - Parameters:
+    ///   - object: Объект логирования
+    class func pm(_ object: Any) {
+        
+         if isLoggingEnabled {
+             print("\(Date().toString()) 📂 [PersistenceManager]: \(object)")
+         }
+    }
+    
     /// Получает название файла из пути
     /// - Parameter filePath: Полный путь файла
     /// - Returns: Название файла с разрешением
