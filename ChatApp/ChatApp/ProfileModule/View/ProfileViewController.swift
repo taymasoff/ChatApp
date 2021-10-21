@@ -13,6 +13,7 @@ final class ProfileViewController: UIViewController, ViewModelBased {
     
     // MARK: - Properties
     lazy var blurredView = BlurredView()
+    lazy var inAppNotificationView = InAppNotificationView()
     private var profileView: ProfileView!
     
     var viewModel: ProfileViewModel?
@@ -39,6 +40,7 @@ final class ProfileViewController: UIViewController, ViewModelBased {
         
         bindWithViewModel()
         viewModel?.loadLastUIStateFromPersistentStorage()
+        setSaveButtonState(.off)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -147,6 +149,7 @@ final class ProfileViewController: UIViewController, ViewModelBased {
         profileView.hideNameUndoButton()
         profileView.hideDescriptionUndoButton()
         profileView.hideProfileUndoButton()
+        setSaveButtonState(.off)
     }
     
     // MARK: UserDescriptionTextView Placeholder Management
@@ -202,34 +205,98 @@ extension ProfileViewController: ViewModelBindable {
         viewModel?.userName.bindUpdates(updatesListener: { [unowned self] isChanged in
             if isChanged {
                 self.profileView.showNameUndoButton()
+                self.setSaveButtonState(.on)
             } else {
                 self.profileView.hideNameUndoButton()
+                self.setSaveButtonState(.off)
             }
         })
         // MARK: Bind userDescription Updates
         viewModel?.userDescription.bindUpdates(updatesListener: { [unowned self] isChanged in
             if isChanged {
                 self.profileView.showDescriptionUndoButton()
+                self.setSaveButtonState(.on)
             } else {
                 self.profileView.hideDescriptionUndoButton()
+                self.setSaveButtonState(.off)
             }
         })
         // MARK: Bind userAvatar Updates
         viewModel?.userAvatar.bindUpdates(updatesListener: { [unowned self] isChanged in
             if isChanged {
                 self.profileView.showProfileUndoButton()
+                self.setSaveButtonState(.on)
             } else {
                 self.profileView.hideProfileUndoButton()
+                self.setSaveButtonState(.off)
             }
         })
         
-        viewModel?.isLoading.bind(listener: { [unowned self] isLoading in
-            if isLoading {
-                self.profileView.activityIndicator.startAnimating()
-            } else {
-                self.profileView.activityIndicator.stopAnimating()
+        viewModel?.operationState.bind(listener: { [unowned self] operationState in
+            switch operationState {
+            case .loading:
+                self.setViewLoadingState(.on)
+            case .success(let vm):
+                self.setViewLoadingState(.off)
+                showSuccessNotification(vm)
+            case .error(let vm):
+                self.setViewLoadingState(.off)
+                showErrorNotification(vm)
+            case .none:
+                self.setViewLoadingState(.off)
             }
         })
+    }
+}
+
+// MARK: - Operation State Reacting UI Changes
+private extension ProfileViewController {
+    enum ElementState { case on, off }
+    
+    func setViewLoadingState(_ state: ElementState) {
+        switch state {
+        case .on:
+            profileView.activityIndicator.startAnimating()
+            profileView.setImageButton.isHidden = true
+//            profileView.saveButton.isHidden = true
+            profileView.userNameTextField.isEnabled = false
+            profileView.userDescriptionTextView.isEditable = false
+        case .off:
+            profileView.activityIndicator.stopAnimating()
+            profileView.setImageButton.isHidden = false
+//            profileView.saveButton.isHidden = false
+            profileView.userNameTextField.isEnabled = true
+            profileView.userDescriptionTextView.isEditable = true
+        }
+    }
+    
+    func showErrorNotification(_ vm: InAppNotificationViewModel) {
+        inAppNotificationView.configure(with: vm)
+        inAppNotificationView.show()
+        inAppNotificationView.onButtonOnePress = { [weak self] in
+            self?.inAppNotificationView.dismiss()
+        }
+        inAppNotificationView.onButtonTwoPress = { [weak self, weak viewModel] in
+            viewModel?.saveCurrentUIState()
+            self?.inAppNotificationView.dismiss()
+        }
+    }
+    
+    func showSuccessNotification(_ vm: InAppNotificationViewModel) {
+        inAppNotificationView.configure(with: vm)
+        inAppNotificationView.show()
+        inAppNotificationView.onButtonOnePress = { [weak self] in
+            self?.inAppNotificationView.dismiss()
+        }
+    }
+    
+    func setSaveButtonState(_ state: ElementState) {
+        switch state {
+        case .on:
+            profileView.saveButton.isHidden = false
+        case .off:
+            profileView.saveButton.isHidden = true
+        }
     }
 }
 

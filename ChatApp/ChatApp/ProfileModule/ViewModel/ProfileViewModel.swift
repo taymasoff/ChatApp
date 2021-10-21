@@ -10,6 +10,12 @@ import UIKit
 /// Вью-модель профиля
 final class ProfileViewModel: Routable {
     
+    enum OperationState {
+        case loading
+        case error(InAppNotificationViewModel)
+        case success(InAppNotificationViewModel)
+    }
+    
     // MARK: - Properties
     let router: MainRouterProtocol
     
@@ -17,9 +23,7 @@ final class ProfileViewModel: Routable {
     var userDescription: DynamicPreservable<String?>
     var userAvatar: DynamicPreservable<UIImage?>
     
-    private(set) var isLoading: Dynamic<Bool> = Dynamic(false)
-    private(set) var onError: Dynamic<String> = Dynamic("")
-    private(set) var onSuccess: Dynamic<String> = Dynamic("")
+    private(set) var operationState: Dynamic<OperationState?> = Dynamic(nil)
     
     let persistenceManager: PersistenceManagerProtocol
     
@@ -54,35 +58,103 @@ final class ProfileViewModel: Routable {
     
     // MARK: Save Changed UI To Persistent Storage
     func saveCurrentUIState() {
-        isLoading.value = true
+        operationState.value = .loading
         let savingGroup = DispatchGroup()
+        var results = [String: Result<Bool, Error>]()
         
         if userName.hasChanged() {
-            saveUserName(group: savingGroup) { text in
-                
+            savingGroup.enter()
+            saveUserName() { [weak self] result in
+                if let self = self {
+                    if case .success(_) = result {
+                        self.userName.preserve()
+                    }
+                    results[self.userName.id] = result
+                }
+                savingGroup.leave()
             }
         } else {
             Log.pm("Имя пользователя не изменилось, оставляю без изменений.")
         }
         
         if userDescription.hasChanged() {
-            saveUserDescription(group: savingGroup) { text in
-                
+            savingGroup.enter()
+            saveUserDescription() { [weak self] result in
+                if let self = self {
+                    if case .success(_) = result {
+                        self.userDescription.preserve()
+                    }
+                    results[self.userDescription.id] = result
+                }
+                savingGroup.leave()
             }
         } else {
             Log.pm("Описание пользователя не изменилось, оставляю без изменений.")
         }
         
         if userAvatar.value != nil, userAvatar.hasChanged() {
-            saveUserAvatar(group: savingGroup) { text in
-                
+            savingGroup.enter()
+            saveUserAvatar() { [weak self] result in
+                if let self = self {
+                    if case .success(_) = result {
+                        self.userAvatar.preserve()
+                    }
+                    results[self.userAvatar.id] = result
+                }
+                savingGroup.leave()
             }
         } else {
             Log.pm("Аватарка пользователя не изменилась или пустая, оставляю без изменений.")
         }
         
+        savingGroup.enter()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            // Задержка 1 секунда
+            savingGroup.leave()
+        }
+        
         savingGroup.notify(queue: .main) { [weak self] in
-            self?.isLoading.value = false
+            guard !results.isEmpty else {
+                self?.operationState.value = nil
+                return
+            }
+            if containsError(results) {
+                let inAppNotificationVM = InAppNotificationViewModel(
+                    notificationType: .error,
+                    headerText: "Произошла ошибка при сохранении",
+                    bodyText: makeSummaryMessage(results),
+                    buttonOneText: "Ok",
+                    buttonTwoText: "Retry"
+                )
+                self?.operationState.value = .error(inAppNotificationVM)
+            } else {
+                let inAppNotificationVM = InAppNotificationViewModel(
+                    notificationType: .success,
+                    headerText: "Успешное сохранение",
+                    bodyText: makeSummaryMessage(results),
+                    buttonOneText: "Ok",
+                    buttonTwoText: nil
+                )
+                self?.operationState.value = .success(inAppNotificationVM)
+            }
+        }
+        
+        func makeSummaryMessage(_ results: [String: Result<Bool, Error>]) -> String {
+            return results.reduce(into: "") { message, dict in
+                if case .failure(_) = dict.value {
+                    message.append("Не удалось сохранить запись с ключом: \(dict.key)")
+                } else {
+                    message.append("Успешно сохранена запись с ключом: \(dict.key)")
+                }
+                message.append("\n")
+            }
+            
+        }
+        
+        func containsError(_ results: [String: Result<Bool, Error>]) -> Bool {
+            return results.contains(where: { key, value in
+                if case .failure(_) = value { return true } else { return false }
+            })
         }
     }
 }
@@ -140,62 +212,29 @@ private extension ProfileViewModel {
     
     // MARK: SaveUserName to Persistent Storage
     func saveUserName(group: DispatchGroup? = nil,
-                      completion: @escaping (String) -> Void) {
-        guard let group = group else { return }
-        group.enter()
+                      completion: @escaping CompletionHandler<Bool>) {
         persistenceManager.save(userName.value ?? "",
-                                key: userName.id) { [weak self] result in
-            switch result {
-            case .success(_):
-                self?.userName.preserve()
-                let successMessage = "Имя пользователя успешно сохранено. Имя записи: \(self?.userName.id ?? "Неизвестно")"
-                Log.pm(successMessage)
-                completion(successMessage)
-            case .failure(let error):
-                let failMessage = "Не удалось сохранить имя пользователя. Ошибка: \(error)"
-                Log.pm(failMessage)
-                completion(failMessage)
-            }
-            group.leave()
+                                key: userName.id) { result in
+            completion(result)
         }
     }
     
     // MARK: SaveUserDescription to Persistent Storage
     func saveUserDescription(group: DispatchGroup? = nil,
-                             completion: @escaping (String) -> Void) {
+                             completion: @escaping CompletionHandler<Bool>) {
         persistenceManager.save(userDescription.value ?? "",
-                                key: userDescription.id) { [weak self] result in
-            switch result {
-            case .success(_):
-                self?.userDescription.preserve()
-                let successMessage = "Описание пользователя успешно сохранено. Имя записи: \(self?.userDescription.id ?? "Неизвестно")"
-                Log.pm(successMessage)
-                completion(successMessage)
-            case .failure(let error):
-                let failMessage = "Не удалось сохранить описание пользователя: \(error)"
-                Log.pm(failMessage)
-                completion(failMessage)
-            }
+                                key: userDescription.id) { result in
+            completion(result)
         }
     }
     
     // MARK: SaveUserAvatar to Persistent Storage
     func saveUserAvatar(group: DispatchGroup? = nil,
-                        completion: @escaping (String) -> Void) {
+                        completion: @escaping CompletionHandler<Bool>) {
         guard let avatar = userAvatar.value else { return }
         persistenceManager.save(avatar,
-                                key: userAvatar.id) { [weak self] result in
-            switch result {
-            case .success(_):
-                self?.userAvatar.preserve()
-                let successMessage = "Аватар пользователя успешно сохранен. Имя файла: \(self?.userAvatar.id ?? "Неизвестно")"
-                Log.pm(successMessage)
-                completion(successMessage)
-            case .failure(let error):
-                let failMessage = "Не удалось сохранить аватар пользователя: \(error)"
-                Log.pm(failMessage)
-                completion(failMessage)
-            }
+                                key: userAvatar.id) { result in
+            completion(result)
         }
     }
 }

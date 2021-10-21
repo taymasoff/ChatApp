@@ -15,8 +15,10 @@ class ProfileView: UIView {
     private(set) lazy var activityIndicator: UIActivityIndicatorView = {
         let activity = UIActivityIndicatorView()
         activity.hidesWhenStopped = true
-        activity.backgroundColor = ThemeManager.currentTheme.settings.tintColor
+        activity.backgroundColor = .clear
+        activity.color = ThemeManager.currentTheme.settings.tintColor
         addSubview(activity)
+        activity.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
         activity.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
