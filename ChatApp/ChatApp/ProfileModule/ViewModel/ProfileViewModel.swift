@@ -33,8 +33,8 @@ final class ProfileViewModel: Routable {
         self.router = router
         self.persistenceManager = persistenceManager
         
-        self.userName = DynamicPreservable(nil, id: "UserName")
-        self.userDescription = DynamicPreservable(nil, id: "UserDescription")
+        self.userName = DynamicPreservable("", id: "UserName")
+        self.userDescription = DynamicPreservable("", id: "UserDescription")
         self.userAvatar = DynamicPreservable(nil, id: "UserAvatar")
     }
     

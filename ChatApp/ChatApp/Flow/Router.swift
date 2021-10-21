@@ -60,8 +60,23 @@ class MainRouter: MainRouterProtocol {
     /// Инициализировать и представить модально экран выбора тем (Swift)
     func presentThemesViewController(onThemeChanged: @escaping (UIColor) -> Void) {
         if let navigationController = navigationController {
+            let fileManager = AsyncFileManager(
+                fileManager: FileManager.default,
+                asyncHandler: .gcd,
+                qos: .userInitiated
+            )
+    
+            let fileManagerPreferences = FileManagerPreferences(
+                preferredTextExtension: .txt,
+                preferredImageExtension: .jpeg,
+                preferredDirectory: .themes
+            )
+            let persistenceManager = PersistenceManager(
+                storageType: .fileManger(fileManager, fileManagerPreferences)
+            )
             let themesViewModel = ThemesViewModel(router: self,
-                                                  onThemeChanged: onThemeChanged)
+                                                  onThemeChanged: onThemeChanged,
+                                                  persistenceManager: persistenceManager)
             let themesViewController = ThemesViewController(with: themesViewModel)
             // Представляем модально с прозрачным эффектом
             themesViewController.modalPresentationStyle = .overCurrentContext

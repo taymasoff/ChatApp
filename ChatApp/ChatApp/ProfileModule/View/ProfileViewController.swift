@@ -151,12 +151,6 @@ final class ProfileViewController: UIViewController, ViewModelBased {
         profileView.hideProfileUndoButton()
         setSaveButtonState(.off)
     }
-
-//
-//    fileprivate func removeUserDescriptionPlaceholder() {
-//        profileView.userDescriptionTextView.text = nil
-//        profileView.userDescriptionTextView.textColor = ThemeManager.currentTheme.settings.titleTextColor
-//    }
 }
 
 // MARK: - ViewModelBindable
@@ -173,9 +167,9 @@ extension ProfileViewController: ViewModelBindable {
         })
         // MARK: Bind userDescription to userDescriptionTextField
         viewModel?.userDescription.bind(listener: { [unowned self] description in
+            self.profileView.userDescriptionTextView.text = description
             if let description = description, description != "" {
                 self.userDescriptionPlaceholderState(.off)
-                self.profileView.userDescriptionTextView.text = description
             } else {
                 self.userDescriptionPlaceholderState(.on)
             }
