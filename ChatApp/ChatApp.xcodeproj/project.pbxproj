@@ -31,6 +31,7 @@
 		22C71C2027201763005C4466 /* DynamicPreservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C71C1F27201763005C4466 /* DynamicPreservable.swift */; };
 		22C71C222720921A005C4466 /* InAppNotificationBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C71C2127209219005C4466 /* InAppNotificationBanner.swift */; };
 		22C71C2727219C02005C4466 /* InAppNotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C71C2627219C02005C4466 /* InAppNotificationViewModel.swift */; };
+		22C71C2B2721D04C005C4466 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 22C71C2A2721D04C005C4466 /* GoogleService-Info.plist */; };
 		22CC53B926FAC8220036F6F9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CC53B826FAC8220036F6F9 /* AppDelegate.swift */; };
 		22CC53BB26FAC8220036F6F9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CC53BA26FAC8220036F6F9 /* SceneDelegate.swift */; };
 		22CC53BD26FAC8220036F6F9 /* ConversationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CC53BC26FAC8220036F6F9 /* ConversationsViewController.swift */; };
@@ -91,6 +92,7 @@
 		22C71C1F27201763005C4466 /* DynamicPreservable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicPreservable.swift; sourceTree = "<group>"; };
 		22C71C2127209219005C4466 /* InAppNotificationBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppNotificationBanner.swift; sourceTree = "<group>"; };
 		22C71C2627219C02005C4466 /* InAppNotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppNotificationViewModel.swift; sourceTree = "<group>"; };
+		22C71C2A2721D04C005C4466 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		22CC53B526FAC8220036F6F9 /* ChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		22CC53B826FAC8220036F6F9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		22CC53BA26FAC8220036F6F9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -213,12 +215,13 @@
 		22B50F7926FB0E760099436A /* Application */ = {
 			isa = PBXGroup;
 			children = (
-				22FFB2322716963E001884BA /* ChatApp-Bridging-Header.h */,
 				22CC53B826FAC8220036F6F9 /* AppDelegate.swift */,
 				22CC53BA26FAC8220036F6F9 /* SceneDelegate.swift */,
 				2247F96E2712A4F800BFFC69 /* R.generated.swift */,
 				22CC53C326FAC8260036F6F9 /* LaunchScreen.storyboard */,
+				22FFB2322716963E001884BA /* ChatApp-Bridging-Header.h */,
 				22CC53C626FAC8260036F6F9 /* Info.plist */,
+				22C71C2A2721D04C005C4466 /* GoogleService-Info.plist */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -571,6 +574,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				22CC53C526FAC8260036F6F9 /* LaunchScreen.storyboard in Resources */,
+				22C71C2B2721D04C005C4466 /* GoogleService-Info.plist in Resources */,
 				22FFB23D2716C0C4001884BA /* ThemesViewControllerObjc.storyboard in Resources */,
 				22CC53C226FAC8260036F6F9 /* Assets.xcassets in Resources */,
 			);
@@ -842,6 +846,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ChatApp/Application/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ChatApp;
+				INFOPLIST_KEY_NSCameraUsageDescription = "To allow user pick profile image";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "To allow user pick profile image";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -853,7 +859,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.taymasoff.ChatApp;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.tinkoff.TinkoffChat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "ChatApp/Application/ChatApp-Bridging-Header.h";
@@ -876,6 +882,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ChatApp/Application/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ChatApp;
+				INFOPLIST_KEY_NSCameraUsageDescription = "To allow user pick profile image";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "To allow user pick profile image";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -887,7 +895,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.taymasoff.ChatApp;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.tinkoff.TinkoffChat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "ChatApp/Application/ChatApp-Bridging-Header.h";

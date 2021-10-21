@@ -7,6 +7,7 @@
 
 import UIKit
 import Rswift
+import Firebase
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,8 +17,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: - UIApplicationDelegate Lifecycle Methods
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
+        FirebaseApp.configure()
         setupLoggers()
-        
         ThemeManager.updateCurrentTheme()
         if #available(iOS 13, *) {} else {
             createAndShowFirstScene()
