@@ -17,7 +17,8 @@ enum StorageType {
     case fileManger(AsyncFileManagerProtocol, FileManagerPreferences)
     
     // Поменять asyncHandler и QoS для FileManager'а
-    mutating func changeFMParameters(asyncHandler: AsyncHandler?, qos: QualityOfService?) {
+    mutating func changeFMParameters(asyncHandler: AsyncHandler? = .gcd,
+                                     qos: QualityOfService? = .default) {
         switch self {
         case .fileManger(var fm, let pref):
             if let qos = qos {

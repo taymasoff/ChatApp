@@ -294,6 +294,7 @@ private extension ProfileView {
         textView.backgroundColor = .clear
         textView.font = UIFont.systemFont(ofSize: 20, weight: .regular)
         textView.textColor = ThemeManager.currentTheme.settings.titleTextColor
+        textView.autocorrectionType = .no
         return textView
     }
     

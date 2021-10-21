@@ -45,6 +45,7 @@ class DynamicPreservable<T: Equatable>: Dynamic<T> {
         } else {
             preservedValue = self.value
         }
+        updatesListener?(hasChanged())
     }
     
     func restore() {

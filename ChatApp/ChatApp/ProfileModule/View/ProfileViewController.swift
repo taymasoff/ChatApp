@@ -145,7 +145,7 @@ final class ProfileViewController: UIViewController, ViewModelBased {
     
     @objc
     fileprivate func didTapSaveButton() {
-        viewModel?.saveCurrentUIState()
+        viewModel?.saveButtonPressed()
         profileView.hideNameUndoButton()
         profileView.hideDescriptionUndoButton()
         profileView.hideProfileUndoButton()
@@ -258,13 +258,11 @@ private extension ProfileViewController {
         case .on:
             profileView.activityIndicator.startAnimating()
             profileView.setImageButton.isHidden = true
-//            profileView.saveButton.isHidden = true
             profileView.userNameTextField.isEnabled = false
             profileView.userDescriptionTextView.isEditable = false
         case .off:
             profileView.activityIndicator.stopAnimating()
             profileView.setImageButton.isHidden = false
-//            profileView.saveButton.isHidden = false
             profileView.userNameTextField.isEnabled = true
             profileView.userDescriptionTextView.isEditable = true
         }

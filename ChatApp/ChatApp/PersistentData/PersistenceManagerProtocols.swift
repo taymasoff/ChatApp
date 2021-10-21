@@ -21,7 +21,7 @@ enum PMError: Error {
 
 // MARK: - Persistence Manager Base
 protocol PMBase {
-    var storageType: StorageType { get }
+    var storageType: StorageType { get set }
 }
 
 // MARK: - Persistence Manager Saveable

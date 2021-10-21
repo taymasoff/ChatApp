@@ -25,7 +25,7 @@ final class ProfileViewModel: Routable {
     
     private(set) var operationState: Dynamic<OperationState?> = Dynamic(nil)
     
-    let persistenceManager: PersistenceManagerProtocol
+    var persistenceManager: PersistenceManagerProtocol
     
     // MARK: - Init
     init(router: MainRouterProtocol,
@@ -43,6 +43,10 @@ final class ProfileViewModel: Routable {
         ImagePickerManager().pickImage(sender) { [weak self] image in
             self?.userAvatar.value = image
         }
+    }
+    
+    func saveButtonPressed() {
+        askPreferredAsyncHandler()
     }
     
     func didDismissProfileView() {
@@ -67,7 +71,9 @@ final class ProfileViewModel: Routable {
             saveUserName() { [weak self] result in
                 if let self = self {
                     if case .success(_) = result {
-                        self.userName.preserve()
+                        DispatchQueue.main.async {
+                            self.userName.preserve()
+                        }
                     }
                     results[self.userName.id] = result
                 }
@@ -82,7 +88,9 @@ final class ProfileViewModel: Routable {
             saveUserDescription() { [weak self] result in
                 if let self = self {
                     if case .success(_) = result {
-                        self.userDescription.preserve()
+                        DispatchQueue.main.async {
+                            self.userDescription.preserve()
+                        }
                     }
                     results[self.userDescription.id] = result
                 }
@@ -97,7 +105,9 @@ final class ProfileViewModel: Routable {
             saveUserAvatar() { [weak self] result in
                 if let self = self {
                     if case .success(_) = result {
-                        self.userAvatar.preserve()
+                        DispatchQueue.main.async {
+                            self.userAvatar.preserve()
+                        }
                     }
                     results[self.userAvatar.id] = result
                 }
@@ -156,6 +166,31 @@ final class ProfileViewModel: Routable {
                 if case .failure(_) = value { return true } else { return false }
             })
         }
+    }
+    
+    private func askPreferredAsyncHandler() {
+        let alert = UIAlertController(title: "Pick preferred async handler", message: nil, preferredStyle: .actionSheet)
+        
+        let gcdOption = UIAlertAction(title: "GCD",
+                                      style: .default) { [weak self] _ in
+            self?.persistenceManager.storageType.changeFMParameters(
+                asyncHandler: .gcd
+            )
+            self?.saveCurrentUIState()
+        }
+        
+        let operationOption = UIAlertAction(title: "Operations",
+                                            style: .default) { [weak self] _ in
+            self?.persistenceManager.storageType.changeFMParameters(
+                asyncHandler: .operation(nil)
+            )
+            self?.saveCurrentUIState()
+        }
+        
+        alert.addAction(gcdOption)
+        alert.addAction(operationOption)
+        
+        router.presentAlert(alert, animated: true)
     }
 }
 

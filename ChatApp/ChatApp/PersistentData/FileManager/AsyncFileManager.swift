@@ -44,7 +44,8 @@ class AsyncFileManager: AsyncFileManagerProtocol {
             if let operationQueue = operationQueue {
                 operationQueue.addOperation(readOperation)
             } else {
-                readOperation.start()
+                let operationQueue = OperationQueue()
+                operationQueue.addOperation(readOperation)
             }
             readOperation.onResult = { result in
                 completion(result)
@@ -77,7 +78,8 @@ class AsyncFileManager: AsyncFileManagerProtocol {
             if let operationQueue = operationQueue {
                 operationQueue.addOperation(writeOperation)
             } else {
-                writeOperation.start()
+                let operationQueue = OperationQueue()
+                operationQueue.addOperation(writeOperation)
             }
             writeOperation.onResult = { result in
                 completion(result)
