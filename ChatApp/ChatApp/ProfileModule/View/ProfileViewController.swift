@@ -151,17 +151,12 @@ final class ProfileViewController: UIViewController, ViewModelBased {
         profileView.hideProfileUndoButton()
         setSaveButtonState(.off)
     }
-    
-    // MARK: UserDescriptionTextView Placeholder Management
-    fileprivate func showUserDescriptionPlaceholder() {
-        profileView.userDescriptionTextView.text = "Tell us about yourself..."
-        profileView.userDescriptionTextView.textColor = ThemeManager.currentTheme.settings.subtitleTextColor
-    }
-    
-    fileprivate func removeUserDescriptionPlaceholder() {
-        profileView.userDescriptionTextView.text = nil
-        profileView.userDescriptionTextView.textColor = ThemeManager.currentTheme.settings.titleTextColor
-    }
+
+//
+//    fileprivate func removeUserDescriptionPlaceholder() {
+//        profileView.userDescriptionTextView.text = nil
+//        profileView.userDescriptionTextView.textColor = ThemeManager.currentTheme.settings.titleTextColor
+//    }
 }
 
 // MARK: - ViewModelBindable
@@ -179,10 +174,10 @@ extension ProfileViewController: ViewModelBindable {
         // MARK: Bind userDescription to userDescriptionTextField
         viewModel?.userDescription.bind(listener: { [unowned self] description in
             if let description = description, description != "" {
-                self.removeUserDescriptionPlaceholder()
+                self.userDescriptionPlaceholderState(.off)
                 self.profileView.userDescriptionTextView.text = description
             } else {
-                self.showUserDescriptionPlaceholder()
+                self.userDescriptionPlaceholderState(.on)
             }
         })
         // MARK: Bind userAvatar to profileImageView
@@ -249,10 +244,11 @@ extension ProfileViewController: ViewModelBindable {
     }
 }
 
-// MARK: - Operation State Reacting UI Changes
+// MARK: - State Reacting UI Changes
 private extension ProfileViewController {
     enum ElementState { case on, off }
     
+    // MARK: Loading State
     func setViewLoadingState(_ state: ElementState) {
         switch state {
         case .on:
@@ -268,6 +264,7 @@ private extension ProfileViewController {
         }
     }
     
+    // MARK: Loaded with Error -> Show Error Notification
     func showErrorNotification(_ vm: InAppNotificationViewModel) {
         inAppNotificationView.configure(with: vm)
         inAppNotificationView.show()
@@ -280,6 +277,7 @@ private extension ProfileViewController {
         }
     }
     
+    // MARK: Loaded with Success -> Show Success Notification
     func showSuccessNotification(_ vm: InAppNotificationViewModel) {
         inAppNotificationView.configure(with: vm)
         inAppNotificationView.show()
@@ -288,12 +286,23 @@ private extension ProfileViewController {
         }
     }
     
+    // MARK: Save Button State
     func setSaveButtonState(_ state: ElementState) {
         switch state {
         case .on:
             profileView.saveButton.isHidden = false
         case .off:
             profileView.saveButton.isHidden = true
+        }
+    }
+    
+    // MARK: UserDescriptionTextView Placeholder State
+    func userDescriptionPlaceholderState(_ state: ElementState) {
+        switch state {
+        case .on:
+            profileView.userDescriptionTextViewPlaceholder.isHidden = false
+        case .off:
+            profileView.userDescriptionTextViewPlaceholder.isHidden = true
         }
     }
 }
@@ -315,19 +324,11 @@ extension ProfileViewController: UITextViewDelegate {
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
-        // Если был Placeholder - убираем его
-        if profileView.userDescriptionTextView.textColor ==
-            ThemeManager.currentTheme.settings.subtitleTextColor {
-            removeUserDescriptionPlaceholder()
-        }
+        userDescriptionPlaceholderState(.off)
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
         viewModel?.userDescription.value = textView.text
-        // Если текст пустой - ставим Placeholder
-        if textView.text.isEmpty {
-            showUserDescriptionPlaceholder()
-        }
     }
 }
 

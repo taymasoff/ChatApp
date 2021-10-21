@@ -27,6 +27,7 @@ class ProfileView: UIView {
     private(set) var profileImageView: UIImageView!
     private(set) var userNameTextField: UITextField!
     private(set) var userDescriptionTextView: UITextView!
+    private(set) var userDescriptionTextViewPlaceholder: UITextView!
     private(set) var userNameUndoButton: UIButton!
     private(set) var userDescriptionUndoButton: UIButton!
     private(set) var profileImageUndoButton: UIButton!
@@ -165,6 +166,7 @@ private extension ProfileView {
         userNameTextField = makeUserNameTextView()
         userNameUndoButton = makeUndoButton()
         userDescriptionTextView = makeUserDescriptionTextView()
+        userDescriptionTextViewPlaceholder = makeUserDescriptionTextViewPlaceholder()
         userDescriptionUndoButton = makeUndoButton()
         profileImageUndoButton = makeUndoButton()
         profileImageUndoButton.setTitle("Reset Photo", for: .normal)
@@ -180,6 +182,7 @@ private extension ProfileView {
         nameContainerView.addSubview(userNameUndoButton)
         addSubview(descriptionContainerView)
         descriptionContainerView.addSubview(userDescriptionTextView)
+        descriptionContainerView.addSubview(userDescriptionTextViewPlaceholder)
         descriptionContainerView.addSubview(userDescriptionUndoButton)
         addSubview(profileImageUndoButton)
         addSubview(saveButton)
@@ -265,6 +268,11 @@ private extension ProfileView {
             make.edges.equalTo(setImageButton.snp.edges).inset(8)
         }
         setImageButton.layer.cornerRadius = setImageButton.frame.size.width / 2
+        
+        // MARK: UserDescriptionTextViewPlaceholder Layout
+        userDescriptionTextViewPlaceholder.snp.makeConstraints { make in
+            make.edges.equalTo(userDescriptionTextView)
+        }
     }
 
     func makeProfileImageView() -> UIImageView {
@@ -286,6 +294,7 @@ private extension ProfileView {
         textField.adjustsFontSizeToFitWidth = true
         textField.textColor = ThemeManager.currentTheme.settings.titleTextColor
         textField.textAlignment = .center
+        textField.autocorrectionType = .no
         return textField
     }
     
@@ -295,6 +304,15 @@ private extension ProfileView {
         textView.font = UIFont.systemFont(ofSize: 20, weight: .regular)
         textView.textColor = ThemeManager.currentTheme.settings.titleTextColor
         textView.autocorrectionType = .no
+        return textView
+    }
+    
+    func makeUserDescriptionTextViewPlaceholder() -> UITextView {
+        let textView = makeUserDescriptionTextView()
+        textView.backgroundColor = .clear
+        textView.textColor = ThemeManager.currentTheme.settings.subtitleTextColor
+        textView.isUserInteractionEnabled = false
+        textView.text = "Tell something about yourself..."
         return textView
     }
     

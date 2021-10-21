@@ -75,7 +75,9 @@ final class ProfileViewModel: Routable {
                             self.userName.preserve()
                         }
                     }
-                    results[self.userName.id] = result
+                    DispatchQueue.main.async {
+                        results[self.userName.id] = result
+                    }
                 }
                 savingGroup.leave()
             }
@@ -92,7 +94,9 @@ final class ProfileViewModel: Routable {
                             self.userDescription.preserve()
                         }
                     }
-                    results[self.userDescription.id] = result
+                    DispatchQueue.main.async {
+                        results[self.userDescription.id] = result
+                    }
                 }
                 savingGroup.leave()
             }
@@ -109,7 +113,9 @@ final class ProfileViewModel: Routable {
                             self.userAvatar.preserve()
                         }
                     }
-                    results[self.userAvatar.id] = result
+                    DispatchQueue.main.async {
+                        results[self.userAvatar.id] = result
+                    }
                 }
                 savingGroup.leave()
             }

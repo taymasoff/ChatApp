@@ -159,9 +159,9 @@ final class InAppNotificationView: UIView, ViewModelBased, ViewModelBindable, Co
         viewModel?.notificationType.bind(listener: { [unowned self] type in
             switch type {
             case .success:
-                self.backgroundColor = R.color.successColor()
+                self.backgroundColor = .systemGreen.withAlphaComponent(0.9)
             case .error:
-                self.backgroundColor = R.color.errorColor()
+                self.backgroundColor = .systemPink.withAlphaComponent(0.9)
             }
         })
         
