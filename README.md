@@ -35,3 +35,14 @@
 <a href="https://youtu.be/PyaeWkAmtQI"><img src="https://i.imgur.com/gnCcIAd.png" height="350"/></a>
 
 </details>
+<details> 
+  <summary>Home Work #5</summary>
+
+Реализовал асинхронный файловый менеджер, менеджер работы с локальными хранилищами. Настроил Profile Module так, чтобы измененные поля сохранялись в папку User Profile Data в документах. Всегда есть возможность изменить локальный менеджер на userDefaults, поменять предпочитаемый асинхронный менеджер на GCD / Operation и изменить приоритет QoS. Все изменения проходят реактивно.
+
+Видео демка:
+
+<a href="https://www.youtube.com/watch?v=dAo57CP2kng"><img src="https://i.imgur.com/jHviVl5.png" height="350"/></a>
+
+
+</details>
