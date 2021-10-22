@@ -16,6 +16,7 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
     fileprivate var profileBarButton: UIBarButtonItem!
     fileprivate var gearBarButton: UIBarButtonItem!
     fileprivate var conversationsTableView: UITableView!
+    fileprivate var searchController: UISearchController!
     
     var viewModel: ConversationsViewModel?
     fileprivate lazy var nameFormatter = PersonNameComponentsFormatter()
@@ -32,6 +33,7 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
         
         gearBarButton = makeGearBarButton()
         conversationsTableView = makeConversationsTableView()
+        searchController = makeSearchController()
         
         updateProfileBarButton(with: "Marina Dudarenko")
         
@@ -46,19 +48,15 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
         conversationsTableView.register(ConversationCell.self,
                                         forCellReuseIdentifier: ConversationCell.reuseID)
         conversationsTableView.rowHeight = 80
+
         setupSearchController()
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
-        navigationItem.hidesSearchBarWhenScrolling = false
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        navigationItem.hidesSearchBarWhenScrolling = true
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -192,7 +190,7 @@ private extension ConversationsViewController {
         return tableView
     }
     
-    func setupSearchController() {
+    func makeSearchController() -> UISearchController {
         let searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self.viewModel
         searchController.obscuresBackgroundDuringPresentation = false
@@ -203,5 +201,6 @@ private extension ConversationsViewController {
         searchController.searchBar.backgroundColor = ThemeManager.currentTheme.settings.backGroundColor
         self.navigationItem.searchController = searchController
         self.definesPresentationContext = true
+        return searchController
     }
 }
