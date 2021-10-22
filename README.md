@@ -16,3 +16,9 @@
    Сверстал экран профиля пользователя с помощью SnapKit, организовал роутинг в приложении без сториборда
   <img src="https://i.imgur.com/NFspJe4.gif" height="500"/>
 </details>
+<details> 
+  <summary>Home Work #3</summary>
+
+   Сверстал экраны переписок и чата, сделал генератор моковых данных, для заполнения таблиц
+  <img src="https://i.imgur.com/4cdA3Sb.gif" height="500"/>
+</details>

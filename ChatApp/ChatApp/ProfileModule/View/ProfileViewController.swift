@@ -8,26 +8,23 @@
 import UIKit
 import SnapKit
 
-final class ProfileViewController: UIViewController {
+/// Контроллер экрана профиля
+final class ProfileViewController: UIViewController, ViewModelBased {
     
     // MARK: - Properties
-    
-    var viewModel: ProfileViewModelProtocol!
-    lazy var nameFormatter = PersonNameComponentsFormatter()
-    
+    lazy var blurredView = BlurredView()
     var profileView: ProfileView!
     
-    // MARK: - Lifecycle Methods
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?)   {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-//        Log.info(profileView.setImageButton.frame)
-        // Само-собой тут будет fatalError, потому что profileView = nil до окончания метода loadView()
-    }
-
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
+    var viewModel: ProfileViewModel?
+    lazy var nameFormatter = PersonNameComponentsFormatter()
+    
+    // MARK: - Initializers
+    convenience init(with viewModel: ProfileViewModel) {
+        self.init()
+        self.viewModel = viewModel
     }
     
+    // MARK: - Lifecycle Methods
     override func loadView() {
         super.loadView()
         profileView = makeProfileView()
@@ -36,8 +33,6 @@ final class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        Log.info("setImageButton.frame: \(profileView.setImageButton.frame)")
-        // 📝 [ProfileViewController.swift]: viewDidLoad() -> setImageButton.frame: (9.166666666666668, 9.166666666666668, 41.666666666666664, 41.666666666666664)
         setupGestureRecognizers()
         bindWithViewModel()
     }
@@ -48,44 +43,13 @@ final class ProfileViewController: UIViewController {
     }
 
     override func viewDidAppear(_ animated: Bool) {
-        Log.info("setImageButton.frame: \(profileView.setImageButton.frame)")
-        // 📝 [ProfileViewController.swift]: viewDidAppear(_:) -> setImageButton Frame: (259.3333333333333, 52.33333333333337, 41.666666666666664, 41.666666666666664)
-        // 🖊 Значения разные, потому что между этими методами VC вызывает layoutSubviews(), в котором перерисовываются фреймы
-        
-        let blurredView = BlurredView()
         view.insertSubview(blurredView, at: 0)
         showProfileView(animated: true)
     }
     
     // MARK: - Private Methods
-    
-    fileprivate func bindWithViewModel() {
-        viewModel?.userName.bind(listener: { [unowned self] name in
-            self.profileView.userNameLabel.text = name
-        })
-        viewModel?.userDescription.bind(listener: { [unowned self] description in
-            self.profileView.userDescription.text = description
-        })
-        viewModel?.userAvatar.bind(listener: { [unowned self] image in
-            if let image = image {
-                // Удаляем инициалы с ProfileImageView если они там есть
-                if let initialsLabel = self.profileView.profileImageView.subviews.last as? UILabel {
-                    initialsLabel.removeFromSuperview()
-                }
-                self.profileView.profileImageView.image = image
-            } else {
-                self.profileView.profileImageView.addProfilePlaceholder(
-                    fullName: viewModel?.userName.value,
-                    formattedBy: nameFormatter
-                )
-            }
-        })
-    }
-    
-    
-    // MARK: - Gesture Recognizer Setup
-    
-    fileprivate func setupGestureRecognizers() {
+    // MARK: Gesture Recognizer Setup
+    private func setupGestureRecognizers() {
         profileView.setImageButton.addTarget(
             self,
             action: #selector(editProfileImagePressed),
@@ -94,6 +58,7 @@ final class ProfileViewController: UIViewController {
         profileView.addGestureRecognizer(UITapGestureRecognizer(
             target: profileView,
             action: #selector(UIView.endEditing(_:))))
+        
         let swipeDown = UISwipeGestureRecognizer(
             target: self,
             action: #selector(didSwipeProfileViewDown))
@@ -105,22 +70,20 @@ final class ProfileViewController: UIViewController {
             action: #selector(didTapOutsideProfileView)))
     }
     
-    // MARK: - Objc Action Methods
-    
     @objc
     fileprivate func editProfileImagePressed() {
-        ImagePickerManager().pickImage(self) { [weak self] image in
-            self?.viewModel.userAvatar.value = image
-        }
+        viewModel?.editProfileImagePressed(sender: self)
     }
     
     @objc
     fileprivate func didTapOutsideProfileView() {
         dismissProfileView(animated: true)
+        viewModel?.didDismissProfileView()
     }
     @objc
     fileprivate func didSwipeProfileViewDown() {
         dismissProfileView(animated: true)
+        viewModel?.didDismissProfileView()
     }
     
     // MARK: - Show/Hide Profile View Animations
@@ -160,8 +123,33 @@ final class ProfileViewController: UIViewController {
     }
 }
 
-// MARK: - ProfileViewController Subviews Setup
+// MARK: - ViewModelBindable
+extension ProfileViewController: ViewModelBindable {
+    func bindWithViewModel() {
+        viewModel?.userName.bind(listener: { [unowned self] name in
+            self.profileView.userNameLabel.text = name
+        })
+        viewModel?.userDescription.bind(listener: { [unowned self] description in
+            self.profileView.userDescription.text = description
+        })
+        viewModel?.userAvatar.bind(listener: { [unowned self] image in
+            if let image = image {
+                // Удаляем инициалы с ProfileImageView если они там есть
+                if let initialsLabel = self.profileView.profileImageView.subviews.last as? UILabel {
+                    initialsLabel.removeFromSuperview()
+                }
+                self.profileView.profileImageView.image = image
+            } else {
+                self.profileView.profileImageView.addProfilePlaceholder(
+                    fullName: viewModel?.userName.value,
+                    formattedBy: nameFormatter
+                )
+            }
+        })
+    }
+}
 
+// MARK: - ProfileViewController Subviews Setup
 private extension ProfileViewController {
     func makeProfileView() -> ProfileView {
         let profileView = ProfileView(frame: view.frame)
@@ -187,7 +175,7 @@ private extension ProfileViewController {
  Когда появляется клавиатура - смещаем вьюшку наверх с той же скоростью, с которой появляется клавиатура. Когда клавиатура убирается, делаем то же самое, только наоборот.
  */
 
-extension ProfileViewController {
+private extension ProfileViewController {
     func addKeyboardObserver() {
         NotificationCenter.default
             .addObserver(self,

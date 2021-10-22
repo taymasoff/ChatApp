@@ -7,4 +7,5 @@ target 'ChatApp' do
 
   # Pods for ChatApp
   pod 'SnapKit', :inhibit_warnings => true
+  pod 'R.swift', :inhibit_warnings => true
 end

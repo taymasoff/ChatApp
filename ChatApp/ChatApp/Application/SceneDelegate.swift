@@ -6,11 +6,7 @@
 //
 
 import UIKit
-
-/*
- C iOS 13 и выше контроль жизненного цикла приложения перешел к UIScene.
- В приложении может быть несколько сцен и у каждой может быть свой жизненный цикл.
- */
+import Rswift
 
 @available(iOS 13.0, *)
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -22,11 +18,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         guard let windowScene = scene as? UIWindowScene else { return }
         window = UIWindow(windowScene: windowScene)
-        window?.backgroundColor = AppAssets.colors(.appMain)
+        window?.backgroundColor = R.color.appMain()
         let navController = UINavigationController()
-        let moduleBuilder = ModuleBuilder()
-        let router = MainRouter(navigationController: navController,
-                                moduleBuilder: moduleBuilder)
+        let router = MainRouter(navigationController: navController)
         router.initiateFirstViewController()
         window?.rootViewController = navController
         window?.makeKeyAndVisible()

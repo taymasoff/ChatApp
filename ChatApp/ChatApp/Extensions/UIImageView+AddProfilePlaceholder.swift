@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import Rswift
 
 /*
  👉 Добавляет в UIImageView желтый фон с инициалами, как в приложении тинькова.
@@ -44,10 +45,10 @@ extension UIImageView {
     }
     
     private func showPlaceholder(_ initials: String) {
-        self.image = AppAssets.image(.yellowCircle)
+        self.image = R.image.yellowCircle()
         let label = UILabel()
         // Тут магия по уменьшению шрифта так, чтобы он вписывался в лейбу
-        label.font = AppAssets.font(.sfProDisplay, type: .semibold, size: 120)
+        label.font = UIFont.systemFont(ofSize: 120, weight: .semibold)
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.1
         // Не знаю почему, но если поставить количество строк 1 и не выставить lineBreakMode шрифт не уменьшается меньше определенного значения
@@ -60,7 +61,7 @@ extension UIImageView {
         
         label.snp.makeConstraints { make in
             make.center.equalToSuperview()
-            make.size.equalToSuperview().dividedBy(1.35)
+            make.size.equalToSuperview().dividedBy(1.45)
         }
     }
     
