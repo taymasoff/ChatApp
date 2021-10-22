@@ -71,10 +71,10 @@ extension ConversationCell: ViewModelBindable {
         viewModel?.lastMessage.bind { [unowned self] message in
             if let message = message {
                 lastMessageLabel.text = message
-                lastMessageLabel.textColor = R.color.footerGray()
+                lastMessageLabel.textColor = ThemeManager.currentTheme.settings.subtitleTextColor
             } else {
                 lastMessageLabel.text = "No messages yet"
-                lastMessageLabel.textColor = .systemBlue
+                lastMessageLabel.textColor = ThemeManager.currentTheme.settings.tintColor
             }
         }
         viewModel?.hasUnreadMessages.bind { [unowned self] hasUnread in
@@ -113,7 +113,8 @@ extension ConversationCell {
                            options: animationOptions,
                            animations: { [weak self] in
                 self?.cellContainer.transform = .init(scaleX: 0.93, y: 0.9)
-                self?.contentView.backgroundColor = R.color.appYellow()
+                self?.contentView.backgroundColor = ThemeManager.currentTheme.settings.tintColor
+                self?.cellContainer.backgroundColor = ThemeManager.currentTheme.settings.backGroundColor
                 self?.cellContainer.layer.cornerRadius = 15
                 
             }, completion: completion)
@@ -125,8 +126,9 @@ extension ConversationCell {
                            options: animationOptions,
                            animations: { [weak self] in
                 self?.cellContainer.transform = .identity
+                self?.cellContainer.backgroundColor = .clear
                 self?.cellContainer.layer.cornerRadius = 0
-                self?.contentView.backgroundColor = .white
+                self?.contentView.backgroundColor = .clear
             }, completion: completion)
         }
     }
@@ -138,7 +140,7 @@ private extension ConversationCell {
     // MARK: - Create Subviews
     func makeCellContainer() -> UIView {
         let view = UIView()
-        view.backgroundColor = .white
+        view.backgroundColor = .clear
         return view
     }
     
@@ -172,7 +174,7 @@ private extension ConversationCell {
     func makeNameLabel() -> UILabel {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
-        label.textColor = .black
+        label.textColor = ThemeManager.currentTheme.settings.titleTextColor
         label.textAlignment = .left
         label.numberOfLines = 1
         return label
@@ -181,7 +183,7 @@ private extension ConversationCell {
     func makeDateLabel() -> UILabel {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 15, weight: .regular)
-        label.textColor = R.color.footerGray()
+        label.textColor = ThemeManager.currentTheme.settings.subtitleTextColor
         label.textAlignment = .right
         label.numberOfLines = 1
         return label
@@ -190,7 +192,7 @@ private extension ConversationCell {
     func makeLastMessageLabel() -> UILabel {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-        label.textColor = R.color.footerGray()
+        label.textColor = ThemeManager.currentTheme.settings.subtitleTextColor
         label.textAlignment = .left
         label.numberOfLines = 2
         return label

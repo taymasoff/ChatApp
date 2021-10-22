@@ -26,7 +26,7 @@ class ProfileView: UIView {
     }
     
     private func createSubviews() {
-        backgroundColor = R.color.appMain()
+        backgroundColor = ThemeManager.currentTheme.settings.mainColor
         profileImageView = makeProfileImageView()
         userNameLabel = makeUserNameLabel()
         userDescription = makeUserDescription()
@@ -55,6 +55,7 @@ private extension ProfileView {
     func makeUserNameLabel() -> UILabel {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 26, weight: .semibold)
+        label.textColor = ThemeManager.currentTheme.settings.titleTextColor
         label.textAlignment = .center
         addSubview(label)
         label.snp.makeConstraints { make in
@@ -68,6 +69,7 @@ private extension ProfileView {
         let textView = UITextView()
         textView.backgroundColor = .clear
         textView.font = UIFont.systemFont(ofSize: 20, weight: .regular)
+        textView.textColor = ThemeManager.currentTheme.settings.subtitleTextColor
         addSubview(textView)
         textView.snp.makeConstraints { make in
             make.left.right.equalToSuperview().inset(40)

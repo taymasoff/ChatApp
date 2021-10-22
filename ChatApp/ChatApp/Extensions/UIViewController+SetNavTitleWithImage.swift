@@ -18,7 +18,7 @@ extension UIViewController {
         titleLabel.text = title
         titleLabel.sizeToFit()
         titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
-        titleLabel.textColor = .black
+        titleLabel.textColor = ThemeManager.currentTheme.settings.titleTextColor
         titleLabel.textAlignment = .left
         titleLabel.numberOfLines = 1
         

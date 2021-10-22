@@ -30,7 +30,44 @@ final class ConversationsViewModel: NSObject, Routable {
     }
     
     func gearBarButtonPressed() {
-        // Обработка нажатия на левый BarButton
+        askToPickController()
+    }
+    
+    private func askToPickController() {
+        let alert = UIAlertController(title: "Выберите контроллер, который будет отвечать за презентацию модуля выбора темы", message: nil, preferredStyle: .actionSheet)
+        
+        let swiftOption = UIAlertAction(title: "Тот что на Swift",
+                                         style: .default) { [weak self] _ in
+            guard let self = self else { return }
+            self.router.presentThemesViewController(
+                onThemeChanged: self.logThemeChanging
+            )
+        }
+        
+        let objcOption = UIAlertAction(title: "Тот что на Objective C",
+                                          style: .default) { [weak self] _ in
+            guard let self = self else { return }
+            self.router.presentThemesViewControllerObjc(
+                delegate: self
+            )
+        }
+        
+        alert.addAction(swiftOption)
+        alert.addAction(objcOption)
+        
+        router.presentAlert(alert, animated: true)
+    }
+    
+    func logThemeChanging(_ color: UIColor) {
+        Log.info("Получен выбранный пользователем цвет -> \(color.description)")
+    }
+}
+
+extension ConversationsViewModel: ThemesViewControllerDelegate {
+    func themesViewController(_ controller: ThemesViewControllerObjc,
+                              didSelectTheme selectedTheme: UIColor) {
+        
+        logThemeChanging(selectedTheme)
     }
 }
 

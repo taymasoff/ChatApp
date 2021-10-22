@@ -49,6 +49,7 @@ extension UIImageView {
         let label = UILabel()
         // Тут магия по уменьшению шрифта так, чтобы он вписывался в лейбу
         label.font = UIFont.systemFont(ofSize: 120, weight: .semibold)
+        label.textColor = .black
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.1
         // Не знаю почему, но если поставить количество строк 1 и не выставить lineBreakMode шрифт не уменьшается меньше определенного значения

@@ -48,11 +48,9 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
         conversationsTableView.register(ConversationCell.self,
                                         forCellReuseIdentifier: ConversationCell.reuseID)
         conversationsTableView.rowHeight = 80
-        
-        navigationItem.searchController = searchController
-        navigationController?.navigationItem.hidesSearchBarWhenScrolling = true
-        // Для корректного отображения SearchController'а
-        extendedLayoutIncludesOpaqueBars = true
+
+        setupSearchController()
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -60,7 +58,7 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.navigationBar.prefersLargeTitles = false
@@ -117,6 +115,13 @@ extension ConversationsViewController: UITableViewDataSource, UITableViewDelegat
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = UITableViewHeaderFooterView()
+        view.contentView.backgroundColor = ThemeManager.currentTheme.settings.mainColor
+        view.textLabel?.textColor = ThemeManager.currentTheme.settings.titleTextColor
+        return view
+    }
+    
     // Scroll Animation
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         cell.transform = CGAffineTransform(scaleX: 0.95, y: 0.8)
@@ -166,7 +171,7 @@ private extension ConversationsViewController {
             style: .plain,
             target: self,
             action: #selector(gearBarButtonPressed))
-        barButton.tintColor = R.color.barItemGray()
+        barButton.tintColor = ThemeManager.currentTheme.settings.tintColor
         return barButton
     }
     
@@ -175,6 +180,7 @@ private extension ConversationsViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.keyboardDismissMode = .onDrag
+        tableView.backgroundColor = .clear
         view.addSubview(tableView)
         
         tableView.snp.makeConstraints { make in
@@ -189,6 +195,10 @@ private extension ConversationsViewController {
         searchController.searchResultsUpdater = self.viewModel
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "Search"
+        searchController.searchBar.tintColor = ThemeManager.currentTheme.settings.tintColor
+        searchController.searchBar.barTintColor = ThemeManager.currentTheme.settings.mainColor
+        searchController.searchBar.barStyle = ThemeManager.currentTheme.settings.barStyle
+        searchController.searchBar.backgroundColor = ThemeManager.currentTheme.settings.backGroundColor
         self.navigationItem.searchController = searchController
         self.definesPresentationContext = true
         return searchController

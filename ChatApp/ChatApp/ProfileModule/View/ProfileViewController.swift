@@ -13,7 +13,7 @@ final class ProfileViewController: UIViewController, ViewModelBased {
     
     // MARK: - Properties
     lazy var blurredView = BlurredView()
-    var profileView: ProfileView!
+    private var profileView: ProfileView!
     
     var viewModel: ProfileViewModel?
     lazy var nameFormatter = PersonNameComponentsFormatter()
@@ -87,13 +87,12 @@ final class ProfileViewController: UIViewController, ViewModelBased {
     }
     
     // MARK: - Show/Hide Profile View Animations
-    
-    fileprivate func showProfileView(animated: Bool) {
+    private func showProfileView(animated: Bool) {
+        profileView.snp.remakeConstraints { make in
+            make.bottom.right.left.equalToSuperview()
+            make.height.equalToSuperview().multipliedBy(0.7)
+        }
         if animated {
-            profileView.snp.remakeConstraints { make in
-                make.bottom.right.left.equalToSuperview()
-                make.height.equalToSuperview().multipliedBy(0.7)
-            }
             UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseOut) {
                 self.view.layoutIfNeeded()
             }
@@ -102,16 +101,16 @@ final class ProfileViewController: UIViewController, ViewModelBased {
         }
     }
     
-    fileprivate func dismissProfileView(animated: Bool) {
+    private func dismissProfileView(animated: Bool) {
         view.endEditing(true) // Убираем клавиатуру если она есть
+        profileView.snp.remakeConstraints { make in
+            make.right.left.equalToSuperview()
+            make.height.equalToSuperview().multipliedBy(0.7)
+            
+            make.top.equalTo(view.snp.bottom)
+                .offset(profileView.profileImageView.frame.height/2)
+        }
         if animated {
-            profileView.snp.remakeConstraints { make in
-                make.right.left.equalToSuperview()
-                make.height.equalToSuperview().multipliedBy(0.7)
-
-                make.top.equalTo(view.snp.bottom)
-                    .offset(profileView.profileImageView.frame.height/2)
-            }
             UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseIn) {
                 self.view.layoutIfNeeded()
             } completion: { [unowned self] _ in
@@ -153,7 +152,7 @@ extension ProfileViewController: ViewModelBindable {
 private extension ProfileViewController {
     func makeProfileView() -> ProfileView {
         let profileView = ProfileView(frame: view.frame)
-        self.view.addSubview(profileView)
+        view.addSubview(profileView)
         
         // Скругляем углы, только верхние
         profileView.layer.cornerRadius = profileView.frame.size.width / 10

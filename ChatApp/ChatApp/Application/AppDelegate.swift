@@ -16,45 +16,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: - UIApplicationDelegate Lifecycle Methods
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        setupNavigationBarAppearance()
-        initWindowAndFirstScreen()
+        ThemeManager.updateCurrentTheme()
+        if #available(iOS 13, *) {} else {
+            createAndShowFirstScene()
+        }
         return true
     }
     
-    
-    private func initWindowAndFirstScreen() {
-        if #available(iOS 13, *) {} else {
-            let window = UIWindow(frame: UIScreen.main.bounds)
-            window.backgroundColor = R.color.appMain()
-            let navController = UINavigationController()
-            let router = MainRouter(navigationController: navController)
-            router.initiateFirstViewController()
-            window.rootViewController = navController
-            window.makeKeyAndVisible()
-            self.window = window
-        }
-    }
-    
-    /// Настраивает дефолтное отображение UINavigationBar в приложении
-    private func setupNavigationBarAppearance() {
-        if #available(iOS 13.0, *) {
-            let appearance = UINavigationBarAppearance()
-            appearance.backgroundColor = R.color.appGray()
-            appearance.titleTextAttributes = [.foregroundColor: UIColor.black,
-                                              .font: UIFont.systemFont(ofSize: 18, weight: .semibold)]
-            appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.black,
-                                                    .font: UIFont.systemFont(ofSize: 30, weight: .bold)]
-
-            UINavigationBar.appearance().tintColor = .systemBlue
-            UINavigationBar.appearance().isTranslucent = false
-            UINavigationBar.appearance().standardAppearance = appearance
-            UINavigationBar.appearance().compactAppearance = appearance
-            UINavigationBar.appearance().scrollEdgeAppearance = appearance
-        } else {
-            UINavigationBar.appearance().tintColor = .systemBlue
-            UINavigationBar.appearance().barTintColor = R.color.appGray()
-            UINavigationBar.appearance().isTranslucent = false
-        }
+    // MARK: - Create and Show First Scene
+    private func createAndShowFirstScene() {
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.backgroundColor = ThemeManager.currentTheme.settings.mainColor
+        let navController = UINavigationController()
+        let router = MainRouter(navigationController: navController)
+        router.initiateFirstViewController()
+        window.rootViewController = navController
+        window.makeKeyAndVisible()
+        self.window = window
+        
     }
     
     // MARK: UISceneSession Lifecycle

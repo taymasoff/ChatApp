@@ -8,15 +8,15 @@
 import UIKit
 
 /// Вью-модель профиля
-final class ProfileViewModel {
+final class ProfileViewModel: Routable {
     
-    let router: RouterProtocol
+    let router: MainRouterProtocol
     
     var userName: Dynamic<String?> = Dynamic(nil)
     var userDescription: Dynamic<String?> = Dynamic(nil)
     var userAvatar: Dynamic<UIImage?> = Dynamic(nil)
     
-    init(router: RouterProtocol) {
+    init(router: MainRouterProtocol) {
         self.router = router
         
         self.userName.value = "Marina Dudarenko"
