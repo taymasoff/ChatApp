@@ -163,6 +163,7 @@ extension ProfileViewController: ViewModelBindable {
             // если userAvatar все еще nil
             if self.viewModel?.userAvatar.value == nil {
                 self.profileView.profileImageView.addProfilePlaceholder(fullName: name)
+                self.animateImageViewTextChange()
             }
         })
         // MARK: Bind userDescription to userDescriptionTextField
@@ -183,6 +184,7 @@ extension ProfileViewController: ViewModelBindable {
                     initialsLabel.removeFromSuperview()
                 }
                 self.profileView.profileImageView.image = image
+                self.animateImageViewImageChange()
             } else {
                 self.profileView.profileImageView.addProfilePlaceholder(
                     fullName: viewModel?.userName.value,
@@ -197,7 +199,11 @@ extension ProfileViewController: ViewModelBindable {
                 self.setSaveButtonState(.on)
             } else {
                 self.profileView.hideNameUndoButton()
-                self.setSaveButtonState(.off)
+                if let viewModel = self.viewModel,
+                   !viewModel.userDescription.hasChanged(),
+                   !viewModel.userAvatar.hasChanged() {
+                    self.setSaveButtonState(.off)
+                }
             }
         })
         // MARK: Bind userDescription Updates
@@ -207,7 +213,11 @@ extension ProfileViewController: ViewModelBindable {
                 self.setSaveButtonState(.on)
             } else {
                 self.profileView.hideDescriptionUndoButton()
-                self.setSaveButtonState(.off)
+                if let viewModel = self.viewModel,
+                   !viewModel.userAvatar.hasChanged(),
+                   !viewModel.userName.hasChanged() {
+                    self.setSaveButtonState(.off)
+                }
             }
         })
         // MARK: Bind userAvatar Updates
@@ -217,7 +227,11 @@ extension ProfileViewController: ViewModelBindable {
                 self.setSaveButtonState(.on)
             } else {
                 self.profileView.hideProfileUndoButton()
-                self.setSaveButtonState(.off)
+                if let viewModel = self.viewModel,
+                   !viewModel.userName.hasChanged(),
+                   !viewModel.userDescription.hasChanged() {
+                    self.setSaveButtonState(.off)
+                }
             }
         })
         
@@ -346,7 +360,7 @@ private extension ProfileViewController {
         view.endEditing(true) // Убираем клавиатуру если она есть
         profileView.snp.updateConstraints { make in
             make.bottom.equalToSuperview()
-                .offset(profileView.profileImageView.frame.height/2)
+                .offset(profileView.circleView.frame.height/2)
                 .offset(profileView.frame.height)
         }
         if animated {
@@ -376,7 +390,7 @@ private extension ProfileViewController {
             make.right.left.equalToSuperview()
             make.height.equalToSuperview().multipliedBy(0.7)
             make.bottom.equalToSuperview()
-                .offset(profileView.profileImageView.frame.height/2)
+                .offset(profileView.circleView.frame.height/2)
                 .offset(profileView.frame.height)
         }
         view.layoutIfNeeded()
@@ -432,5 +446,34 @@ private extension ProfileViewController {
                 self.view.layoutIfNeeded()
             }
         }
+    }
+}
+
+// MARK: - Animations
+private extension ProfileViewController {
+    
+    func animateImageViewTextChange() {
+        UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseIn, animations: { [weak self] in
+            self?.profileView.profileImageView.transform = CGAffineTransform(
+                scaleX: 1.4, y: 1.4
+            )
+        }, completion: { [weak self] _ in
+            UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut) {
+                self?.profileView.profileImageView.transform = .identity
+            }
+        })
+    }
+    
+    func animateImageViewImageChange() {
+        UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveEaseIn, animations: {
+            [weak self] in
+            self?.profileView.profileImageView.transform = CGAffineTransform(
+                scaleX: -1, y: 1
+            )
+        }, completion: { [weak self] _ in
+            UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveEaseOut) {
+                self?.profileView.profileImageView.transform = .identity
+            }
+        })
     }
 }

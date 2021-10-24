@@ -8,6 +8,8 @@
 import Foundation
 import UIKit
 
+enum ProfileAvatarUpdateInfo { case avatar(UIImage), name(String) }
+
 /// Вью-модель экрана диалогов
 final class ConversationsViewModel: NSObject, Routable {
     
@@ -15,10 +17,15 @@ final class ConversationsViewModel: NSObject, Routable {
     let router: MainRouterProtocol
     var title = "Tinkoff Chat"
     var conversations: [String : [Conversation]]?
+    var profileAvatarUpdateInfo: Dynamic<ProfileAvatarUpdateInfo?> = Dynamic(nil)
+    
+    var persistenceManager: PersistenceManagerProtocol
     
     // MARK: - Initializer
-    init(router: MainRouterProtocol) {
+    init(router: MainRouterProtocol,
+         persistenceManager: PersistenceManagerProtocol? = nil) {
         self.router = router
+        self.persistenceManager = persistenceManager ?? PersistenceManager()
         super.init()
         
         conversations = makeConversationsDictionary(40) // 👈 если нужно изменить количество моковых данных
@@ -26,7 +33,7 @@ final class ConversationsViewModel: NSObject, Routable {
     
     // MARK: - Private Methods
     func profileBarButtonPressed() {
-        router.presentProfileViewController()
+        router.presentProfileViewController(delegate: self)
     }
     
     func gearBarButtonPressed() {
@@ -63,6 +70,43 @@ final class ConversationsViewModel: NSObject, Routable {
     }
 }
 
+// MARK: - PersistentManager Methods
+extension ConversationsViewModel {
+    // Ищем аватарку пользователя
+    // если ее нет - возвращаем имя для генерации плейсхолдера
+    // если и имя пустое - то ничего
+    func fetchUserAvatarOrName() {
+        persistenceManager.fetchImage(key: AppFileNames.userAvatar.rawValue) {
+            [weak self] result in
+            if case .success(let image) = result {
+                DispatchQueue.main.async {
+                    self?.profileAvatarUpdateInfo.value = .avatar(image)
+                }
+            } else {
+                self?.persistenceManager.fetchString(key: AppFileNames.userName.rawValue) {
+                    result in
+                    if case .success(let name) = result {
+                        DispatchQueue.main.async {
+                            self?.profileAvatarUpdateInfo.value = .name(name)
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            self?.profileAvatarUpdateInfo.value = nil
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+extension ConversationsViewModel: ProfileDelegate {
+    func didUpdateProfileAvatar(with info: ProfileAvatarUpdateInfo?) {
+        profileAvatarUpdateInfo.value = info
+    }
+}
+
+// MARK: - ThemesViewControllerDelegate
 extension ConversationsViewModel: ThemesViewControllerDelegate {
     func themesViewController(_ controller: ThemesViewControllerObjc,
                               didSelectTheme selectedTheme: UIColor) {

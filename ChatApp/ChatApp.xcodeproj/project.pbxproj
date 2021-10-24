@@ -10,6 +10,8 @@
 		221729E8270D93D60022D174 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221729E7270D93D60022D174 /* MessageCell.swift */; };
 		221729EE270D94040022D174 /* MessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221729ED270D94040022D174 /* MessageViewModel.swift */; };
 		221729F4270DA4B00022D174 /* UIViewController+SetNavTitleWithImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221729F3270DA4B00022D174 /* UIViewController+SetNavTitleWithImage.swift */; };
+		22210D8327245C77005ED4B6 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22210D8227245C77005ED4B6 /* Constants.swift */; };
+		22210D85272485AA005ED4B6 /* UIButton+setBackgroundForState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22210D84272485AA005ED4B6 /* UIButton+setBackgroundForState.swift */; };
 		222A55B3270C06C10047CA24 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222A55B2270C06C10047CA24 /* Conversation.swift */; };
 		222A55B6270C0FA90047CA24 /* Date+TimeSince.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222A55B5270C0FA90047CA24 /* Date+TimeSince.swift */; };
 		2247F96F2712A4F800BFFC69 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2247F96E2712A4F800BFFC69 /* R.generated.swift */; };
@@ -71,6 +73,8 @@
 		221729E7270D93D60022D174 /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
 		221729ED270D94040022D174 /* MessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewModel.swift; sourceTree = "<group>"; };
 		221729F3270DA4B00022D174 /* UIViewController+SetNavTitleWithImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+SetNavTitleWithImage.swift"; sourceTree = "<group>"; };
+		22210D8227245C77005ED4B6 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		22210D84272485AA005ED4B6 /* UIButton+setBackgroundForState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+setBackgroundForState.swift"; sourceTree = "<group>"; };
 		222A55B2270C06C10047CA24 /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		222A55B5270C0FA90047CA24 /* Date+TimeSince.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+TimeSince.swift"; sourceTree = "<group>"; };
 		2247F96E2712A4F800BFFC69 /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
@@ -218,6 +222,7 @@
 				22CC53B826FAC8220036F6F9 /* AppDelegate.swift */,
 				22CC53BA26FAC8220036F6F9 /* SceneDelegate.swift */,
 				2247F96E2712A4F800BFFC69 /* R.generated.swift */,
+				22210D8227245C77005ED4B6 /* Constants.swift */,
 				22CC53C326FAC8260036F6F9 /* LaunchScreen.storyboard */,
 				22FFB2322716963E001884BA /* ChatApp-Bridging-Header.h */,
 				22CC53C626FAC8260036F6F9 /* Info.plist */,
@@ -322,6 +327,7 @@
 				22FFB22327160BEA001884BA /* UIColor+contrastingColor.swift */,
 				22FFB22527160E76001884BA /* UIColor+isLight.swift */,
 				22FFB2292716550B001884BA /* UIColor+makeColorLigherDarker.swift */,
+				22210D84272485AA005ED4B6 /* UIButton+setBackgroundForState.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -655,6 +661,7 @@
 				225D6186271D66B500A5D678 /* AsyncOperation.swift in Sources */,
 				22C71C222720921A005C4466 /* InAppNotificationBanner.swift in Sources */,
 				22D104C6270535D3006CF686 /* Dynamic.swift in Sources */,
+				22210D8327245C77005ED4B6 /* Constants.swift in Sources */,
 				22FFB22427160BEA001884BA /* UIColor+contrastingColor.swift in Sources */,
 				222A55B3270C06C10047CA24 /* Conversation.swift in Sources */,
 				22E69D232701E0AD009CAAC0 /* DMViewController.swift in Sources */,
@@ -673,6 +680,7 @@
 				22E69D182701D9A4009CAAC0 /* Router.swift in Sources */,
 				22FFB21727149A7F001884BA /* Theme.swift in Sources */,
 				22D104B22704A12C006CF686 /* ProfileView.swift in Sources */,
+				22210D85272485AA005ED4B6 /* UIButton+setBackgroundForState.swift in Sources */,
 				22FFB22627160E76001884BA /* UIColor+isLight.swift in Sources */,
 				22CC53BB26FAC8220036F6F9 /* SceneDelegate.swift in Sources */,
 				225D618A271D850F00A5D678 /* AsyncFileManager.swift in Sources */,

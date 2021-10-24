@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol ProfileDelegate {
+    func didUpdateProfileAvatar(with info: ProfileAvatarUpdateInfo?)
+}
+
 /// Вью-модель профиля
 final class ProfileViewModel: Routable {
     
@@ -22,20 +26,30 @@ final class ProfileViewModel: Routable {
     let userName: DynamicPreservable<String?>
     let userDescription: DynamicPreservable<String?>
     let userAvatar: DynamicPreservable<UIImage?>
-    
+
+    var delegate: ProfileDelegate?
+
     let operationState: Dynamic<OperationState?> = Dynamic(nil)
     
     var persistenceManager: PersistenceManagerProtocol
     
     // MARK: - Init
     init(router: MainRouterProtocol,
-         persistenceManager: PersistenceManagerProtocol = PersistenceManager()) {
+         persistenceManager: PersistenceManagerProtocol? = nil,
+         delegate: ProfileDelegate? = nil) {
         self.router = router
-        self.persistenceManager = persistenceManager
+        self.persistenceManager = persistenceManager ?? PersistenceManager()
+        self.delegate = delegate
         
-        self.userName = DynamicPreservable("", id: "UserName")
-        self.userDescription = DynamicPreservable("", id: "UserDescription")
-        self.userAvatar = DynamicPreservable(nil, id: "UserAvatar")
+        self.userName = DynamicPreservable(
+            "", id: AppFileNames.userName.rawValue
+        )
+        self.userDescription = DynamicPreservable(
+            "", id: AppFileNames.userDescription.rawValue
+        )
+        self.userAvatar = DynamicPreservable(
+            nil, id: AppFileNames.userAvatar.rawValue
+        )
     }
     
     // MARK: - Action Methods
@@ -46,7 +60,7 @@ final class ProfileViewModel: Routable {
     }
     
     func saveButtonPressed() {
-        askPreferredAsyncHandler()
+        saveCurrentUIState()
     }
     
     func didDismissProfileView() {
@@ -123,12 +137,6 @@ final class ProfileViewModel: Routable {
             PMLog.info("Аватарка пользователя не изменилась или пустая, оставляю без изменений.")
         }
         
-        savingGroup.enter()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            // Задержка 1 секунда
-            savingGroup.leave()
-        }
-        
         savingGroup.notify(queue: .main) { [weak self] in
             guard !results.isEmpty else {
                 self?.operationState.value = nil
@@ -173,30 +181,29 @@ final class ProfileViewModel: Routable {
             })
         }
     }
+}
+
+// MARK: - Profile Delegate Notify Methods
+private extension ProfileViewModel {
+    // Метод вызывается после успешного сохранения аватарки
+    // Если аватарка не пустая - передаем ее делегату
+    private func notifyDelegateOnAvatarSave() {
+        if let avatar = userAvatar.value {
+            DispatchQueue.main.async { [weak self] in
+                self?.delegate?.didUpdateProfileAvatar(with: .avatar(avatar))
+            }
+        }
+    }
     
-    private func askPreferredAsyncHandler() {
-        let alert = UIAlertController(title: "Pick preferred async handler", message: nil, preferredStyle: .actionSheet)
-        
-        let gcdOption = UIAlertAction(title: "GCD",
-                                      style: .default) { [weak self] _ in
-            self?.persistenceManager.storageType.changeFMParameters(
-                asyncHandler: .gcd
-            )
-            self?.saveCurrentUIState()
+    // Метод вызывается после успешного сохранения имени
+    // Если аватарка пустая (т.е. нужен плейсхолдер) передаем имя
+    // (имя нужно для генерации плейсхолдера с инициалами)
+    private func notifyDelegateOnNameSave() {
+        if let name = userName.value, userAvatar.value == nil {
+            DispatchQueue.main.async { [weak self] in
+                self?.delegate?.didUpdateProfileAvatar(with: .name(name))
+            }
         }
-        
-        let operationOption = UIAlertAction(title: "Operations",
-                                            style: .default) { [weak self] _ in
-            self?.persistenceManager.storageType.changeFMParameters(
-                asyncHandler: .operation(nil)
-            )
-            self?.saveCurrentUIState()
-        }
-        
-        alert.addAction(gcdOption)
-        alert.addAction(operationOption)
-        
-        router.presentAlert(alert, animated: true)
     }
 }
 
@@ -210,8 +217,7 @@ private extension ProfileViewModel {
             switch result {
             case .success(let text):
                 DispatchQueue.main.async {
-                    self?.userName.preserve(text)
-                    self?.userName.value = text
+                    self?.userName.setAndPreserve(text)
                 }
             case .failure(let error):
                 PMLog.error("Загрузка имени пользователя не удалась: \(error)")
@@ -226,8 +232,7 @@ private extension ProfileViewModel {
             switch result {
             case .success(let text):
                 DispatchQueue.main.async {
-                    self?.userDescription.preserve(text)
-                    self?.userDescription.value = text
+                    self?.userDescription.setAndPreserve(text)
                 }
             case .failure(let error):
                 PMLog.error("Загрузка описания пользователя не удалась: \(error)")
@@ -242,8 +247,7 @@ private extension ProfileViewModel {
             switch result {
             case .success(let image):
                 DispatchQueue.main.async {
-                    self?.userAvatar.preserve(image)
-                    self?.userAvatar.value = image
+                    self?.userAvatar.setAndPreserve(image)
                 }
             case .failure(let error):
                 PMLog.error("Загрузка аватарки пользователя не удалась: \(error)")
@@ -254,7 +258,11 @@ private extension ProfileViewModel {
     // MARK: SaveUserName to Persistent Storage
     func saveUserName(completion: @escaping CompletionHandler<Bool>) {
         persistenceManager.save(userName.value ?? "",
-                                key: userName.id) { result in
+                                key: userName.id) { [weak self] result in
+            
+            if case .success(_) = result {
+                self?.notifyDelegateOnNameSave()
+            }
             completion(result)
         }
     }
@@ -271,7 +279,10 @@ private extension ProfileViewModel {
     func saveUserAvatar(completion: @escaping CompletionHandler<Bool>) {
         guard let avatar = userAvatar.value else { return }
         persistenceManager.save(avatar,
-                                key: userAvatar.id) { result in
+                                key: userAvatar.id) { [weak self] result in
+            if case .success(_) = result {
+                self?.notifyDelegateOnAvatarSave()
+            }
             completion(result)
         }
     }

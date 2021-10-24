@@ -18,17 +18,50 @@ extension UIImageView {
     
     /// Добавляет желтый фон с инициалами на родительский ImageView
     /// - Parameter fullName: Имя Фамилия
-    func addProfilePlaceholder(fullName: String?,
-                               formattedBy formatter: PersonNameComponentsFormatter = PersonNameComponentsFormatter()) {
-        guard let fullName = fullName,
-              let components = formatter.personNameComponents(from: fullName) else {
-                  showPlaceholder("?")
-                  return
-              }
+    func addProfilePlaceholder(
+        fullName: String?,
+        formattedBy formatter: PersonNameComponentsFormatter = PersonNameComponentsFormatter()
+    ) {
+        guard let fullName = fullName, fullName != "" else {
+            showPlaceholder("?")
+            return
+        }
         
-        formatter.style = .abbreviated
-        let initials = formatter.string(from: components)
+        let initials = getInitials(from: fullName,
+                                   formatter: formatter,
+                                   formatterStyle: .abbreviated)
+        
         addProfilePlaceholder(initials: initials)
+    }
+    
+    // PersonNameComponentsFormatter может получить инициалы только с английского
+    // и еще нескольких языков, в котором конечно же нету русского, поэтому
+    // достаем
+    private func getInitials(
+        from name: String,
+        formatter: PersonNameComponentsFormatter,
+        formatterStyle: PersonNameComponentsFormatter.Style
+    ) -> String {
+        
+        formatter.style = formatterStyle
+        
+        
+        if let components = formatter.personNameComponents(from: name) {
+            return formatter.string(from: components)
+        } else {
+            var initials = name.split { !$0.isLetter }
+                .reduce(into: "") {
+                    if let first = $1.first {
+                        $0.append(first)
+                    }
+                }
+            if initials.count > 2,
+               let first = initials.first,
+               let last = initials.last {
+                initials = "\(first)\(last)"
+            }
+            return initials
+        }
     }
     
     /// Добавляет желтый фон с инициалами на родительский ImageView
@@ -36,7 +69,6 @@ extension UIImageView {
     func addProfilePlaceholder(initials: String?) {
         guard let initials = initials,
               initials.count >= 1 && initials.count < 5 else {
-                  Log.error("Введены пустые инициалы, или размер не соответствует формуле 1<=X<5 ")
                   showPlaceholder("?")
                   return
               }
@@ -49,7 +81,17 @@ extension UIImageView {
             initialsLabel.removeFromSuperview()
         }
         self.image = R.image.yellowCircle()
-        let label = UILabel()
+        let label = UILabel(frame: self.frame)
+        
+        addSubview(label)
+        
+        label.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.size.equalToSuperview().dividedBy(1.45)
+        }
+        
+        layoutIfNeeded()
+        
         // Тут магия по уменьшению шрифта так, чтобы он вписывался в лейбу
         label.font = UIFont.systemFont(ofSize: 120, weight: .semibold)
         label.textColor = .black
@@ -61,12 +103,6 @@ extension UIImageView {
         label.textAlignment = .center
         label.baselineAdjustment = .alignCenters
         label.text = initials.uppercased()
-        addSubview(label)
-        
-        label.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-            make.size.equalToSuperview().dividedBy(1.45)
-        }
     }
     
     /// Добавляет action на родительский ImageView

@@ -18,7 +18,7 @@ protocol MainRouterProtocol: RouterProtocol {
                               withViewModel viewModel: DMViewModel?)
     func presentThemesViewController(onThemeChanged: @escaping (UIColor) -> Void)
     func presentThemesViewControllerObjc(delegate: ThemesViewControllerDelegate)
-    func presentProfileViewController()
+    func presentProfileViewController(delegate: ProfileDelegate?)
     func popToRoot(animated: Bool)
     func presentAlert(_ alert: UIAlertController, animated: Bool)
     func resetToUpdateTheme()
@@ -34,7 +34,23 @@ class MainRouter: MainRouterProtocol {
     /// Инициализировать первый экран приложения
     func initiateFirstViewController() {
         if let navigationController = navigationController {
-            let conversationsViewModel = ConversationsViewModel(router: self)
+            let fileManager = AsyncFileManager(
+                fileManager: FileManager.default,
+                asyncHandler: .gcd,
+                qos: .userInteractive
+            )
+    
+            let fileManagerPreferences = FileManagerPreferences(
+                preferredTextExtension: .txt,
+                preferredImageExtension: .jpeg,
+                preferredDirectory: .userProfile
+            )
+            let persistenceManager = PersistenceManager(
+                storageType: .fileManger(fileManager, fileManagerPreferences)
+            )
+            let conversationsViewModel = ConversationsViewModel(
+                router: self, persistenceManager: persistenceManager
+            )
             let conversationsViewController = ConversationsViewController(with: conversationsViewModel)
             navigationController.viewControllers = [conversationsViewController]
         }
@@ -102,7 +118,7 @@ class MainRouter: MainRouterProtocol {
     }
     
     /// Инициализировать и представить модально экран профиля в своем собственном NC
-    func presentProfileViewController() {
+    func presentProfileViewController(delegate: ProfileDelegate? = nil) {
         if let navigationController = navigationController {
             let fileManager = AsyncFileManager(fileManager: FileManager.default, asyncHandler: .gcd, qos: .userInitiated)
             let fileManagerPreferences = FileManagerPreferences(
@@ -114,7 +130,8 @@ class MainRouter: MainRouterProtocol {
                 storageType: .fileManger(fileManager, fileManagerPreferences)
             )
             let profileViewModel = ProfileViewModel(router: self,
-                                                    persistenceManager: persistenceManager)
+                                                    persistenceManager: persistenceManager,
+                                                    delegate: delegate)
             let profileViewController = ProfileViewController(with: profileViewModel)
             // Представляем модально с прозрачным эффектом
             profileViewController.modalPresentationStyle = .overCurrentContext

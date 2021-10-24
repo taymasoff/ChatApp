@@ -13,7 +13,11 @@ import Rswift
 final class ConversationsViewController: UIViewController, ViewModelBased {
     
     // MARK: - Properties
-    fileprivate var profileBarButton: UIBarButtonItem!
+    fileprivate var profileBarButton: UIBarButtonItem? {
+        didSet {
+            updateNavBarItem(with: profileBarButton, animated: true)
+        }
+    }
     fileprivate var gearBarButton: UIBarButtonItem!
     fileprivate var conversationsTableView: UITableView!
     
@@ -33,11 +37,8 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
         gearBarButton = makeGearBarButton()
         conversationsTableView = makeConversationsTableView()
         
-        updateProfileBarButton(with: "Marina Dudarenko")
-        
         navigationItem.title = viewModel?.title
         navigationItem.leftBarButtonItem = gearBarButton
-        navigationItem.rightBarButtonItem = profileBarButton
     }
     
     override func viewDidLoad() {
@@ -47,6 +48,8 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
                                         forCellReuseIdentifier: ConversationCell.reuseID)
         conversationsTableView.rowHeight = 80
         setupSearchController()
+        viewModel?.fetchUserAvatarOrName()
+        bindWithViewModel()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -78,6 +81,15 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
         viewModel?.gearBarButtonPressed()
     }
 }
+
+extension ConversationsViewController: ViewModelBindable {
+    func bindWithViewModel() {
+        viewModel?.profileAvatarUpdateInfo.bind(listener: { [unowned self] update in
+            updateProfileBarButton(with: update)
+        })
+    }
+}
+
 // MARK: - UITableView Delegate & Data Source
 extension ConversationsViewController: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -136,31 +148,50 @@ extension ConversationsViewController: UITableViewDataSource, UITableViewDelegat
 // MARK: - Update Bar Button Items Methods
 // Обновляет ProfileBarButtonItem картинкой, или плейсхолдером с инициалами
 private extension ConversationsViewController {
-    func updateProfileBarButton(with image: UIImage?) {
-        guard let image = image else {
-            Log.error("No image was set. Updating Profile Bar Button with default image.")
-            return updateProfileBarButton(with: "")
+    func updateNavBarItem(with item: UIBarButtonItem? = nil,
+                          animated: Bool = true) {
+        let item = item != nil ? item : profileBarButton
+        navigationItem.rightBarButtonItem = item
+        if animated {
+            navigationItem.rightBarButtonItem?.customView?.alpha = 0.0
+            UIView.animate(withDuration: 0.3) { [weak self] in
+                self?.navigationItem.rightBarButtonItem?.customView?.alpha = 1.0
+            }
         }
-        let button = UIButton(type: .system)
-        button.setImage(image, for: .normal)
+    }
+    
+    func updateProfileBarButton(with info: ProfileAvatarUpdateInfo?) {
+        let imageViewSize = 40
+        let imageView = UIImageView()
+        imageView.layer.cornerRadius = CGFloat(imageViewSize / 2)
+        imageView.layer.masksToBounds = true
+        let button = UIButton(type: .custom)
+        
         button.addTarget(self,
                          action: #selector(profileBarButtonPressed),
                          for: .touchUpInside)
-        button.snp.makeConstraints { make in
-            make.size.equalTo(40)
+        button.setBackgroundColor(.clear.withAlphaComponent(0.5), for: .highlighted)
+        
+        switch info {
+        case .avatar(let image):
+            imageView.image = image
+        case .name(let name):
+            imageView.addProfilePlaceholder(fullName: name,
+                                            formattedBy: nameFormatter)
+        default:
+            imageView.addProfilePlaceholder(fullName: "")
         }
-        profileBarButton = UIBarButtonItem(customView: button)
-    }
-    
-    func updateProfileBarButton(with fullName: String?) {
-        let imageView = UIImageView()
+        
         imageView.snp.makeConstraints { make in
-            make.size.equalTo(40)
+            make.size.equalTo(imageViewSize)
         }
-        imageView.addProfilePlaceholder(fullName: fullName,
-                                        formattedBy: nameFormatter)
-        imageView.addAction(target: self,
-                            action: #selector(profileBarButtonPressed))
+        
+        imageView.addSubview(button)
+        
+        button.snp.makeConstraints { make in
+            make.edges.equalTo(imageView)
+        }
+        
         profileBarButton = UIBarButtonItem(customView: imageView)
     }
 }
