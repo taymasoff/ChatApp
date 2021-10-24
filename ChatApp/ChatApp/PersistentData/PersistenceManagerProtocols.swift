@@ -73,7 +73,7 @@ extension FromDataConvertable {
         }
     }
     
-    func convertToModel<T: Decodable>(_ data: Data) throws -> T  {
+    func convertToModel<T: Decodable>(_ data: Data) throws -> T {
         do {
             return try JSONDecoder().decode(T.self, from: data)
         } catch {
@@ -121,7 +121,7 @@ extension ToDataConvertable where Self: PMBase {
                     throw CodingError.imageEncodingError
                 }
             }
-        case .userDefaults(_):
+        case .userDefaults:
             if let data = image.pngData() {
                 return data
             } else {

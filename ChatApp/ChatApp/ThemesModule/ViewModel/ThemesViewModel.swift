@@ -62,7 +62,16 @@ final class ThemesViewModel: NSObject, Routable {
     func didDismissThemesView() { }
     
     private func askToReset() {
-        let alert = UIAlertController(title: "Обновить тему?", message: "Чтобы обновить тему, необходимо перезагрузить экраны. \nНесохраненные состояния могут быть потеряны. \nВ ином случае, тема сменится после следующего рестарта приложения.", preferredStyle: .alert)
+        let alert = UIAlertController(
+            title: "Обновить тему?",
+            message:
+"""
+Чтобы обновить тему, необходимо перезагрузить экраны.
+Несохраненные состояния могут быть потеряны.
+В ином случае, тема сменится после следующего рестарта приложения.
+""",
+            preferredStyle: .alert
+        )
         
         let acceptAction = UIAlertAction(title: "Обновить тему сейчас",
                                          style: .default) { [weak self] _ in
@@ -94,8 +103,9 @@ final class ThemesViewModel: NSObject, Routable {
     }
     
     private func loadThemeUsingPersistenceManager() {
-        persistenceManager?.fetchModel(key: ThemeManager.themeKey)
-        { (result: Result<Theme, Error>) in
+        persistenceManager?.fetchModel(
+            key: ThemeManager.themeKey
+        ) { (result: Result<Theme, Error>) in
             switch result {
             case .success(let model):
                 PMLog.info("Загружена тема - \(model.rawValue)")

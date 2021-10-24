@@ -40,7 +40,6 @@ final class ConversationCell: UITableViewCell, ReuseIdentifiable, Configurable {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
     // MARK: - Internal Methods
     private func changeLastMessageLabelState(_ hasUnread: Bool) {
         switch hasUnread {

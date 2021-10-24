@@ -27,6 +27,4 @@ class FileReadOperation: AsyncResultOperation<Data, Error> {
             try fileManager.read(fromFileNamed: fileName, at: directory)
         })
     }
-    
-    
 }

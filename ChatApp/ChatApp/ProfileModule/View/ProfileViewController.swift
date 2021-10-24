@@ -26,13 +26,9 @@ final class ProfileViewController: UIViewController, ViewModelBased {
     }
     
     // MARK: - Lifecycle Methods
-    override func loadView() {
-        super.loadView()
-        profileView = makeProfileView()
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        profileView = makeProfileView()
         
         profileView.userNameTextField.delegate = self
         profileView.userDescriptionTextView.delegate = self
@@ -49,6 +45,7 @@ final class ProfileViewController: UIViewController, ViewModelBased {
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         view.insertSubview(blurredView, at: 0)
         showProfileView(animated: true)
     }
@@ -355,12 +352,11 @@ private extension ProfileViewController {
         }
     }
     
-    
     func dismissProfileView(animated: Bool) {
         view.endEditing(true) // Убираем клавиатуру если она есть
         profileView.snp.updateConstraints { make in
             make.bottom.equalToSuperview()
-                .offset(profileView.circleView.frame.height/2)
+                .offset(profileView.circleView.frame.height / 2)
                 .offset(profileView.frame.height)
         }
         if animated {
@@ -390,7 +386,7 @@ private extension ProfileViewController {
             make.right.left.equalToSuperview()
             make.height.equalToSuperview().multipliedBy(0.7)
             make.bottom.equalToSuperview()
-                .offset(profileView.circleView.frame.height/2)
+                .offset(profileView.circleView.frame.height / 2)
                 .offset(profileView.frame.height)
         }
         view.layoutIfNeeded()

@@ -60,7 +60,7 @@ extension UIViewController {
         
         titleView.snp.makeConstraints { make in
             make.height.equalTo(44)
-            make.width.equalTo(UIScreen.main.bounds.width * 2/3)
+            make.width.equalTo(UIScreen.main.bounds.width * 2 / 3)
         }
         
         navigationItem.titleView = titleView

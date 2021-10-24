@@ -45,7 +45,6 @@ extension UIImageView {
         
         formatter.style = formatterStyle
         
-        
         if let components = formatter.personNameComponents(from: name) {
             return formatter.string(from: components)
         } else {

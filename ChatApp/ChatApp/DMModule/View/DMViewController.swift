@@ -28,18 +28,14 @@ final class DMViewController: UIViewController, ViewModelBased {
     }
     
     // MARK: - Lifecycle Methods
-    override func loadView() {
-        super.loadView()
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
         view.backgroundColor = ThemeManager.currentTheme.settings.mainColor
         
         setupSubviews()
         setupSubviewsHierarchy()
         setupSubviewsLayout()
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
         
         clearBackButtonText()
         configureTableView()
@@ -73,7 +69,11 @@ final class DMViewController: UIViewController, ViewModelBased {
     
     private func calculateEstimatedRowHeight() -> CGFloat {
         // 17 - примерная высота 1 строки TextView при текущем шрифте
-        return CGFloat(17 + MessageCell.timePadding*2 + MessageCell.textPadding*2 + MessageCell.bubbleMargin*2)
+        return CGFloat(
+            17 + MessageCell.timePadding * 2 +
+            MessageCell.textPadding * 2 +
+            MessageCell.bubbleMargin * 2
+        )
     }
     
     @objc

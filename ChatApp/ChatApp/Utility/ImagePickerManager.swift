@@ -14,7 +14,7 @@ class ImagePickerManager: NSObject, UIImagePickerControllerDelegate, UINavigatio
                                   message: nil,
                                   preferredStyle: .actionSheet)
     var viewController: UIViewController?
-    var pickImageCallback : ((UIImage) -> ())?
+    var pickImageCallback: ((UIImage) -> Void)?
     
     override init() {
         super.init()
@@ -25,8 +25,7 @@ class ImagePickerManager: NSObject, UIImagePickerControllerDelegate, UINavigatio
         let galleryAction = UIAlertAction(title: "Gallery", style: .default) { _ in
             self.openGallery()
         }
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel){
-            _ in
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
         }
 
         picker.delegate = self
@@ -36,7 +35,7 @@ class ImagePickerManager: NSObject, UIImagePickerControllerDelegate, UINavigatio
     }
 
     func pickImage(_ viewController: UIViewController,
-                   _ callback: @escaping ((UIImage) -> ())) {
+                   _ callback: @escaping ((UIImage) -> Void)) {
         
         pickImageCallback = callback
         self.viewController = viewController
@@ -74,7 +73,7 @@ class ImagePickerManager: NSObject, UIImagePickerControllerDelegate, UINavigatio
     }
 
     func imagePickerController(_ picker: UIImagePickerController,
-                               didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+                               didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         picker.dismiss(animated: true, completion: nil)
         guard let image = info[.originalImage] as? UIImage else {
             let alertController = UIAlertController(title: "Ошибка",

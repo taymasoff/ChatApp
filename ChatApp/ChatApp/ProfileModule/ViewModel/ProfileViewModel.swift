@@ -82,9 +82,9 @@ final class ProfileViewModel: Routable {
         
         if userName.hasChanged() {
             savingGroup.enter()
-            saveUserName() { [weak self] result in
+            saveUserName { [weak self] result in
                 if let self = self {
-                    if case .success(_) = result {
+                    if case .success = result {
                         DispatchQueue.main.async {
                             self.userName.preserve()
                         }
@@ -101,9 +101,9 @@ final class ProfileViewModel: Routable {
         
         if userDescription.hasChanged() {
             savingGroup.enter()
-            saveUserDescription() { [weak self] result in
+            saveUserDescription { [weak self] result in
                 if let self = self {
-                    if case .success(_) = result {
+                    if case .success = result {
                         DispatchQueue.main.async {
                             self.userDescription.preserve()
                         }
@@ -120,9 +120,9 @@ final class ProfileViewModel: Routable {
         
         if userAvatar.value != nil, userAvatar.hasChanged() {
             savingGroup.enter()
-            saveUserAvatar() { [weak self] result in
+            saveUserAvatar { [weak self] result in
                 if let self = self {
-                    if case .success(_) = result {
+                    if case .success = result {
                         DispatchQueue.main.async {
                             self.userAvatar.preserve()
                         }
@@ -165,7 +165,7 @@ final class ProfileViewModel: Routable {
         
         func makeSummaryMessage(_ results: [String: Result<Bool, Error>]) -> String {
             return results.reduce(into: "") { message, dict in
-                if case .failure(_) = dict.value {
+                if case .failure = dict.value {
                     message.append("Не удалось сохранить запись с ключом: \(dict.key)")
                 } else {
                     message.append("Успешно сохранена запись с ключом: \(dict.key)")
@@ -176,8 +176,8 @@ final class ProfileViewModel: Routable {
         }
         
         func containsError(_ results: [String: Result<Bool, Error>]) -> Bool {
-            return results.contains(where: { key, value in
-                if case .failure(_) = value { return true } else { return false }
+            return results.contains(where: { _, value in
+                if case .failure = value { return true } else { return false }
             })
         }
     }
@@ -260,7 +260,7 @@ private extension ProfileViewModel {
         persistenceManager.save(userName.value ?? "",
                                 key: userName.id) { [weak self] result in
             
-            if case .success(_) = result {
+            if case .success = result {
                 self?.notifyDelegateOnNameSave()
             }
             completion(result)
@@ -280,7 +280,7 @@ private extension ProfileViewModel {
         guard let avatar = userAvatar.value else { return }
         persistenceManager.save(avatar,
                                 key: userAvatar.id) { [weak self] result in
-            if case .success(_) = result {
+            if case .success = result {
                 self?.notifyDelegateOnAvatarSave()
             }
             completion(result)

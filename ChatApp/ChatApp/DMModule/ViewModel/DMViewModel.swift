@@ -31,7 +31,7 @@ final class DMViewModel: Routable {
     }
     
     private func observeImageURL() {
-        self.chatBuddyImageURL.bind { [unowned self] url in
+        self.chatBuddyImageURL.bind { [unowned self] _ in
             // Тут получаем пикчу, пока мок
             let mockImages: [UIImage?] = [UIImage(named: "ArthurBell"),
                                           UIImage(named: "JaneWarren"), nil]
@@ -77,7 +77,7 @@ extension DMViewModel {
     func randomText(_ amountOfCharacters: Int) -> String {
       let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
         return String((0...Int.random(in: 0...amountOfCharacters))
-                        .map{ _ in letters.randomElement()! })
+                        .map { _ in letters.randomElement()! })
     }
     
     func generateRandomMessage() -> Message {

@@ -31,18 +31,14 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
     }
     
     // MARK: - UIViewController Lifecycle Methods
-    override func loadView() {
-        super.loadView()
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
         gearBarButton = makeGearBarButton()
         conversationsTableView = makeConversationsTableView()
         
         navigationItem.title = viewModel?.title
         navigationItem.leftBarButtonItem = gearBarButton
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
         
         conversationsTableView.register(ConversationCell.self,
                                         forCellReuseIdentifier: ConversationCell.reuseID)
@@ -161,7 +157,7 @@ private extension ConversationsViewController {
     }
     
     func updateProfileBarButton(with info: ProfileAvatarUpdateInfo?) {
-        let imageViewSize = 40
+        let imageViewSize = 35
         let imageView = UIImageView()
         imageView.layer.cornerRadius = CGFloat(imageViewSize / 2)
         imageView.layer.masksToBounds = true

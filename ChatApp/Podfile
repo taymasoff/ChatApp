@@ -13,4 +13,5 @@ target 'ChatApp' do
   pod 'R.swift'
   pod 'Firebase/Firestore'
   pod 'FirebaseFirestoreSwift', '8.8.0-beta'
+  pod 'SwiftLint'
 end

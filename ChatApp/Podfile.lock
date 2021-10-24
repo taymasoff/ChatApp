@@ -416,12 +416,14 @@ PODS:
     - R.swift.Library (~> 5.3.0)
   - R.swift.Library (5.3.0)
   - SnapKit (5.0.1)
+  - SwiftLint (0.45.0)
 
 DEPENDENCIES:
   - Firebase/Firestore
   - FirebaseFirestoreSwift (= 8.8.0-beta)
   - R.swift
   - SnapKit
+  - SwiftLint
 
 SPEC REPOS:
   trunk:
@@ -442,6 +444,7 @@ SPEC REPOS:
     - R.swift
     - R.swift.Library
     - SnapKit
+    - SwiftLint
 
 SPEC CHECKSUMS:
   abseil: 6c8eb7892aefa08d929b39f9bb108e5367e3228f
@@ -461,7 +464,8 @@ SPEC CHECKSUMS:
   R.swift: c533450b0f7dc494e0993f5f1a1db925d84c3006
   R.swift.Library: 0fc583cb55a99e28901299cc451614cad1161962
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
+  SwiftLint: e5c7f1fba68eccfc51509d5b2ce1699f5502e0c7
 
-PODFILE CHECKSUM: 56b5858098e4cf2c10ceafcc033324f53f39e8f3
+PODFILE CHECKSUM: 4d129aea9c246df7211085e5b35e838f2e3ec7ee
 
 COCOAPODS: 1.11.2

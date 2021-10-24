@@ -16,7 +16,7 @@ final class ConversationsViewModel: NSObject, Routable {
     // MARK: - Properties
     let router: MainRouterProtocol
     var title = "Tinkoff Chat"
-    var conversations: [String : [Conversation]]?
+    var conversations: [String: [Conversation]]?
     var profileAvatarUpdateInfo: Dynamic<ProfileAvatarUpdateInfo?> = Dynamic(nil)
     
     var persistenceManager: PersistenceManagerProtocol
@@ -76,15 +76,17 @@ extension ConversationsViewModel {
     // если ее нет - возвращаем имя для генерации плейсхолдера
     // если и имя пустое - то ничего
     func fetchUserAvatarOrName() {
-        persistenceManager.fetchImage(key: AppFileNames.userAvatar.rawValue) {
-            [weak self] result in
+        persistenceManager.fetchImage(
+            key: AppFileNames.userAvatar.rawValue
+        ) { [weak self] result in
             if case .success(let image) = result {
                 DispatchQueue.main.async {
                     self?.profileAvatarUpdateInfo.value = .avatar(image)
                 }
             } else {
-                self?.persistenceManager.fetchString(key: AppFileNames.userName.rawValue) {
-                    result in
+                self?.persistenceManager.fetchString(
+                    key: AppFileNames.userName.rawValue
+                ) { result in
                     if case .success(let name) = result {
                         DispatchQueue.main.async {
                             self?.profileAvatarUpdateInfo.value = .name(name)
@@ -157,11 +159,14 @@ extension ConversationsViewModel: UISearchResultsUpdating {
 extension ConversationsViewModel {
     func randomText() -> String {
       let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        return String((0...Int.random(in: 0...100)).map{ _ in letters.randomElement()! })
+        return String((0...Int.random(in: 0...100)).map { _ in letters.randomElement()! })
     }
     
     func generateRandomConversation() -> Conversation {
-        let userNames = ["Talisha Hakobyan", "Vitomir Mark", "Maryna Madigan", "Margherita Simmon", "Sudarshan Eckstein", "Berenice Ferreiro", "Padma Traylor", "Isla Kumar", "Dareios Sternberg"]
+        let userNames = ["Talisha Hakobyan", "Vitomir Mark",
+                         "Maryna Madigan", "Margherita Simmon",
+                         "Sudarshan Eckstein", "Berenice Ferreiro",
+                         "Padma Traylor", "Isla Kumar", "Dareios Sternberg"]
         let randomText: [String?] = [randomText(), nil]
         return Conversation(
             profileImageURL: nil,
@@ -173,7 +178,7 @@ extension ConversationsViewModel {
             hasUnreadMessages: ([true, false].randomElement() != nil))
     }
     
-    func makeConversationsDictionary(_ amount: Int) -> [String : [Conversation]] {
+    func makeConversationsDictionary(_ amount: Int) -> [String: [Conversation]] {
         var conversations: [Conversation] {
             var conversations = [Conversation]()
             for _ in 0...amount {
