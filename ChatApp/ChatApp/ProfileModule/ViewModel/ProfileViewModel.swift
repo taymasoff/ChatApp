@@ -19,11 +19,11 @@ final class ProfileViewModel: Routable {
     // MARK: - Properties
     let router: MainRouterProtocol
     
-    var userName: DynamicPreservable<String?>
-    var userDescription: DynamicPreservable<String?>
-    var userAvatar: DynamicPreservable<UIImage?>
+    let userName: DynamicPreservable<String?>
+    let userDescription: DynamicPreservable<String?>
+    let userAvatar: DynamicPreservable<UIImage?>
     
-    private(set) var operationState: Dynamic<OperationState?> = Dynamic(nil)
+    let operationState: Dynamic<OperationState?> = Dynamic(nil)
     
     var persistenceManager: PersistenceManagerProtocol
     
@@ -82,7 +82,7 @@ final class ProfileViewModel: Routable {
                 savingGroup.leave()
             }
         } else {
-            Log.pm("Имя пользователя не изменилось, оставляю без изменений.")
+            PMLog.info("Имя пользователя не изменилось, оставляю без изменений.")
         }
         
         if userDescription.hasChanged() {
@@ -101,7 +101,7 @@ final class ProfileViewModel: Routable {
                 savingGroup.leave()
             }
         } else {
-            Log.pm("Описание пользователя не изменилось, оставляю без изменений.")
+            PMLog.info("Описание пользователя не изменилось, оставляю без изменений.")
         }
         
         if userAvatar.value != nil, userAvatar.hasChanged() {
@@ -120,7 +120,7 @@ final class ProfileViewModel: Routable {
                 savingGroup.leave()
             }
         } else {
-            Log.pm("Аватарка пользователя не изменилась или пустая, оставляю без изменений.")
+            PMLog.info("Аватарка пользователя не изменилась или пустая, оставляю без изменений.")
         }
         
         savingGroup.enter()
@@ -214,7 +214,7 @@ private extension ProfileViewModel {
                     self?.userName.value = text
                 }
             case .failure(let error):
-                Log.pm("Загрузка имени пользователя не удалась: \(error)")
+                PMLog.error("Загрузка имени пользователя не удалась: \(error)")
             }
         }
     }
@@ -230,7 +230,7 @@ private extension ProfileViewModel {
                     self?.userDescription.value = text
                 }
             case .failure(let error):
-                Log.pm("Загрузка описания пользователя не удалась: \(error)")
+                PMLog.error("Загрузка описания пользователя не удалась: \(error)")
             }
         }
     }
@@ -246,14 +246,13 @@ private extension ProfileViewModel {
                     self?.userAvatar.value = image
                 }
             case .failure(let error):
-                Log.pm("Загрузка аватарки пользователя не удалась: \(error)")
+                PMLog.error("Загрузка аватарки пользователя не удалась: \(error)")
             }
         }
     }
     
     // MARK: SaveUserName to Persistent Storage
-    func saveUserName(group: DispatchGroup? = nil,
-                      completion: @escaping CompletionHandler<Bool>) {
+    func saveUserName(completion: @escaping CompletionHandler<Bool>) {
         persistenceManager.save(userName.value ?? "",
                                 key: userName.id) { result in
             completion(result)
@@ -261,8 +260,7 @@ private extension ProfileViewModel {
     }
     
     // MARK: SaveUserDescription to Persistent Storage
-    func saveUserDescription(group: DispatchGroup? = nil,
-                             completion: @escaping CompletionHandler<Bool>) {
+    func saveUserDescription(completion: @escaping CompletionHandler<Bool>) {
         persistenceManager.save(userDescription.value ?? "",
                                 key: userDescription.id) { result in
             completion(result)
@@ -270,8 +268,7 @@ private extension ProfileViewModel {
     }
     
     // MARK: SaveUserAvatar to Persistent Storage
-    func saveUserAvatar(group: DispatchGroup? = nil,
-                        completion: @escaping CompletionHandler<Bool>) {
+    func saveUserAvatar(completion: @escaping CompletionHandler<Bool>) {
         guard let avatar = userAvatar.value else { return }
         persistenceManager.save(avatar,
                                 key: userAvatar.id) { result in

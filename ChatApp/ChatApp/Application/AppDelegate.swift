@@ -16,11 +16,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: - UIApplicationDelegate Lifecycle Methods
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
+        setupLoggers()
+        
         ThemeManager.updateCurrentTheme()
         if #available(iOS 13, *) {} else {
             createAndShowFirstScene()
         }
         return true
+    }
+    
+    private func setupLoggers() {
+        Log.setup(loggerState: .onlyInDebug,
+                  includeDate: true,
+                  includeFileNames: true,
+                  includeFuncNames: true)
+        PMLog.setup(loggerState: .onlyInDebug,
+                    includeDate: true)
     }
     
     // MARK: - Create and Show First Scene

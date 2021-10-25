@@ -86,9 +86,9 @@ final class ThemesViewModel: NSObject, Routable {
         ) { [weak self] result in
             switch result {
             case .success(_):
-                Log.pm("Успешно сохранена тема: \(self?.selectedTheme.rawValue ?? "")")
+                PMLog.info("Успешно сохранена тема: \(self?.selectedTheme.rawValue ?? "")")
             case .failure(let error):
-                Log.pm("Не удалось сохранить тему. Ошибка: \(error)")
+                PMLog.error("Не удалось сохранить тему. Ошибка: \(error)")
             }
         }
     }
@@ -98,9 +98,9 @@ final class ThemesViewModel: NSObject, Routable {
         { (result: Result<Theme, Error>) in
             switch result {
             case .success(let model):
-                Log.pm("Загружена тема - \(model.rawValue)")
+                PMLog.info("Загружена тема - \(model.rawValue)")
             case .failure(let error):
-                Log.pm("Ошибка загрузки темы - \(error)")
+                PMLog.error("Ошибка загрузки темы - \(error)")
             }
         }
     }
