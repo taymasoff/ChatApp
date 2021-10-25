@@ -94,7 +94,7 @@ final class ThemesViewModel: NSObject, Routable {
             key: ThemeManager.themeKey
         ) { [weak self] result in
             switch result {
-            case .success(_):
+            case .success:
                 PMLog.info("Успешно сохранена тема: \(self?.selectedTheme.rawValue ?? "")")
             case .failure(let error):
                 PMLog.error("Не удалось сохранить тему. Ошибка: \(error)")

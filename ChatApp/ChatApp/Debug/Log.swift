@@ -14,7 +14,7 @@ import Foundation
     10:16:46537 📝 [AppDelegate.swift]: application(_:didFinishLaunchingWithOptions:) -> App just Launched
  */
 
-fileprivate enum LoggerOutputType {
+private enum LoggerOutputType {
     case info
     case error
     
@@ -97,8 +97,8 @@ internal class Log {
     ///   - filename: Название файла, из которого ведется логирование
     ///   - funcName: Название функции, откуда вызван метод логирования
     class func info(_ object: Any,
-                 fileName: String = #file,
-                 funcName: String = #function) {
+                    fileName: String = #file,
+                    funcName: String = #function) {
         
         guard isLoggingEnabled else { return }
         let prefix = createPrefix(fileName: fileName,
@@ -181,4 +181,3 @@ internal class PMLog: Log {
         }
     
 }
-

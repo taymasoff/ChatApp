@@ -357,10 +357,10 @@
 		22E69D1C2701DA91009CAAC0 /* ConversationsModule */ = {
 			isa = PBXGroup;
 			children = (
+				22E69D2F2701E285009CAAC0 /* ConversationCell */,
 				222A55B4270C06C50047CA24 /* Model */,
 				22E69D1D2701DAA6009CAAC0 /* View */,
 				22E69D1E2701DAB9009CAAC0 /* ViewModel */,
-				22E69D2F2701E285009CAAC0 /* ConversationCell */,
 			);
 			path = ConversationsModule;
 			sourceTree = "<group>";
