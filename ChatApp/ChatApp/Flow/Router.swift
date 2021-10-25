@@ -15,7 +15,7 @@ protocol RouterProtocol {
 protocol MainRouterProtocol: RouterProtocol {
     func initiateFirstViewController()
     func showDMViewController(animated: Bool,
-                              withViewModel viewModel: DMViewModel?)
+                              withViewModel viewModel: DMViewModel)
     func presentThemesViewController(onThemeChanged: @escaping (UIColor) -> Void)
     func presentThemesViewControllerObjc(delegate: ThemesViewControllerDelegate)
     func presentProfileViewController(delegate: ProfileDelegate?)
@@ -59,15 +59,9 @@ class MainRouter: MainRouterProtocol {
     /// Инициализировать и закинуть в navigation стэк экран переписки
     /// - Parameter animated: включена ли анимация перехода (да по умолчанию)
     func showDMViewController(animated: Bool = true,
-                              withViewModel viewModel: DMViewModel? = nil) {
+                              withViewModel viewModel: DMViewModel) {
         if let navigationController = navigationController {
-            let dmViewController: DMViewController
-            if let viewModel = viewModel {
-                dmViewController = DMViewController(with: viewModel)
-            } else {
-                let viewModel = DMViewModel(router: self)
-                dmViewController = DMViewController(with: viewModel)
-            }
+            let dmViewController = DMViewController(with: viewModel)
             navigationController.pushViewController(dmViewController,
                                                     animated: animated)
         }

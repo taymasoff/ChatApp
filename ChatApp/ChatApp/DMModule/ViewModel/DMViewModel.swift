@@ -12,31 +12,22 @@ import UIKit
 final class DMViewModel: Routable {
     
     let router: MainRouterProtocol
-    var chatBuddyName: Dynamic<String?> = Dynamic(nil)
-    var chatBuddyImageURL: Dynamic<String?> = Dynamic(nil)
-    var chatBuddyImage: Dynamic<UIImage?> = Dynamic(nil)
+    let dialogueID: String
+    let chatName: Dynamic<String?> = Dynamic(nil)
+    let chatImage: Dynamic<UIImage?> = Dynamic(nil)
     
     var groupedMessages: [GroupedMessages]?
     
     init(router: MainRouterProtocol,
-         chatBuddyName: String? = nil,
-         chatBuddyImageURL: String? = nil) {
+         dialogueID: String,
+         chatName: String? = nil,
+         chatImage: UIImage? = nil) {
         self.router = router
-        self.chatBuddyName.value = chatBuddyName
-        self.chatBuddyImageURL.value = chatBuddyImageURL
+        self.dialogueID = dialogueID
+        self.chatName.value = chatName
+        self.chatImage.value = chatImage
         
         groupedMessages = makeGroupedMessages(40)
-        
-        observeImageURL()
-    }
-    
-    private func observeImageURL() {
-        self.chatBuddyImageURL.bind { [unowned self] _ in
-            // Тут получаем пикчу, пока мок
-            let mockImages: [UIImage?] = [UIImage(named: "ArthurBell"),
-                                          UIImage(named: "JaneWarren"), nil]
-            chatBuddyImage.value = mockImages.randomElement()!
-        }
     }
     
     func sendMessagePressed() {

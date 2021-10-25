@@ -15,20 +15,22 @@ final class ConversationsViewModel: NSObject, Routable {
     
     // MARK: - Properties
     let router: MainRouterProtocol
-    var title = "Tinkoff Chat"
-    var conversations: [String: [Conversation]]?
+    let title = "Conversations"
+    let conversations: Dynamic<[GroupedConversations]?> = Dynamic(nil)
+    var onUpdate: (() -> Void)?
     var profileAvatarUpdateInfo: Dynamic<ProfileAvatarUpdateInfo?> = Dynamic(nil)
     
     var persistenceManager: PersistenceManagerProtocol
+    let repository: ConversationsRepositoryProtocol
     
     // MARK: - Initializer
     init(router: MainRouterProtocol,
-         persistenceManager: PersistenceManagerProtocol? = nil) {
+         persistenceManager: PersistenceManagerProtocol? = nil,
+         repository: ConversationsRepositoryProtocol? = nil) {
         self.router = router
         self.persistenceManager = persistenceManager ?? PersistenceManager()
+        self.repository = repository ?? ConversationsRepository()
         super.init()
-        
-        conversations = makeConversationsDictionary(40) // 👈 если нужно изменить количество моковых данных
     }
     
     // MARK: - Private Methods
@@ -38,6 +40,30 @@ final class ConversationsViewModel: NSObject, Routable {
     
     func gearBarButtonPressed() {
         askToPickController()
+    }
+    
+    private func bindToRepositoryUpdates() {
+        repository.conversations.bind(listener: { [weak self] conversations in
+            self?.conversations
+                .value = self?.mapConversationsByActivity(conversations)
+            self?.onUpdate?()
+        })
+    }
+    
+    // Группируем модель по полю активности, структуру используем для отрисовки таблицы
+    private func mapConversationsByActivity(
+        _ conversations: [Conversation]
+    ) -> [GroupedConversations] {
+        return Dictionary(grouping: conversations) { $0.isActive }
+        .map { (element) -> GroupedConversations in
+            if element.key {
+                return GroupedConversations(title: "Currently Active",
+                                            conversations: element.value)
+            } else {
+                return GroupedConversations(title: "Inactive",
+                                            conversations: element.value)
+            }
+        }
     }
     
     private func askToPickController() {
@@ -117,33 +143,44 @@ extension ConversationsViewModel: ThemesViewControllerDelegate {
     }
 }
 
+// MARK: - ConversationsViewController Lifecycle Updates
+extension ConversationsViewModel {
+    func viewDidLoad() {
+        bindToRepositoryUpdates()
+        repository.subscribeToUpdates()
+    }
+}
+
 // MARK: - TableView Methods
 extension ConversationsViewModel {
     func numberOfSections() -> Int {
-        return conversations?.keys.count ?? 0
+        return conversations.value?.count ?? 0
     }
     
     func numberOfRowsInSection(_ section: Int) -> Int {
-        let key = ConversationsSections.allCases[section].rawValue
-        return conversations?[key]?.count ?? 0
+        return conversations.value?[section].numberOfItems ?? 0
     }
     
     func titleForHeaderInSection(_ section: Int) -> String? {
-        return ConversationsSections.allCases[section].rawValue.capitalized
+        return conversations.value?[section].title.capitalized
     }
     
     func conversationCellViewModel(forIndexPath indexPath: IndexPath) -> ConversationCellViewModel? {
-        let key = ConversationsSections.allCases[indexPath.section].rawValue
-        let conversation = conversations?[key]?[indexPath.row]
+        let conversationSection = conversations.value?[indexPath.section]
+        let conversation = conversationSection?[indexPath.row]
         return ConversationCellViewModel(with: conversation)
     }
     
     func didSelectRowAt(_ indexPath: IndexPath) {
-        let key = ConversationsSections.allCases[indexPath.section].rawValue
-        let conversation = conversations?[key]?[indexPath.row]
+        let conversationSection = conversations.value?[indexPath.section]
+        let conversation = conversationSection?[indexPath.row]
+        guard let conversationID = conversation?.identifier else {
+            Log.error("Conversation ID = nil, невозможно совершить переход")
+            return
+        }
         let dmViewModel = DMViewModel(router: router,
-                                      chatBuddyName: conversation?.userName,
-                                      chatBuddyImageURL: conversation?.profileImageURL)
+                                      dialogueID: conversationID,
+                                      chatName: conversation?.name)
         router.showDMViewController(animated: true, withViewModel: dmViewModel)
     }
 }
@@ -152,47 +189,5 @@ extension ConversationsViewModel {
 extension ConversationsViewModel: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         //
-    }
-}
-
-// MARK: - Data Mock
-extension ConversationsViewModel {
-    func randomText() -> String {
-      let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        return String((0...Int.random(in: 0...100)).map { _ in letters.randomElement()! })
-    }
-    
-    func generateRandomConversation() -> Conversation {
-        let userNames = ["Talisha Hakobyan", "Vitomir Mark",
-                         "Maryna Madigan", "Margherita Simmon",
-                         "Sudarshan Eckstein", "Berenice Ferreiro",
-                         "Padma Traylor", "Isla Kumar", "Dareios Sternberg"]
-        let randomText: [String?] = [randomText(), nil]
-        return Conversation(
-            profileImageURL: nil,
-            isOnline: Bool.random(),
-            userName: userNames.randomElement(),
-            lastMessage: randomText.randomElement() as? String,
-            messageDate: nil,
-            messageTime: nil,
-            hasUnreadMessages: ([true, false].randomElement() != nil))
-    }
-    
-    func makeConversationsDictionary(_ amount: Int) -> [String: [Conversation]] {
-        var conversations: [Conversation] {
-            var conversations = [Conversation]()
-            for _ in 0...amount {
-                conversations.append(generateRandomConversation())
-            }
-            return conversations
-        }
-        
-        return Dictionary(grouping: conversations, by: {
-            if $0.isOnline {
-                return ConversationsSections.online.rawValue
-            } else {
-                return ConversationsSections.history.rawValue
-            }
-        })
     }
 }

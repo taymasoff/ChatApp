@@ -39,32 +39,24 @@ final class ConversationCell: UITableViewCell, ReuseIdentifiable, Configurable {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    // MARK: - Internal Methods
-    private func changeLastMessageLabelState(_ hasUnread: Bool) {
-        switch hasUnread {
-        case true:
-            lastMessageLabel.font = UIFont.systemFont(ofSize: 13, weight: .bold)
-        case false:
-            lastMessageLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-        }
-    }
 }
 
 extension ConversationCell: ViewModelBindable {
     func bindWithViewModel() {
-        viewModel?.profileImage.bind { [unowned self] image in
+        viewModel?.conversationImage.bind { [unowned self] image in
             profileImageView.subviews.forEach { $0.removeFromSuperview() }
             if let profileImage = image {
                 profileImageView.image = profileImage
             } else {
-                profileImageView.addProfilePlaceholder(fullName: viewModel?.name.value)
+                profileImageView.addAbbreviatedPlaceholder(
+                    text: viewModel?.name.value
+                )
             }
         }
         viewModel?.name.bind { [unowned self] name in
             nameLabel.text = name
         }
-        viewModel?.date.bind { [unowned self] date in
+        viewModel?.lastActivity.bind { [unowned self] date in
             dateLabel.text = date
         }
         viewModel?.lastMessage.bind { [unowned self] message in
@@ -76,11 +68,8 @@ extension ConversationCell: ViewModelBindable {
                 lastMessageLabel.textColor = ThemeManager.currentTheme.settings.tintColor
             }
         }
-        viewModel?.hasUnreadMessages.bind { [unowned self] hasUnread in
-            changeLastMessageLabelState(hasUnread ?? false)
-        }
-        viewModel?.isOnline.bind { [unowned self] isOnline in
-            onlineIndicatorView.isHidden = !(isOnline ?? false)
+        viewModel?.isActive.bind { [unowned self] isActive in
+            onlineIndicatorView.isHidden = !(isActive ?? false)
         }
     }
 }

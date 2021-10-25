@@ -15,3 +15,8 @@ enum AppFileNames: String {
     case userDescription = "UserDescription"
     case userAvatar = "UserAvatar"
 }
+
+enum FBCollections: String {
+    case channels
+    case messages
+}

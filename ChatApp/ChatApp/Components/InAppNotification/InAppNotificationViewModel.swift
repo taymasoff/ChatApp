@@ -13,11 +13,11 @@ final class InAppNotificationViewModel {
         case error = "Ошибка"
     }
     
-    var notificationType: Dynamic<NotificationType> = Dynamic(.success)
-    var headerText: Dynamic<String?> = Dynamic(nil)
-    var bodyText: Dynamic<String?> = Dynamic(nil)
-    var buttonOneText: Dynamic<String?> = Dynamic(nil)
-    var buttonTwoText: Dynamic<String?> = Dynamic(nil)
+    let notificationType: Dynamic<NotificationType> = Dynamic(.success)
+    let headerText: Dynamic<String?> = Dynamic(nil)
+    let bodyText: Dynamic<String?> = Dynamic(nil)
+    let buttonOneText: Dynamic<String?> = Dynamic(nil)
+    let buttonTwoText: Dynamic<String?> = Dynamic(nil)
     
     init(notificationType: NotificationType,
          headerText: String? = nil,

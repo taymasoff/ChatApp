@@ -37,4 +37,8 @@ extension Date {
         let diff = Calendar.current.dateComponents([.weekOfYear], from: self, to: Date()).weekOfYear ?? 0
         return "\(diff) weeks ago"
     }
+    
+    func minutesSince() -> Int {
+        return Calendar.current.dateComponents([.second], from: self, to: Date()).second ?? 0
+    }
 }

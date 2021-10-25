@@ -9,9 +9,9 @@ import Foundation
 
 /// Вью-модель ячейки сообщения
 final class MessageCellViewModel {
-    var text: Dynamic<String?> = Dynamic(nil)
-    var time: Dynamic<String?> = Dynamic(nil)
-    var isSender: Dynamic<Bool?> = Dynamic(nil)
+    let text: Dynamic<String?> = Dynamic(nil)
+    let time: Dynamic<String?> = Dynamic(nil)
+    let isSender: Dynamic<Bool?> = Dynamic(nil)
     
     init(with message: Message? = nil) {
         updateValues(with: message)

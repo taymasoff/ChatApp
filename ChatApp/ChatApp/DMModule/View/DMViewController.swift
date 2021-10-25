@@ -90,10 +90,10 @@ final class DMViewController: UIViewController, ViewModelBased {
 // MARK: - ViewModelBindable
 extension DMViewController: ViewModelBindable {
     func bindWithViewModel() {
-        viewModel?.chatBuddyImage.bind { [unowned self] image in
-            setNavTitleWithImage(title: viewModel?.chatBuddyName.value,
+        viewModel?.chatImage.bind(listener: { [unowned self] image in
+            setNavTitleWithImage(title: self.viewModel?.chatName.value,
                                  image: image)
-        }
+        })
     }
 }
 

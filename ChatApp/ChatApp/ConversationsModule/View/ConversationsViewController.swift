@@ -42,10 +42,12 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
         
         conversationsTableView.register(ConversationCell.self,
                                         forCellReuseIdentifier: ConversationCell.reuseID)
+        
         conversationsTableView.rowHeight = 80
         setupSearchController()
         viewModel?.fetchUserAvatarOrName()
         bindWithViewModel()
+        viewModel?.viewDidLoad()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -83,6 +85,11 @@ extension ConversationsViewController: ViewModelBindable {
         viewModel?.profileAvatarUpdateInfo.bind(listener: { [unowned self] update in
             updateProfileBarButton(with: update)
         })
+        viewModel?.onUpdate = { [unowned self] in
+            DispatchQueue.main.async {
+                self.conversationsTableView.reloadData()
+            }
+        }
     }
 }
 
@@ -122,7 +129,7 @@ extension ConversationsViewController: UITableViewDataSource, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         viewModel?.didSelectRowAt(indexPath)
-        tableView.deselectRow(at: indexPath, animated: true)
+        tableView.deselectRow(at: indexPath, animated: false)
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
