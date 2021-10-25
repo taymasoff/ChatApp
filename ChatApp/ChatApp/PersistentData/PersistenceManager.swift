@@ -37,13 +37,13 @@ enum StorageType {
 /// Пакет предпочитаемых настроек для работы с файловым менеджером
 struct FileManagerPreferences {
     enum TextExtension: String {
-        case txt = "txt"
-        case json = "json"
+        case txt
+        case json
     }
     
     enum ImageExtension: String {
-        case png = "png"
-        case jpeg = "jpeg"
+        case png
+        case jpeg
     }
     
     private(set) var preferredTextExtension: TextExtension

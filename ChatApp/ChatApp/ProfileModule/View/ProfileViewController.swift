@@ -13,7 +13,7 @@ final class ProfileViewController: UIViewController, ViewModelBased {
     
     // MARK: - Properties
     lazy var blurredView = BlurredView()
-    lazy var inAppNotificationView = InAppNotificationView()
+    lazy var inAppNotificationView = InAppNotificationBanner()
     private var profileView: ProfileView!
     
     var viewModel: ProfileViewModel?

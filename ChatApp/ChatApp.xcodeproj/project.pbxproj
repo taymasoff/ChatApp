@@ -23,12 +23,13 @@
 		2286F4E7270F7FFA00ED809E /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2286F4E6270F7FFA00ED809E /* UIImage+Resize.swift */; };
 		2286F4E9270F842800ED809E /* UITableView+ScrollToBottom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2286F4E8270F842800ED809E /* UITableView+ScrollToBottom.swift */; };
 		22B50F7726FB01810099436A /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B50F7626FB01810099436A /* Log.swift */; };
+		22C44A312726BE2E003D106C /* InAppNotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C44A302726BE2E003D106C /* InAppNotificationView.swift */; };
 		22C71C11271EE8C8005C4466 /* AsyncResultOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C71C10271EE8C8005C4466 /* AsyncResultOperation.swift */; };
 		22C71C13271EEEDA005C4466 /* AsyncFileManagerProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C71C12271EEEDA005C4466 /* AsyncFileManagerProtocols.swift */; };
 		22C71C18271F003B005C4466 /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C71C17271F003B005C4466 /* PersistenceManager.swift */; };
 		22C71C1A271F047E005C4466 /* PersistenceManagerProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C71C19271F047E005C4466 /* PersistenceManagerProtocols.swift */; };
 		22C71C2027201763005C4466 /* DynamicPreservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C71C1F27201763005C4466 /* DynamicPreservable.swift */; };
-		22C71C222720921A005C4466 /* InAppNotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C71C2127209219005C4466 /* InAppNotificationView.swift */; };
+		22C71C222720921A005C4466 /* InAppNotificationBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C71C2127209219005C4466 /* InAppNotificationBanner.swift */; };
 		22C71C2727219C02005C4466 /* InAppNotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C71C2627219C02005C4466 /* InAppNotificationViewModel.swift */; };
 		22CC53B926FAC8220036F6F9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CC53B826FAC8220036F6F9 /* AppDelegate.swift */; };
 		22CC53BB26FAC8220036F6F9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CC53BA26FAC8220036F6F9 /* SceneDelegate.swift */; };
@@ -82,12 +83,13 @@
 		2286F4E6270F7FFA00ED809E /* UIImage+Resize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
 		2286F4E8270F842800ED809E /* UITableView+ScrollToBottom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+ScrollToBottom.swift"; sourceTree = "<group>"; };
 		22B50F7626FB01810099436A /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		22C44A302726BE2E003D106C /* InAppNotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppNotificationView.swift; sourceTree = "<group>"; };
 		22C71C10271EE8C8005C4466 /* AsyncResultOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncResultOperation.swift; sourceTree = "<group>"; };
 		22C71C12271EEEDA005C4466 /* AsyncFileManagerProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncFileManagerProtocols.swift; sourceTree = "<group>"; };
 		22C71C17271F003B005C4466 /* PersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceManager.swift; sourceTree = "<group>"; };
 		22C71C19271F047E005C4466 /* PersistenceManagerProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceManagerProtocols.swift; sourceTree = "<group>"; };
 		22C71C1F27201763005C4466 /* DynamicPreservable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicPreservable.swift; sourceTree = "<group>"; };
-		22C71C2127209219005C4466 /* InAppNotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppNotificationView.swift; sourceTree = "<group>"; };
+		22C71C2127209219005C4466 /* InAppNotificationBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppNotificationBanner.swift; sourceTree = "<group>"; };
 		22C71C2627219C02005C4466 /* InAppNotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppNotificationViewModel.swift; sourceTree = "<group>"; };
 		22CC53B526FAC8220036F6F9 /* ChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		22CC53B826FAC8220036F6F9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -253,7 +255,8 @@
 		22C71C2527219BE9005C4466 /* InAppNotification */ = {
 			isa = PBXGroup;
 			children = (
-				22C71C2127209219005C4466 /* InAppNotificationView.swift */,
+				22C71C2127209219005C4466 /* InAppNotificationBanner.swift */,
+				22C44A302726BE2E003D106C /* InAppNotificationView.swift */,
 				22C71C2627219C02005C4466 /* InAppNotificationViewModel.swift */,
 			);
 			path = InAppNotification;
@@ -646,7 +649,7 @@
 				221729F4270DA4B00022D174 /* UIViewController+SetNavTitleWithImage.swift in Sources */,
 				22C71C1A271F047E005C4466 /* PersistenceManagerProtocols.swift in Sources */,
 				225D6186271D66B500A5D678 /* AsyncOperation.swift in Sources */,
-				22C71C222720921A005C4466 /* InAppNotificationView.swift in Sources */,
+				22C71C222720921A005C4466 /* InAppNotificationBanner.swift in Sources */,
 				22D104C6270535D3006CF686 /* Dynamic.swift in Sources */,
 				22FFB22427160BEA001884BA /* UIColor+contrastingColor.swift in Sources */,
 				222A55B3270C06C10047CA24 /* Conversation.swift in Sources */,
@@ -689,6 +692,7 @@
 				22D104B72704D55E006CF686 /* BlurredView.swift in Sources */,
 				22B50F7726FB01810099436A /* Log.swift in Sources */,
 				2286F4E9270F842800ED809E /* UITableView+ScrollToBottom.swift in Sources */,
+				22C44A312726BE2E003D106C /* InAppNotificationView.swift in Sources */,
 				225D618E271D8F2700A5D678 /* FileWriteOperation.swift in Sources */,
 				2286F4DC270EF27700ED809E /* Message.swift in Sources */,
 				22E69D252701E0B7009CAAC0 /* DMViewModel.swift in Sources */,
