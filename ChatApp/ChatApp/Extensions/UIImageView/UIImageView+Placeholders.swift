@@ -1,5 +1,5 @@
 //
-//  UIImageView+AddProfilePlaceholder.swift
+//  UIImageView+Placeholders.swift
 //  ChatApp
 //
 //  Created by Тимур Таймасов on 29.09.2021.
@@ -10,11 +10,25 @@ import SnapKit
 import Rswift
 
 /*
- 👉 Добавляет в UIImageView желтый фон с инициалами, как в приложении тинькова.
- ⚙️ Использование: imageView.addProfilePlaceholder(fullName: "Oleg Tinkoff") -> OT
+ 👉 Добавляет в UIImageView фон с инициалами группы/человека.
+ ⚙️ Использование: imageView.addPlaceholder(name: "Oleg Tinkoff", .forPerson) -> OT
  */
 
-extension UIImageView {
+enum PlaceholderType {
+    case forPerson
+    case forGroupChat
+    
+    var image: UIImage? {
+        switch self {
+        case .forPerson:
+            return R.image.yellowCircle()
+        case .forGroupChat:
+            return R.image.blueCircle()
+        }
+    }
+}
+
+internal extension UIImageView {
     
     /// Добавляет желтый фон с инициалами на родительский ImageView
     /// - Parameter fullName: Имя Фамилия
@@ -23,22 +37,33 @@ extension UIImageView {
         formattedBy formatter: PersonNameComponentsFormatter = PersonNameComponentsFormatter()
     ) {
         guard let fullName = fullName, fullName != "" else {
-            showPlaceholder("?")
+            setPlaceholder("?", .forPerson)
             return
         }
         
-        let initials = getInitials(from: fullName,
-                                   formatter: formatter,
-                                   formatterStyle: .abbreviated)
+        let initials = getNameInitials(fullName,
+                                       formatter: formatter,
+                                       formatterStyle: .abbreviated)
         
-        addProfilePlaceholder(initials: initials)
+        addPlaceholder(initials, .forPerson)
+    }
+    
+    func addAbbreviatedPlaceholder(text: String?) {
+        guard let text = text, text != "" else {
+            setPlaceholder("?", .forGroupChat)
+            return
+        }
+        
+        let initials = getAbbreviation(text)
+        
+        addPlaceholder(initials, .forGroupChat)
     }
     
     // PersonNameComponentsFormatter может получить инициалы только с английского
     // и еще нескольких языков, в котором конечно же нету русского, поэтому
-    // достаем
-    private func getInitials(
-        from name: String,
+    // если возвращает пустоту - достаем вручную
+    private func getNameInitials(
+        _ name: String,
         formatter: PersonNameComponentsFormatter,
         formatterStyle: PersonNameComponentsFormatter.Style
     ) -> String {
@@ -63,23 +88,38 @@ extension UIImageView {
         }
     }
     
-    /// Добавляет желтый фон с инициалами на родительский ImageView
-    /// - Parameter initials: Инициалы (Например: "ОТ")
-    func addProfilePlaceholder(initials: String?) {
-        guard let initials = initials,
-              initials.count >= 1 && initials.count < 5 else {
-                  showPlaceholder("?")
-                  return
-              }
-        showPlaceholder(initials)
+    // Получаем инициалы с текста (просто
+    private func getAbbreviation(_ text: String) -> String {
+        return text.split { !$0.isLetter }
+        .prefix(3)
+        .reduce(into: "") {
+            if let first = $1.first {
+                $0.append(first)
+            }
+        }
     }
     
-    private func showPlaceholder(_ initials: String) {
+    // Проверяем количество инициалов: от 1 до 3 выводим, больше или 0 вопросик
+    private func addPlaceholder(_ initials: String?, _ type: PlaceholderType) {
+        if let initials = initials,
+              initials.count > 0 && initials.count < 4 {
+            setPlaceholder(initials, type)
+        } else {
+            setPlaceholder("?", type)
+        }
+    }
+}
+
+// MARK: - SetPlaceholder
+internal extension UIImageView {
+    fileprivate func setPlaceholder(_ initials: String, _ type: PlaceholderType) {
         // Если у нас уже установлен placeholder, удаляем предыдущие инициалы
         if let initialsLabel = self.subviews.last as? UILabel {
             initialsLabel.removeFromSuperview()
         }
-        self.image = R.image.yellowCircle()
+        
+        self.image = type.image
+        
         let label = UILabel(frame: self.frame)
         
         addSubview(label)
@@ -102,19 +142,5 @@ extension UIImageView {
         label.textAlignment = .center
         label.baselineAdjustment = .alignCenters
         label.text = initials.uppercased()
-    }
-    
-    /// Добавляет action на родительский ImageView
-    /// - Parameters:
-    ///   - target: target
-    ///   - action: selector
-    func addAction(target: Any?, action: Selector) {
-        let button = UIButton(type: .system)
-        button.addTarget(target, action: action, for: .touchUpInside)
-        self.addSubview(button)
-        button.snp.makeConstraints { make in
-            make.size.equalToSuperview()
-            make.center.equalToSuperview()
-        }
     }
 }
