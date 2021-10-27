@@ -7,11 +7,12 @@
 
 import Foundation
 import FirebaseFirestore
-import UIKit
 
 /// Модель диалога
 struct Conversation {
-    // Берем из DocumentID
+    static let minutesToDefineConversationActive = 10
+    
+    // Не энкодим/не декодим, а берем из DocumentID
     var identifier: String?
     
     // Декодим/Энкодим
@@ -19,8 +20,14 @@ struct Conversation {
     let lastMessage: String?
     var lastActivity: Date?
     
-    // Вычисляем из lastActivity, не энкодим
-    let isActive: Bool
+    // Вычисляем активность
+    var isActive: Bool {
+        if let lastActivity = lastActivity {
+            return lastActivity.minutesSince() < 10
+        } else {
+            return false
+        }
+    }
     
     enum CodingKeys: CodingKey {
         case name
@@ -29,29 +36,19 @@ struct Conversation {
     }
 }
 
-// Рассчет активности
-extension Conversation {
-    // В течении скольки минут диалог будет считаться активным
-    static let minutesToDefineConversationActive = 10
-    static func hadActivityIn(minutes: Int,
-                              lastActivity: Date?) -> Bool {
-        guard let lastActivity = lastActivity else { return false }
-        return lastActivity.minutesSince() < 10
-    }
-}
-
 // MARK: - Decodable
 extension Conversation: Decodable {
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
+        // Нам 100% нужно имя, поэтому декодим его там
         name = try values.decode(String.self, forKey: .name)
-        lastMessage = try values.decode(String.self, forKey: .lastMessage)
-        lastActivity = try values.decode(Timestamp.self, forKey: .lastActivity).dateValue()
-
-        isActive = Self.hadActivityIn(
-            minutes: Self.minutesToDefineConversationActive,
-            lastActivity: lastActivity
-        )
+        // Последнее сообщение и lastActivity не обязательно
+        lastMessage = try values.decodeIfPresent(String.self, forKey: .lastMessage)
+        if let lastActivity = try values.decodeIfPresent(Timestamp.self, forKey: .lastActivity) {
+            self.lastActivity = lastActivity.dateValue()
+        } else {
+            self.lastActivity = nil
+        }
     }
 }
 
@@ -59,14 +56,18 @@ extension Conversation: Decodable {
 extension Conversation: Encodable {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
+        // 100% нужно имя, поэтому кодим его
         try container.encode(name, forKey: .name)
-        try container.encode(lastMessage, forKey: .lastMessage)
-        // Энкодим по серверному времени
-        if let lastActivity = lastActivity {
-            try container.encode(
-                Timestamp(date: lastActivity),
-                forKey: .lastActivity
-            )
+        // По идее не нужно записывать lastMessage, но если вдруг
+        // появится возможность создавать канал сразу с сообщением
+        // записываем, если нету - то nil
+        try container.encodeIfPresent(lastMessage, forKey: .lastMessage)
+        // Тут 100% не понятно, надо ли записывать текущую дату при создании канала,
+        // Я записываю текущую дату по серверному времени
+        if let date = lastActivity {
+            try container.encode(Timestamp(date: date), forKey: .lastActivity)
+        } else {
+            try container.encodeNil(forKey: .lastActivity)
         }
     }
 }

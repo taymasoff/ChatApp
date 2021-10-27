@@ -9,8 +9,9 @@ import Foundation
 
 struct GroupedConversations {
     let title: String
-    let conversations: [Conversation]
-
+    var conversations: [Conversation]
+    var indexInTable: Int?
+    
     var numberOfItems: Int {
         return conversations.count
     }
