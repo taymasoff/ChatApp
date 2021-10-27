@@ -1,5 +1,5 @@
 //
-//  CRError.swift
+//  FirestoreError.swift
 //  ChatApp
 //
 //  Created by Тимур Таймасов on 27.10.2021.
@@ -7,13 +7,12 @@
 
 import Foundation
 
-/// ConversationsRepository Error
-enum CRError: Error {
+enum FirestoreError: Error {
     case emptyString
     case documentAddError
 }
 
-extension CRError: LocalizedError {
+extension FirestoreError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .emptyString:
