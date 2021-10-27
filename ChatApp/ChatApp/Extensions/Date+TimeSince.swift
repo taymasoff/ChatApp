@@ -22,14 +22,13 @@ extension Date {
         let weekAgo = calendar.date(byAdding: .day, value: -7, to: Date())!
         
         if minuteAgo < self {
-            let diff = Calendar.current.dateComponents([.second], from: self, to: Date()).second ?? 0
-            return "\(diff) sec ago"
+            return "just now"
         } else if hourAgo < self {
             let diff = Calendar.current.dateComponents([.minute], from: self, to: Date()).minute ?? 0
-            return "\(diff) min ago"
+            return "\(diff) minutes ago"
         } else if dayAgo < self {
             let diff = Calendar.current.dateComponents([.hour], from: self, to: Date()).hour ?? 0
-            return "\(diff) hrs ago"
+            return "\(diff) hours ago"
         } else if weekAgo < self {
             let diff = Calendar.current.dateComponents([.day], from: self, to: Date()).day ?? 0
             return "\(diff) days ago"
@@ -39,6 +38,6 @@ extension Date {
     }
     
     func minutesSince() -> Int {
-        return Calendar.current.dateComponents([.second], from: self, to: Date()).second ?? 0
+        return Calendar.current.dateComponents([.minute], from: self, to: Date()).minute ?? 0
     }
 }

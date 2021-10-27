@@ -13,15 +13,15 @@ import Rswift
 final class ConversationCell: UITableViewCell, ReuseIdentifiable, Configurable {
     
     // MARK: - Properties
-    fileprivate var profileImageView: UIImageView!
-    fileprivate var nameLabel: UILabel!
-    fileprivate var lastMessageLabel: UILabel!
-    fileprivate var dateLabel: UILabel!
-    fileprivate var onlineIndicatorView: UIView!
+    private var profileImageView: UIImageView!
+    private var nameLabel: UILabel!
+    private var lastMessageLabel: UILabel!
+    private var dateLabel: UILabel!
+    private var onlineIndicatorView: UIView!
     
-    fileprivate var allTextContainer: UIView!
-    fileprivate var nameDateContainer: UIView!
-    fileprivate var cellContainer: UIView!
+    private var allTextContainer: UIView!
+    private var nameDateContainer: UIView!
+    private var cellContainer: UIView!
     
     var viewModel: ConversationCellViewModel?
     
@@ -56,8 +56,8 @@ extension ConversationCell: ViewModelBindable {
         viewModel?.name.bind { [unowned self] name in
             nameLabel.text = name
         }
-        viewModel?.lastActivity.bind { [unowned self] date in
-            dateLabel.text = date
+        viewModel?.timeSinceLastMessage.bind { [unowned self] time in
+            dateLabel.text = time
         }
         viewModel?.lastMessage.bind { [unowned self] message in
             if let message = message {
@@ -174,6 +174,8 @@ private extension ConversationCell {
         label.textColor = ThemeManager.currentTheme.settings.subtitleTextColor
         label.textAlignment = .right
         label.numberOfLines = 1
+        label.setContentCompressionResistancePriority(UILayoutPriority(950),
+                                                      for: .horizontal)
         return label
     }
     
@@ -255,7 +257,7 @@ private extension ConversationCell {
         // MARK: Layout Name Label
         nameLabel.snp.makeConstraints { make in
             make.left.top.bottom.equalToSuperview()
-            make.right.equalTo(dateLabel.snp.left)
+            make.right.equalTo(dateLabel.snp.left).offset(-5)
         }
         
         // MARK: Layout Date Label

@@ -30,7 +30,7 @@ extension UIViewController {
         if let image = image {
             imageView.image = image
         } else {
-            imageView.addProfilePlaceholder(fullName: title)
+            imageView.addAbbreviatedPlaceholder(text: title)
         }
         
         let titleView = UIView()

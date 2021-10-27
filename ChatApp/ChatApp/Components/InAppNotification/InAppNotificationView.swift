@@ -14,7 +14,7 @@ final class InAppNotificationView: UIView {
     private let mainStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.spacing = 5
+        stackView.spacing = 10
         return stackView
     }()
     

@@ -30,4 +30,13 @@ final class InAppNotificationViewModel {
         self.buttonOneText.value = buttonOneText
         self.buttonTwoText.value = buttonTwoText
     }
+    
+    // Быстрая версия инита, только с телом и автоматическим добавлением кнопки Ok
+    init(notificationType: NotificationType,
+         text: String) {
+        self.notificationType.value = notificationType
+        self.headerText.value = notificationType.rawValue
+        self.bodyText.value = text
+        self.buttonOneText.value = "Ok"
+    }
 }
