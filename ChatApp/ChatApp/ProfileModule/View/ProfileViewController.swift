@@ -13,7 +13,7 @@ final class ProfileViewController: UIViewController, ViewModelBased {
     
     // MARK: - Properties
     lazy var blurredView = BlurredView()
-    lazy var inAppNotificationView = InAppNotificationBanner()
+    lazy var inAppNotification = InAppNotificationBanner()
     private var profileView: ProfileView!
     
     var viewModel: ProfileViewModel?
@@ -271,23 +271,23 @@ private extension ProfileViewController {
     
     // MARK: Loaded with Error -> Show Error Notification
     func showErrorNotification(_ vm: InAppNotificationViewModel) {
-        inAppNotificationView.configure(with: vm)
-        inAppNotificationView.show()
-        inAppNotificationView.onButtonOnePress = { [weak self] in
-            self?.inAppNotificationView.dismiss()
+        inAppNotification.configure(with: vm)
+        inAppNotification.show()
+        inAppNotification.onButtonOnePress = { [weak self] in
+            self?.inAppNotification.dismiss()
         }
-        inAppNotificationView.onButtonTwoPress = { [weak self, weak viewModel] in
+        inAppNotification.onButtonTwoPress = { [weak self, weak viewModel] in
             viewModel?.saveCurrentUIState()
-            self?.inAppNotificationView.dismiss()
+            self?.inAppNotification.dismiss()
         }
     }
     
     // MARK: Loaded with Success -> Show Success Notification
     func showSuccessNotification(_ vm: InAppNotificationViewModel) {
-        inAppNotificationView.configure(with: vm)
-        inAppNotificationView.show()
-        inAppNotificationView.onButtonOnePress = { [weak self] in
-            self?.inAppNotificationView.dismiss()
+        inAppNotification.configure(with: vm)
+        inAppNotification.show()
+        inAppNotification.onButtonOnePress = { [weak self] in
+            self?.inAppNotification.dismiss()
         }
     }
     

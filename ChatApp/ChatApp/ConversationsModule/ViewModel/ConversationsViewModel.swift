@@ -13,14 +13,18 @@ enum ProfileAvatarUpdateInfo { case avatar(UIImage), name(String) }
 /// Вью-модель экрана диалогов
 final class ConversationsViewModel: NSObject, Routable {
     
+    enum NotificationState { case showSucces(InAppNotificationViewModel),
+                                  showError(InAppNotificationViewModel) }
+    
     // MARK: - Properties
     let router: MainRouterProtocol
     let title = "Conversations"
     let conversations: Dynamic<[GroupedConversations]?> = Dynamic(nil)
-    var onUpdate: (() -> Void)?
+    var onDataUpdate: (() -> Void)?
+    var notificationCallback: Dynamic<NotificationState?> = Dynamic(nil)
     var profileAvatarUpdateInfo: Dynamic<ProfileAvatarUpdateInfo?> = Dynamic(nil)
     
-    var persistenceManager: PersistenceManagerProtocol
+    let persistenceManager: PersistenceManagerProtocol
     let repository: ConversationsRepositoryProtocol
     
     // MARK: - Initializer
@@ -42,11 +46,23 @@ final class ConversationsViewModel: NSObject, Routable {
         askToPickController()
     }
     
+    func didRequestRefresh(completion: @escaping () -> Void) {
+        repository.updateConversationsOnce {
+            completion()
+        }
+    }
+    
+    func newConversationButtonPressed(with name: String?) {
+        repository.addConversation(with: name) { [weak self] result in
+            self?.notifyViewWithUpdates(result)
+        }
+    }
+    
     private func bindToRepositoryUpdates() {
         repository.conversations.bind(listener: { [weak self] conversations in
             self?.conversations
                 .value = self?.mapConversationsByActivity(conversations)
-            self?.onUpdate?()
+            self?.onDataUpdate?()
         })
     }
     
@@ -56,12 +72,43 @@ final class ConversationsViewModel: NSObject, Routable {
     ) -> [GroupedConversations] {
         return Dictionary(grouping: conversations) { $0.isActive }
         .map { (element) -> GroupedConversations in
+            let sortedConversations = element.value.sorted {
+                $0.lastActivity ?? .distantPast > $1.lastActivity ?? .distantPast
+            }
             if element.key {
                 return GroupedConversations(title: "Currently Active",
-                                            conversations: element.value)
+                                            conversations: sortedConversations,
+                                            indexInTable: 0)
             } else {
                 return GroupedConversations(title: "Inactive",
-                                            conversations: element.value)
+                                            conversations: sortedConversations,
+                                            indexInTable: 1)
+            }
+        }
+        .sorted { (lhs, rhs) -> Bool in
+            switch (lhs.indexInTable, rhs.indexInTable) {
+            case let(l?, r?): return l < r
+            case (nil, _): return false
+            case (_?, nil): return true
+            }
+        }
+    }
+    
+    private func notifyViewWithUpdates(_ result: Result<String, Error>) {
+        switch result {
+        case .success(let message):
+            let notificationModel = InAppNotificationViewModel(
+                notificationType: .success,
+                text: message)
+            DispatchQueue.main.async {
+                self.notificationCallback.value = .showSucces(notificationModel)
+            }
+        case .failure(let error):
+            let notificationModel = InAppNotificationViewModel(
+                notificationType: .error,
+                text: error.localizedDescription)
+            DispatchQueue.main.async {
+                self.notificationCallback.value = .showError(notificationModel)
             }
         }
     }
@@ -166,14 +213,12 @@ extension ConversationsViewModel {
     }
     
     func conversationCellViewModel(forIndexPath indexPath: IndexPath) -> ConversationCellViewModel? {
-        let conversationSection = conversations.value?[indexPath.section]
-        let conversation = conversationSection?[indexPath.row]
+        let conversation = getConversation(for: indexPath)
         return ConversationCellViewModel(with: conversation)
     }
     
     func didSelectRowAt(_ indexPath: IndexPath) {
-        let conversationSection = conversations.value?[indexPath.section]
-        let conversation = conversationSection?[indexPath.row]
+        let conversation = getConversation(for: indexPath)
         guard let conversationID = conversation?.identifier else {
             Log.error("Conversation ID = nil, невозможно совершить переход")
             return
@@ -182,6 +227,20 @@ extension ConversationsViewModel {
                                       dialogueID: conversationID,
                                       chatName: conversation?.name)
         router.showDMViewController(animated: true, withViewModel: dmViewModel)
+    }
+    
+    func didSwipeToDelete(at indexPath: IndexPath) {
+        let conversation = getConversation(for: indexPath)
+        repository.deleteConversation(
+            withID: conversation?.identifier
+        ) { [weak self] result in
+            self?.notifyViewWithUpdates(result)
+        }
+    }
+    
+    private func getConversation(for indexPath: IndexPath) -> Conversation? {
+        let conversationSection = conversations.value?[indexPath.section]
+        return conversationSection?[indexPath.row]
     }
 }
 

@@ -13,16 +13,19 @@ import Rswift
 final class ConversationsViewController: UIViewController, ViewModelBased {
     
     // MARK: - Properties
-    fileprivate var profileBarButton: UIBarButtonItem? {
+    private var profileBarButton: UIBarButtonItem? {
         didSet {
             updateNavBarItem(with: profileBarButton, animated: true)
         }
     }
-    fileprivate var gearBarButton: UIBarButtonItem!
-    fileprivate var conversationsTableView: UITableView!
+    private var gearBarButton: UIBarButtonItem!
+    private var conversationsTableView: UITableView!
+    private var newConversationButton: UIButton!
+    private let newConversationView: NewConversationView = NewConversationView()
+    lazy var inAppNotification = InAppNotificationBanner()
     
     var viewModel: ConversationsViewModel?
-    fileprivate lazy var nameFormatter = PersonNameComponentsFormatter()
+    private lazy var nameFormatter = PersonNameComponentsFormatter()
     
     // MARK: - Initializers
     convenience init(with viewModel: ConversationsViewModel) {
@@ -36,6 +39,8 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
         
         gearBarButton = makeGearBarButton()
         conversationsTableView = makeConversationsTableView()
+        newConversationButton = makeNewConversationButton()
+        setupNewConversationView()
         
         navigationItem.title = viewModel?.title
         navigationItem.leftBarButtonItem = gearBarButton
@@ -45,8 +50,10 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
         
         conversationsTableView.rowHeight = 80
         setupSearchController()
+        setupRefreshControl()
         viewModel?.fetchUserAvatarOrName()
         bindWithViewModel()
+        subscribeToNotificationUpdates()
         viewModel?.viewDidLoad()
     }
     
@@ -60,6 +67,7 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         navigationItem.hidesSearchBarWhenScrolling = true
+        addKeyboardObserver()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -68,7 +76,7 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
         navigationItem.largeTitleDisplayMode = .never
     }
     
-    // MARK: - Private Methods
+    // MARK: - Action Methods
     @objc
     private func profileBarButtonPressed() {
         viewModel?.profileBarButtonPressed()
@@ -78,6 +86,31 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
     private func gearBarButtonPressed() {
         viewModel?.gearBarButtonPressed()
     }
+    
+    @objc
+    private func didPullToRefresh() {
+        viewModel?.didRequestRefresh { [unowned self] in
+            self.conversationsTableView.refreshControl?.endRefreshing()
+        }
+    }
+    
+    @objc
+    private func newConversationButtonPressed() {
+        revealNewConversationView()
+    }
+    
+    @objc
+    private func addConversationButtonPressed() {
+        viewModel?.newConversationButtonPressed(
+            with: newConversationView.nameTextField.text)
+        newConversationView.nameTextField.text = ""
+        collapseNewConversationView()
+    }
+    
+    @objc
+    private func cancelAddingConversationButtonPressed() {
+        collapseNewConversationView()
+    }
 }
 
 extension ConversationsViewController: ViewModelBindable {
@@ -85,7 +118,7 @@ extension ConversationsViewController: ViewModelBindable {
         viewModel?.profileAvatarUpdateInfo.bind(listener: { [unowned self] update in
             updateProfileBarButton(with: update)
         })
-        viewModel?.onUpdate = { [unowned self] in
+        viewModel?.onDataUpdate = { [unowned self] in
             DispatchQueue.main.async {
                 self.conversationsTableView.reloadData()
             }
@@ -139,12 +172,57 @@ extension ConversationsViewController: UITableViewDataSource, UITableViewDelegat
         return view
     }
     
-    // Scroll Animation
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        cell.transform = CGAffineTransform(scaleX: 0.95, y: 0.8)
-        UIView.animate(withDuration: 0.3, delay: 0, options: [.allowUserInteraction]) {
-            cell.transform = CGAffineTransform.identity
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            viewModel?.didSwipeToDelete(at: indexPath)
         }
+    }
+}
+
+extension ConversationsViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+}
+
+// MARK: - Update NewConversationViewState
+private extension ConversationsViewController {
+    
+    func revealNewConversationView(animated: Bool = true) {
+        newConversationView.snp.remakeConstraints { make in
+            make.left.right.equalToSuperview().inset(20)
+            make.bottom.equalTo(newConversationButton)
+            make.height.equalToSuperview().dividedBy(5)
+        }
+        newConversationView.viewState = .revealed
+        if animated {
+            UIView.animate(withDuration: 0.3,
+                           delay: 0,
+                           options: [.curveEaseOut]) { [weak self] in
+                self?.view.layoutIfNeeded()
+            }
+        }
+    }
+    
+    func collapseNewConversationView(animated: Bool = true) {
+        newConversationView.snp.remakeConstraints { make in
+            make.edges.equalTo(newConversationButton)
+        }
+        if animated {
+            UIView.animate(withDuration: 0.3,
+                           delay: 0,
+                           options: [.curveEaseIn],
+                           animations: { [weak self] in
+                self?.view.layoutIfNeeded()
+                
+            }, completion: { [weak self] _ in
+                self?.newConversationView.viewState = .collapsed
+            })
+        } else {
+            newConversationView.viewState = .collapsed
+        }
+        
     }
 }
 
@@ -226,6 +304,59 @@ private extension ConversationsViewController {
         return tableView
     }
     
+    func makeNewConversationButton() -> UIButton {
+        let button = UIButton(type: .system)
+        let buttonSize = view.frame.width / 6
+        let tintedImage = R.image.add()?.withRenderingMode(.alwaysTemplate)
+        button.setImage(tintedImage, for: .normal)
+        button.imageEdgeInsets = UIEdgeInsets(top: CGFloat(buttonSize / 3),
+                                              left: CGFloat(buttonSize / 3),
+                                              bottom: CGFloat(buttonSize / 3),
+                                              right: CGFloat(buttonSize / 3))
+        button.layer.cornerRadius = CGFloat(buttonSize / 2)
+        button.backgroundColor = ThemeManager.currentTheme.settings.secondaryColor
+        button.tintColor = ThemeManager.currentTheme.settings.tintColor
+        
+        view.addSubview(button)
+        
+        button.snp.makeConstraints { make in
+            make.size.equalTo(buttonSize)
+            make.right.equalToSuperview().inset(40)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(20)
+        }
+        
+        button.addTarget(
+            self,
+            action: #selector(newConversationButtonPressed),
+            for: .touchUpInside
+        )
+        
+        return button
+    }
+    
+    func setupNewConversationView() {
+        view.addSubview(newConversationView)
+        
+        newConversationView.nameTextField.delegate = self
+    
+        newConversationView.okButton.addTarget(
+            self,
+            action: #selector(addConversationButtonPressed),
+            for: .touchUpInside
+        )
+        newConversationView.cancelButton.addTarget(
+            self,
+            action: #selector(cancelAddingConversationButtonPressed),
+            for: .touchUpInside
+        )
+        
+        newConversationView.snp.makeConstraints { make in
+            make.edges.equalTo(newConversationButton)
+        }
+        
+        newConversationView.viewState = .collapsed
+    }
+    
     func setupSearchController() {
         let searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self.viewModel
@@ -237,5 +368,96 @@ private extension ConversationsViewController {
         searchController.searchBar.backgroundColor = ThemeManager.currentTheme.settings.backGroundColor
         self.navigationItem.searchController = searchController
         self.definesPresentationContext = true
+    }
+    
+    func setupRefreshControl() {
+        conversationsTableView.refreshControl = UIRefreshControl()
+        conversationsTableView.refreshControl?
+            .addTarget(self,
+                       action: #selector(didPullToRefresh),
+                       for: .valueChanged)
+    }
+}
+
+// MARK: - InAppNotification Updates
+private extension ConversationsViewController {
+    func subscribeToNotificationUpdates() {
+        viewModel?.notificationCallback.bind { [unowned self] state in
+            switch state {
+            case .showSucces(let vm):
+                self.showSuccessNotification(vm)
+            case .showError(let vm):
+                self.showErrorNotification(vm)
+            case .none:
+                break
+            }
+        }
+    }
+    
+    // MARK: ViewModel Sent Error -> Show Error Notification
+    func showErrorNotification(_ vm: InAppNotificationViewModel) {
+        inAppNotification.configure(with: vm)
+        inAppNotification.show()
+        inAppNotification.onButtonOnePress = { [weak self] in
+            self?.inAppNotification.dismiss()
+        }
+    }
+    
+    // MARK: ViewModel Sent Success -> Show Success Notification
+    func showSuccessNotification(_ vm: InAppNotificationViewModel) {
+        inAppNotification.configure(with: vm)
+        inAppNotification.show()
+        inAppNotification.onButtonOnePress = { [weak self] in
+            self?.inAppNotification.dismiss()
+        }
+    }
+}
+
+// MARK: - KeyboardObservers
+private extension ConversationsViewController {
+    func addKeyboardObserver() {
+        NotificationCenter.default
+            .addObserver(self,
+                         selector: #selector(keyboardWillShow),
+                         name: UIResponder.keyboardWillShowNotification,
+                         object: nil)
+        NotificationCenter.default
+            .addObserver(self,
+                         selector: #selector(keyboardWillHide),
+                         name: UIResponder.keyboardWillHideNotification,
+                         object: nil)
+    }
+
+    @objc
+    func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue,
+           let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double {
+            
+            newConversationButton.snp.updateConstraints { make in
+                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+                    .inset(20)
+                    .offset(-keyboardSize.height)
+            }
+            
+            UIView.animate(withDuration: duration) {
+                self.view.layoutIfNeeded()
+            }
+            
+        }
+    }
+    
+    @objc
+    func keyboardWillHide(notification: NSNotification) {
+        if let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double {
+            
+            newConversationButton.snp.updateConstraints { make in
+                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+                    .inset(20)
+            }
+            
+            UIView.animate(withDuration: duration) {
+                self.view.layoutIfNeeded()
+            }
+        }
     }
 }
