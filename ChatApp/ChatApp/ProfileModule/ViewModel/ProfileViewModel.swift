@@ -262,6 +262,7 @@ private extension ProfileViewModel {
             
             if case .success = result {
                 self?.notifyDelegateOnNameSave()
+                AppData.currentUserName = self?.userName.value ?? AppData.defaultUserName
             }
             completion(result)
         }

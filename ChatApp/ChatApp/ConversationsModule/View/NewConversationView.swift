@@ -44,7 +44,11 @@ final class NewConversationView: UIView {
         button.setTitle("Ok", for: .normal)
         button.setTitleColor(ThemeManager.currentTheme.settings.tintColor,
                              for: .normal)
+        button.setTitleColor(ThemeManager.currentTheme.settings.tintColor
+                                .withAlphaComponent(0.6),
+                             for: .disabled)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+        button.isEnabled = false
         return button
     }()
     
@@ -80,6 +84,12 @@ final class NewConversationView: UIView {
         stackView.spacing = 20
         return stackView
     }()
+    
+    var isSendable: Bool = false {
+        didSet {
+            okButton.isEnabled = isSendable
+        }
+    }
     
     init() {
         super.init(frame: CGRect.zero)

@@ -58,6 +58,15 @@ final class ConversationsViewModel: NSObject, Routable {
         }
     }
     
+    func isTextSendable(text: String?) -> Bool {
+        if let text = text,
+           text.isntEmptyOrWhitespaced() {
+            return true
+        } else {
+            return false
+        }
+    }
+    
     private func bindToRepositoryUpdates() {
         repository.conversations.bind(listener: { [weak self] conversations in
             self?.conversations

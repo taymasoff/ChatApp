@@ -20,9 +20,10 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
     }
     private var gearBarButton: UIBarButtonItem!
     private var conversationsTableView: UITableView!
+    private var searchController: UISearchController!
     private var newConversationButton: UIButton!
     private let newConversationView: NewConversationView = NewConversationView()
-    lazy var inAppNotification = InAppNotificationBanner()
+    private lazy var inAppNotification = InAppNotificationBanner()
     
     var viewModel: ConversationsViewModel?
     private lazy var nameFormatter = PersonNameComponentsFormatter()
@@ -40,16 +41,24 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
         gearBarButton = makeGearBarButton()
         conversationsTableView = makeConversationsTableView()
         newConversationButton = makeNewConversationButton()
+        searchController = makeSearchController()
         setupNewConversationView()
         
         navigationItem.title = viewModel?.title
         navigationItem.leftBarButtonItem = gearBarButton
         
+        navigationController?.navigationBar.prefersLargeTitles = true
+        
         conversationsTableView.register(ConversationCell.self,
                                         forCellReuseIdentifier: ConversationCell.reuseID)
         
         conversationsTableView.rowHeight = 80
-        setupSearchController()
+        
+        navigationItem.searchController = searchController
+        navigationController?.navigationItem.hidesSearchBarWhenScrolling = true
+        // Для корректного отображения SearchControllerа
+        extendedLayoutIncludesOpaqueBars = true
+        
         setupRefreshControl()
         viewModel?.fetchUserAvatarOrName()
         bindWithViewModel()
@@ -57,25 +66,11 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
         viewModel?.viewDidLoad()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.largeTitleDisplayMode = .always
-        navigationItem.hidesSearchBarWhenScrolling = false
-    }
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        navigationItem.hidesSearchBarWhenScrolling = true
         addKeyboardObserver()
     }
 
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        navigationController?.navigationBar.prefersLargeTitles = false
-        navigationItem.largeTitleDisplayMode = .never
-    }
-    
     // MARK: - Action Methods
     @objc
     private func profileBarButtonPressed() {
@@ -102,7 +97,8 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
     @objc
     private func addConversationButtonPressed() {
         viewModel?.newConversationButtonPressed(
-            with: newConversationView.nameTextField.text)
+            with: newConversationView.nameTextField.text
+        )
         newConversationView.nameTextField.text = ""
         collapseNewConversationView()
     }
@@ -181,8 +177,17 @@ extension ConversationsViewController: UITableViewDataSource, UITableViewDelegat
 
 extension ConversationsViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
+        if newConversationView.isSendable {
+            addConversationButtonPressed()
+        }
         return true
+    }
+    
+    @objc
+    func nameTextFieldDidChange(_ textField: UITextField) {
+        if let isSendable = viewModel?.isTextSendable(text: textField.text) {
+            newConversationView.isSendable = isSendable
+        }
     }
 }
 
@@ -193,7 +198,7 @@ private extension ConversationsViewController {
         newConversationView.snp.remakeConstraints { make in
             make.left.right.equalToSuperview().inset(20)
             make.bottom.equalTo(newConversationButton)
-            make.height.equalToSuperview().dividedBy(5)
+            make.height.equalToSuperview().dividedBy(6)
         }
         newConversationView.viewState = .revealed
         if animated {
@@ -355,9 +360,15 @@ private extension ConversationsViewController {
         }
         
         newConversationView.viewState = .collapsed
+        
+        newConversationView.nameTextField.addTarget(
+            self,
+            action: #selector(nameTextFieldDidChange),
+            for: .editingChanged
+        )
     }
     
-    func setupSearchController() {
+    func makeSearchController() -> UISearchController {
         let searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self.viewModel
         searchController.obscuresBackgroundDuringPresentation = false
@@ -366,8 +377,8 @@ private extension ConversationsViewController {
         searchController.searchBar.barTintColor = ThemeManager.currentTheme.settings.mainColor
         searchController.searchBar.barStyle = ThemeManager.currentTheme.settings.barStyle
         searchController.searchBar.backgroundColor = ThemeManager.currentTheme.settings.backGroundColor
-        self.navigationItem.searchController = searchController
         self.definesPresentationContext = true
+        return searchController
     }
     
     func setupRefreshControl() {

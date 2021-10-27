@@ -28,7 +28,20 @@ struct Conversation {
             return false
         }
     }
-    
+}
+
+// MARK: - Quick Init Option
+extension Conversation {
+    init(name: String) {
+        self.name = name
+        self.lastActivity = Date()
+        self.identifier = nil
+        self.lastMessage = nil
+    }
+}
+
+// MARK: - CodingKeys
+extension Conversation {
     enum CodingKeys: CodingKey {
         case name
         case lastMessage
@@ -41,7 +54,12 @@ extension Conversation: Decodable {
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         // Нам 100% нужно имя, поэтому декодим его там
-        name = try values.decode(String.self, forKey: .name)
+        if let name = try? values.decode(String.self, forKey: .name),
+           name.isntEmptyOrWhitespaced() {
+            self.name = name
+        } else {
+            throw FirestoreError.emptyString
+        }
         // Последнее сообщение и lastActivity не обязательно
         lastMessage = try values.decodeIfPresent(String.self, forKey: .lastMessage)
         if let lastActivity = try values.decodeIfPresent(Timestamp.self, forKey: .lastActivity) {

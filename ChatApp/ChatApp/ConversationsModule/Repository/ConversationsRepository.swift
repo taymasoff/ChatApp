@@ -84,17 +84,11 @@ final class ConversationsRepository: ConversationsRepositoryProtocol {
                          completion: CompletionHandler<String>) {
         guard let name = name,
               name.isntEmptyOrWhitespaced() else {
-                  completion(.failure(CRError.emptyString))
+                  completion(.failure(FirestoreError.emptyString))
                   return
               }
         
-        let conversation = Conversation(
-            // Мы не энкодим identifier и он не должен записываться
-            identifier: "Use documentID indentifier!",
-            name: name,
-            lastMessage: nil,
-            lastActivity: Date()
-        )
+        let conversation = Conversation(name: name)
         
         do {
             _ = try channelsReference.addDocument(from: conversation)
@@ -102,14 +96,14 @@ final class ConversationsRepository: ConversationsRepositoryProtocol {
                 .success("Новая беседа с именем \(name) успешно создана!")
             )
         } catch {
-            completion(.failure(CRError.documentAddError))
+            completion(.failure(FirestoreError.documentAddError))
         }
     }
     
     func deleteConversation(withID id: String?,
                             completion: @escaping CompletionHandler<String>) {
         guard let id = id, id != "" else {
-            completion(.failure(CRError.emptyString))
+            completion(.failure(FirestoreError.emptyString))
             return
         }
         

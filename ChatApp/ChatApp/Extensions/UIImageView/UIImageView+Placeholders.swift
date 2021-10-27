@@ -132,7 +132,7 @@ internal extension UIImageView {
         layoutIfNeeded()
         
         // Тут магия по уменьшению шрифта так, чтобы он вписывался в лейбу
-        label.font = UIFont.systemFont(ofSize: 120, weight: .semibold)
+        label.font = UIFont.systemFont(ofSize: 100, weight: .semibold)
         label.textColor = .black
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.1

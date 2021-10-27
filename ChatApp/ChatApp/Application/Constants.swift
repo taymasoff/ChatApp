@@ -5,9 +5,7 @@
 //  Created by Тимур Таймасов on 23.10.2021.
 //
 
-import Foundation
-
-let deviceID = UIDevice.current.identifierForVendor!.uuidString
+import UIKit
 
 /// Дефолтные названия файлов для полей
 enum AppFileNames: String {
@@ -16,7 +14,20 @@ enum AppFileNames: String {
     case userAvatar = "UserAvatar"
 }
 
+/// Имена коллекций Firebase
 enum FBCollections: String {
     case channels
     case messages
+}
+
+/// Данные приложения
+struct AppData {
+    private init() {}
+    
+    static let defaultUserName = "Unauthorized"
+    
+    @Stored(key: AppFileNames.userName.rawValue, defaultValue: Self.defaultUserName)
+    static var currentUserName: String
+    
+    static var deviceID: String = UIDevice.current.identifierForVendor!.uuidString
 }
