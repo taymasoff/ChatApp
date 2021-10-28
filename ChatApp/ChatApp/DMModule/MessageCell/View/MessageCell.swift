@@ -2,7 +2,7 @@
 //  MessageCell.swift
 //  ChatApp
 //
-//  Created by Тимур Таймасов on 07.10.2021.
+//  Created by Тимур Таймасов on 28.10.2021.
 //
 
 import UIKit
@@ -13,20 +13,58 @@ import Rswift
 final class MessageCell: UITableViewCell, ReuseIdentifiable, ViewModelBased {
     
     /// Направление расположения текстовых "баблов" в ячейке
-    enum Direction {
-        case left
-        case right
-    }
+    enum ChatBubbleDirection { case left, right }
     
-    // MARK: - Properties
-    var bgBubbleView: UIView!
-    var textView: UITextView!
-    var timeLabel: UILabel!
-    
-    static var textPadding: Int = 6
-    static var bubbleMargin: Int = 12
-    static var timePadding: Int = 8
     static var messageToScreenRatio: Float = 0.66
+    private static let bubbleMargin: Int = 8
+    private static let contentPadding: Int = 8
+    static var estimatedContentHeight = 19 + 19 + 14 +
+    MessageCell.contentPadding * 2 + MessageCell.bubbleMargin * 2
+    
+    private var bgBubbleView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 14
+        return view
+    }()
+    
+    private var nameLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+        label.textColor = .black
+        label.textAlignment = .left
+        return label
+    }()
+    
+    private var textView: UITextView = {
+        let textView = UITextView()
+        textView.isEditable = false
+        textView.isScrollEnabled = false
+        textView.isSelectable = false
+        textView.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        textView.textColor = .black
+        textView.backgroundColor = .clear
+        textView.textAlignment = .left
+        textView.textContainer.lineFragmentPadding = .zero
+        textView.textContainerInset = .zero
+        textView.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+        textView.setContentHuggingPriority(.defaultLow, for: .vertical)
+        return textView
+    }()
+    
+    private var timeLabel: UILabel! = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
+        label.textColor = R.color.timeGray()
+        label.textAlignment = .right
+        return label
+    }()
+    
+    private var containerStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 3
+        return stackView
+    }()
     
     var viewModel: MessageCellViewModel?
     
@@ -36,7 +74,6 @@ final class MessageCell: UITableViewCell, ReuseIdentifiable, ViewModelBased {
         
         selectionStyle = .none
         
-        setupSubviews()
         setupSubviewsHierarchy()
         setConstantConstraints()
     }
@@ -46,12 +83,14 @@ final class MessageCell: UITableViewCell, ReuseIdentifiable, ViewModelBased {
     }
     
     // MARK: - Internal Methods
-    private func updateSubviews(direction: Direction) {
+    private func updateSubviews(direction: ChatBubbleDirection) {
         switch direction {
         case .left:
             bgBubbleView.backgroundColor = R.color.dmGray()
+            textView.textAlignment = .left
         case .right:
             bgBubbleView.backgroundColor = R.color.dmGreen()
+            textView.textAlignment = .right
         }
         setupSubviewsLayout(direction: direction)
     }
@@ -80,88 +119,49 @@ extension MessageCell: Configurable, ViewModelBindable {
                 updateSubviews(direction: .left)
             }
         })
+        
+        viewModel?.senderName.bind(listener: { [unowned self] name in
+            if let isSender = viewModel?.isSender.value, isSender {
+                nameLabel.text = ""
+                nameLabel.isHidden = true
+            } else {
+                nameLabel.text = name?.capitalized
+                nameLabel.isHidden = false
+            }
+        })
     }
 }
 
-// MARK: - Subviews Setup
+// MARK: - Setup Subviews Methods
 extension MessageCell {
-    
-    // MARK: - Create Subviews
-    func makeBgBubbleView() -> UIView {
-        let view = UIView()
-        view.layer.cornerRadius = 12
-        return view
-    }
-    
-    func makeTextView() -> UITextView {
-        let textView = UITextView()
-        textView.isEditable = false
-        textView.isScrollEnabled = false
-        textView.isSelectable = false
-        textView.font = UIFont.systemFont(ofSize: 16, weight: .regular)
-        textView.textColor = .black
-        textView.backgroundColor = .clear
-        textView.textAlignment = .left
-        return textView
-    }
-    
-    func makeTimeLabel() -> UILabel {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
-        label.textColor = R.color.timeGray()
-        label.textAlignment = .right
-        return label
-    }
-    
-    // MARK: - Setup Subviews Methods
-    func setupSubviews() {
-        bgBubbleView = makeBgBubbleView()
-        textView = makeTextView()
-        timeLabel = makeTimeLabel()
-    }
     
     func setupSubviewsHierarchy() {
         contentView.addSubview(bgBubbleView)
-        bgBubbleView.addSubview(textView)
-        bgBubbleView.addSubview(timeLabel)
+        bgBubbleView.addSubview(containerStackView)
+        containerStackView.addArrangedSubview(nameLabel)
+        containerStackView.addArrangedSubview(textView)
+        containerStackView.addArrangedSubview(timeLabel)
     }
     
     func setConstantConstraints() {
-        // MARK: Layout BubbleView
         bgBubbleView.snp.makeConstraints { make in
-            // Делаем минимальную ширину и высоту, чтобы все выглядело прилично, когда сообщение пустое или состоит из одного пробела
-            make.width.greaterThanOrEqualTo(80)
-            make.height.greaterThanOrEqualTo(40)
-            make.left.top.right.equalTo(textView).inset(-MessageCell.textPadding)
-            make.bottom.equalTo(timeLabel.snp.bottom).inset(-MessageCell.timePadding)
-            // На случай, если лейбл со временем пустой
-            make.bottom.greaterThanOrEqualTo(textView).inset(-MessageCell.textPadding)
-        }
-        
-        // MARK: Layout TimeLabel
-        timeLabel.snp.makeConstraints { make in
-            make.top.equalTo(textView.snp.bottom)
-            make.right.equalTo(bgBubbleView).inset(MessageCell.timePadding)
+            make.edges.equalTo(containerStackView).inset(-Self.contentPadding)
         }
     }
     
-    // Вряд ли когда либо будет динамически меняться отправитель сообщения, но на всякий случай пусть будет так)
-    // MARK: Layout TextView
-    func setupSubviewsLayout(direction: Direction) {
+    func setupSubviewsLayout(direction: ChatBubbleDirection) {
         
-        let insetFromScreen = contentView.bounds.size.width * CGFloat((1 - MessageCell.messageToScreenRatio))
+        let insetFromScreen = contentView.bounds.size.width * CGFloat((1 - Self.messageToScreenRatio))
         
         switch direction {
         case .left:
-            textView.snp.remakeConstraints { make in
-                make.left.top.equalTo(contentView).inset(MessageCell.textPadding + MessageCell.bubbleMargin)
-                make.bottom.equalTo(contentView).inset(MessageCell.textPadding + MessageCell.bubbleMargin + MessageCell.timePadding * 2)
+            containerStackView.snp.remakeConstraints { make in
+                make.left.top.bottom.equalTo(contentView).inset(Self.bubbleMargin + Self.contentPadding)
                 make.right.lessThanOrEqualTo(contentView).inset(insetFromScreen)
             }
         case .right:
-            textView.snp.remakeConstraints { make in
-                make.right.top.equalTo(contentView).inset(MessageCell.textPadding + MessageCell.bubbleMargin)
-                make.bottom.equalTo(contentView).inset(MessageCell.textPadding + MessageCell.bubbleMargin + MessageCell.timePadding * 2)
+            containerStackView.snp.remakeConstraints { make in
+                make.right.top.bottom.equalTo(contentView).inset(Self.bubbleMargin + Self.contentPadding)
                 make.left.greaterThanOrEqualTo(contentView).inset(insetFromScreen)
             }
         }
