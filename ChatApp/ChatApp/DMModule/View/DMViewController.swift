@@ -13,11 +13,17 @@ import Rswift
 final class DMViewController: UIViewController, ViewModelBased {
 
     // MARK: - Properties
-    fileprivate var tableView: UITableView!
-    fileprivate var footerView: UIView!
-    fileprivate var newMessageTextField: UITextField!
-    fileprivate var addButton: UIButton!
-    fileprivate var sendButton: UIButton!
+    private var tableView: UITableView!
+    private var footerView: UIView!
+    private var newMessageTextField: UITextField!
+    private var addButton: UIButton!
+    private var sendButton: UIButton!
+    private lazy var titleView: TitleViewWithImage = TitleViewWithImage()
+    private var newMessageCanBeSent: Bool = false {
+        didSet {
+            sendButton.isEnabled = newMessageCanBeSent
+        }
+    }
     
     var viewModel: DMViewModel?
     
@@ -32,7 +38,7 @@ final class DMViewController: UIViewController, ViewModelBased {
         super.viewDidLoad()
         
         view.backgroundColor = ThemeManager.currentTheme.settings.mainColor
-        
+        navigationItem.largeTitleDisplayMode = .never
         setupSubviews()
         setupSubviewsHierarchy()
         setupSubviewsLayout()
@@ -40,16 +46,12 @@ final class DMViewController: UIViewController, ViewModelBased {
         clearBackButtonText()
         configureTableView()
         bindWithViewModel()
+        viewModel?.viewDidLoad()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         addKeyboardObserver()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        tableView.scrollToBottom(animated: false)
     }
     
     // MARK: - Private Methods
@@ -68,17 +70,19 @@ final class DMViewController: UIViewController, ViewModelBased {
     }
     
     private func calculateEstimatedRowHeight() -> CGFloat {
-        // 17 - примерная высота 1 строки TextView при текущем шрифте
-        return CGFloat(
-            17 + MessageCell.timePadding * 2 +
-            MessageCell.textPadding * 2 +
-            MessageCell.bubbleMargin * 2
-        )
+        return CGFloat(MessageCell.estimatedContentHeight)
+    }
+    
+    private func scrollTableToButtom(animated: Bool = true) {
+        
     }
     
     @objc
     func sendMessagePressed() {
-        Log.info("Send Button Pressed")
+        viewModel?.sendMessagePressed(
+            with: newMessageTextField.text
+        )
+        newMessageTextField.text = ""
     }
     
     @objc
@@ -91,9 +95,22 @@ final class DMViewController: UIViewController, ViewModelBased {
 extension DMViewController: ViewModelBindable {
     func bindWithViewModel() {
         viewModel?.chatImage.bind(listener: { [unowned self] image in
-            setNavTitleWithImage(title: self.viewModel?.chatName.value,
-                                 image: image)
+            if let image = image {
+                titleView.updateUsing(image: image,
+                                      title: viewModel?.chatName.value)
+            } else {
+                titleView.updateUsing(title: viewModel?.chatName.value,
+                                      placeholderType: .forGroupChat)
+            }
+            self.navigationItem.titleView = titleView
         })
+        viewModel?.onDataUpdate = { [unowned self] in
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+                self.view.layoutIfNeeded()
+                self.tableView.scrollToBottom(animated: false)
+            }
+        }
     }
 }
 
@@ -139,7 +156,21 @@ extension DMViewController: UITableViewDataSource, UITableViewDelegate {
 }
 
 // MARK: - UITextField Delegate
-extension DMViewController: UITextFieldDelegate { }
+extension DMViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if newMessageCanBeSent {
+            sendMessagePressed()
+        }
+        return true
+    }
+    
+    @objc
+    func nameTextFieldDidChange(_ textField: UITextField) {
+        if let isSendable = viewModel?.isTextSendable(text: textField.text) {
+            newMessageCanBeSent = isSendable
+        }
+    }
+}
 
 // MARK: - KeyboardObservers
 /*
@@ -237,6 +268,9 @@ private extension DMViewController {
         textField.clearButtonMode = .whileEditing
         textField.contentVerticalAlignment = .center
         textField.delegate = self
+        textField.addTarget(self,
+                            action: #selector(nameTextFieldDidChange),
+                            for: .editingChanged)
         
         return textField
     }
@@ -249,6 +283,7 @@ private extension DMViewController {
         button.addTarget(self,
                          action: #selector(sendMessagePressed),
                          for: .touchUpInside)
+        button.isEnabled = false
         return button
     }
     
@@ -273,7 +308,7 @@ private extension DMViewController {
         // MARK: Layout Table View
         tableView.snp.makeConstraints { make in
             make.top.left.right.equalToSuperview()
-            make.bottom.equalTo(footerView.snp.top)
+            make.bottom.equalTo(footerView.snp.top).inset(-5)
         }
 
         // MARK: Layout Footer View
