@@ -8,31 +8,38 @@
 import Foundation
 
 // MARK: - Async File Manager Protocol
-typealias AsyncFileManagerProtocol = AsyncFMBase & FileManagerProtocol & FMAsyncReadable & FMAsyncWritable
+typealias AsyncFileManagerProtocol = FileManagerProtocol & FMAsyncReadable & FMAsyncWritable & FMAsyncQoSModifiable
 
-// MARK: - Async Handlers
-enum AsyncHandler {
-    case gcd
-    case operation(OperationQueue? = nil)
+// MARK: - File Manager Async QoS Modifiable
+
+protocol FMAsyncQoSModifiable {
+    
+    /// Позволяет задать предпочитаемый приоритет сервиса для асинхронных задач файлового менеджера
+    func setQoS(_ qos: QualityOfService)
 }
-
-// MARK: - Async File Manager Base
-protocol AsyncFMBase: FMBase {
-    var qos: QualityOfService { get set }
-    var asyncHandler: AsyncHandler { get set }
-}
-
-// MARK: - Handler
-typealias CompletionHandler<T> = (Result<T, Error>) -> Void
 
 // MARK: - File Manager Async Readable
-protocol FMAsyncReadable: AsyncFMBase {
+protocol FMAsyncReadable {
+    
+    /// Создает операцию чтения файла в бекграунд потоке
+    /// - Parameters:
+    ///   - name: полное имя файла с расширением
+    ///   - directory: директория хранения файла
+    ///   - completion: результат в виде Data или ошибка
     func read(fromFileNamed name: String,
               at directory: FMDirectory,
               completion: @escaping CompletionHandler<Data>)
 }
 
-protocol FMAsyncWritable: AsyncFMBase {
+// MARK: - File Manager Async Writable
+protocol FMAsyncWritable {
+    
+    /// Создает операцию записи файла в бекграунд потоке
+    /// - Parameters:
+    ///   - data: данные файла представленные в формате Data
+    ///   - name: имя файла в который необходимо произвести запись или создать новый
+    ///   - directory: директория в которой будет расположен файл
+    ///   - completion: результат в виде Успех/Неудача или ошибка
     func write(data: Data,
                inFileNamed name: String,
                at directory: FMDirectory,

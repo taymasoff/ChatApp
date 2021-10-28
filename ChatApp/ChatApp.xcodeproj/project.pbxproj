@@ -15,7 +15,7 @@
 		2247F96F2712A4F800BFFC69 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2247F96E2712A4F800BFFC69 /* R.generated.swift */; };
 		225D6184271A8D9A00A5D678 /* FileManagerProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D6183271A8D9A00A5D678 /* FileManagerProtocols.swift */; };
 		225D6186271D66B500A5D678 /* AsyncOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D6185271D66B500A5D678 /* AsyncOperation.swift */; };
-		225D618A271D850F00A5D678 /* AsyncFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D6189271D850F00A5D678 /* AsyncFileManager.swift */; };
+		225D618A271D850F00A5D678 /* GCDFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D6189271D850F00A5D678 /* GCDFileManager.swift */; };
 		225D618C271D8B4500A5D678 /* FileReadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D618B271D8B4500A5D678 /* FileReadOperation.swift */; };
 		225D618E271D8F2700A5D678 /* FileWriteOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D618D271D8F2700A5D678 /* FileWriteOperation.swift */; };
 		2286F4DC270EF27700ED809E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2286F4DB270EF27700ED809E /* Message.swift */; };
@@ -65,6 +65,7 @@
 		22FEEA3C272AD098003C8B62 /* Date+isYesterday.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEA3B272AD098003C8B62 /* Date+isYesterday.swift */; };
 		22FEEA3E272AD357003C8B62 /* Date+isThisYear.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEA3D272AD357003C8B62 /* Date+isThisYear.swift */; };
 		22FEEA42272AEFB9003C8B62 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEA41272AEFB9003C8B62 /* MessageCell.swift */; };
+		22FEEA46272B4F2C003C8B62 /* OperationFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEA45272B4F2C003C8B62 /* OperationFileManager.swift */; };
 		22FFB21727149A7F001884BA /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FFB21627149A7E001884BA /* Theme.swift */; };
 		22FFB21927149A97001884BA /* ThemesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FFB21827149A97001884BA /* ThemesViewController.swift */; };
 		22FFB21B27149AA6001884BA /* ThemesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FFB21A27149AA6001884BA /* ThemesViewModel.swift */; };
@@ -91,7 +92,7 @@
 		2247F96E2712A4F800BFFC69 /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
 		225D6183271A8D9A00A5D678 /* FileManagerProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerProtocols.swift; sourceTree = "<group>"; };
 		225D6185271D66B500A5D678 /* AsyncOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncOperation.swift; sourceTree = "<group>"; };
-		225D6189271D850F00A5D678 /* AsyncFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncFileManager.swift; sourceTree = "<group>"; };
+		225D6189271D850F00A5D678 /* GCDFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GCDFileManager.swift; sourceTree = "<group>"; };
 		225D618B271D8B4500A5D678 /* FileReadOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileReadOperation.swift; sourceTree = "<group>"; };
 		225D618D271D8F2700A5D678 /* FileWriteOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileWriteOperation.swift; sourceTree = "<group>"; };
 		2286F4DB270EF27700ED809E /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
@@ -143,6 +144,7 @@
 		22FEEA3B272AD098003C8B62 /* Date+isYesterday.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+isYesterday.swift"; sourceTree = "<group>"; };
 		22FEEA3D272AD357003C8B62 /* Date+isThisYear.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+isThisYear.swift"; sourceTree = "<group>"; };
 		22FEEA41272AEFB9003C8B62 /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
+		22FEEA45272B4F2C003C8B62 /* OperationFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationFileManager.swift; sourceTree = "<group>"; };
 		22FFB21627149A7E001884BA /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		22FFB21827149A97001884BA /* ThemesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemesViewController.swift; sourceTree = "<group>"; };
 		22FFB21A27149AA6001884BA /* ThemesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemesViewModel.swift; sourceTree = "<group>"; };
@@ -300,7 +302,8 @@
 			children = (
 				225D6183271A8D9A00A5D678 /* FileManagerProtocols.swift */,
 				22C71C12271EEEDA005C4466 /* AsyncFileManagerProtocols.swift */,
-				225D6189271D850F00A5D678 /* AsyncFileManager.swift */,
+				225D6189271D850F00A5D678 /* GCDFileManager.swift */,
+				22FEEA45272B4F2C003C8B62 /* OperationFileManager.swift */,
 				225D618B271D8B4500A5D678 /* FileReadOperation.swift */,
 				225D618D271D8F2700A5D678 /* FileWriteOperation.swift */,
 			);
@@ -766,6 +769,7 @@
 				22D104BD2704DCDA006CF686 /* UIImageView+Placeholders.swift in Sources */,
 				222A55B6270C0FA90047CA24 /* Date+timeSince.swift in Sources */,
 				22FFB2352716963F001884BA /* ThemesViewControllerObjc.m in Sources */,
+				22FEEA46272B4F2C003C8B62 /* OperationFileManager.swift in Sources */,
 				22CC53B926FAC8220036F6F9 /* AppDelegate.swift in Sources */,
 				225D6184271A8D9A00A5D678 /* FileManagerProtocols.swift in Sources */,
 				22E69D332701E2C1009CAAC0 /* ConversationCell.swift in Sources */,
@@ -778,7 +782,7 @@
 				22FEEA3C272AD098003C8B62 /* Date+isYesterday.swift in Sources */,
 				22FEEA2E2729C089003C8B62 /* DMRepository.swift in Sources */,
 				22CC53BB26FAC8220036F6F9 /* SceneDelegate.swift in Sources */,
-				225D618A271D850F00A5D678 /* AsyncFileManager.swift in Sources */,
+				225D618A271D850F00A5D678 /* GCDFileManager.swift in Sources */,
 				22C71C2027201763005C4466 /* DynamicPreservable.swift in Sources */,
 				22FEEA312729CBF0003C8B62 /* TitleViewWithImage.swift in Sources */,
 				2286F4E3270F064600ED809E /* Protocols.swift in Sources */,
