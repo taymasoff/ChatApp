@@ -35,6 +35,9 @@ struct ThemeSettings {
     /// Цвет вспомогательного текста
     var subtitleTextColor: UIColor
     
+    /// Констрастный цвет к tintу
+    var tintContrastColor: UIColor
+    
     init(backGroundColor: UIColor, mainColor: UIColor?, secondaryColor: UIColor? = nil, tintColor: UIColor, titleTextColor: UIColor? = nil, subtitleTextColor: UIColor? = nil) {
         self.backGroundColor = backGroundColor
         self.mainColor = mainColor ?? backGroundColor.lighter(by: 15)
@@ -44,6 +47,7 @@ struct ThemeSettings {
         self.tintColor = tintColor
         self.titleTextColor = titleTextColor ?? backGroundColor.contrastingColor(for: .title)
         self.subtitleTextColor = subtitleTextColor ?? backGroundColor.contrastingColor(for: .subtitle)
+        self.tintContrastColor = self.tintColor.contrastingColor(for: .title)
     }
     
     static let defaultLight = ThemeSettings(backGroundColor: R.color.appGray()!,

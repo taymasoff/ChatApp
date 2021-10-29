@@ -46,7 +46,7 @@ class ThemesView: UIView {
     }()
     
     var confirmButton: UIButton = {
-        let button = UIButton(type: .custom)
+        let button = UIButton(type: .system)
         button.setTitle("Apply Theme", for: .normal)
         button.layer.cornerRadius = 10
         button.backgroundColor = R.color.appYellow()

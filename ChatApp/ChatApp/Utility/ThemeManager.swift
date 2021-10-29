@@ -8,7 +8,7 @@
 import UIKit
 
 struct ThemeManager {
-    private static let themeKey = "AppTheme"
+    static let themeKey = "AppTheme"
     
     // Использую 2 проперти темы, чтобы иметь возможность изменить тему на следующий сеанс, но оставить текущую на этот
     private(set) static var currentTheme: Theme = Theme.defaultLight {

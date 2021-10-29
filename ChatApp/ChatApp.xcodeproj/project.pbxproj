@@ -13,11 +13,24 @@
 		222A55B3270C06C10047CA24 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222A55B2270C06C10047CA24 /* Conversation.swift */; };
 		222A55B6270C0FA90047CA24 /* Date+TimeSince.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222A55B5270C0FA90047CA24 /* Date+TimeSince.swift */; };
 		2247F96F2712A4F800BFFC69 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2247F96E2712A4F800BFFC69 /* R.generated.swift */; };
+		225D6184271A8D9A00A5D678 /* FileManagerProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D6183271A8D9A00A5D678 /* FileManagerProtocols.swift */; };
+		225D6186271D66B500A5D678 /* AsyncOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D6185271D66B500A5D678 /* AsyncOperation.swift */; };
+		225D618A271D850F00A5D678 /* AsyncFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D6189271D850F00A5D678 /* AsyncFileManager.swift */; };
+		225D618C271D8B4500A5D678 /* FileReadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D618B271D8B4500A5D678 /* FileReadOperation.swift */; };
+		225D618E271D8F2700A5D678 /* FileWriteOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D618D271D8F2700A5D678 /* FileWriteOperation.swift */; };
 		2286F4DC270EF27700ED809E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2286F4DB270EF27700ED809E /* Message.swift */; };
 		2286F4E3270F064600ED809E /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2286F4E2270F064600ED809E /* Protocols.swift */; };
 		2286F4E7270F7FFA00ED809E /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2286F4E6270F7FFA00ED809E /* UIImage+Resize.swift */; };
 		2286F4E9270F842800ED809E /* UITableView+ScrollToBottom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2286F4E8270F842800ED809E /* UITableView+ScrollToBottom.swift */; };
 		22B50F7726FB01810099436A /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B50F7626FB01810099436A /* Log.swift */; };
+		22C44A312726BE2E003D106C /* InAppNotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C44A302726BE2E003D106C /* InAppNotificationView.swift */; };
+		22C71C11271EE8C8005C4466 /* AsyncResultOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C71C10271EE8C8005C4466 /* AsyncResultOperation.swift */; };
+		22C71C13271EEEDA005C4466 /* AsyncFileManagerProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C71C12271EEEDA005C4466 /* AsyncFileManagerProtocols.swift */; };
+		22C71C18271F003B005C4466 /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C71C17271F003B005C4466 /* PersistenceManager.swift */; };
+		22C71C1A271F047E005C4466 /* PersistenceManagerProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C71C19271F047E005C4466 /* PersistenceManagerProtocols.swift */; };
+		22C71C2027201763005C4466 /* DynamicPreservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C71C1F27201763005C4466 /* DynamicPreservable.swift */; };
+		22C71C222720921A005C4466 /* InAppNotificationBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C71C2127209219005C4466 /* InAppNotificationBanner.swift */; };
+		22C71C2727219C02005C4466 /* InAppNotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C71C2627219C02005C4466 /* InAppNotificationViewModel.swift */; };
 		22CC53B926FAC8220036F6F9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CC53B826FAC8220036F6F9 /* AppDelegate.swift */; };
 		22CC53BB26FAC8220036F6F9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CC53BA26FAC8220036F6F9 /* SceneDelegate.swift */; };
 		22CC53BD26FAC8220036F6F9 /* ConversationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CC53BC26FAC8220036F6F9 /* ConversationsViewController.swift */; };
@@ -60,11 +73,24 @@
 		222A55B2270C06C10047CA24 /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		222A55B5270C0FA90047CA24 /* Date+TimeSince.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+TimeSince.swift"; sourceTree = "<group>"; };
 		2247F96E2712A4F800BFFC69 /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
+		225D6183271A8D9A00A5D678 /* FileManagerProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerProtocols.swift; sourceTree = "<group>"; };
+		225D6185271D66B500A5D678 /* AsyncOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncOperation.swift; sourceTree = "<group>"; };
+		225D6189271D850F00A5D678 /* AsyncFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncFileManager.swift; sourceTree = "<group>"; };
+		225D618B271D8B4500A5D678 /* FileReadOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileReadOperation.swift; sourceTree = "<group>"; };
+		225D618D271D8F2700A5D678 /* FileWriteOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileWriteOperation.swift; sourceTree = "<group>"; };
 		2286F4DB270EF27700ED809E /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		2286F4E2270F064600ED809E /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		2286F4E6270F7FFA00ED809E /* UIImage+Resize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
 		2286F4E8270F842800ED809E /* UITableView+ScrollToBottom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+ScrollToBottom.swift"; sourceTree = "<group>"; };
 		22B50F7626FB01810099436A /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		22C44A302726BE2E003D106C /* InAppNotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppNotificationView.swift; sourceTree = "<group>"; };
+		22C71C10271EE8C8005C4466 /* AsyncResultOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncResultOperation.swift; sourceTree = "<group>"; };
+		22C71C12271EEEDA005C4466 /* AsyncFileManagerProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncFileManagerProtocols.swift; sourceTree = "<group>"; };
+		22C71C17271F003B005C4466 /* PersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceManager.swift; sourceTree = "<group>"; };
+		22C71C19271F047E005C4466 /* PersistenceManagerProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceManagerProtocols.swift; sourceTree = "<group>"; };
+		22C71C1F27201763005C4466 /* DynamicPreservable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicPreservable.swift; sourceTree = "<group>"; };
+		22C71C2127209219005C4466 /* InAppNotificationBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppNotificationBanner.swift; sourceTree = "<group>"; };
+		22C71C2627219C02005C4466 /* InAppNotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppNotificationViewModel.swift; sourceTree = "<group>"; };
 		22CC53B526FAC8220036F6F9 /* ChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		22CC53B826FAC8220036F6F9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		22CC53BA26FAC8220036F6F9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -158,6 +184,16 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		225D6182271A8D6300A5D678 /* PersistentData */ = {
+			isa = PBXGroup;
+			children = (
+				22C71C14271EFC72005C4466 /* FileManager */,
+				22C71C17271F003B005C4466 /* PersistenceManager.swift */,
+				22C71C19271F047E005C4466 /* PersistenceManagerProtocols.swift */,
+			);
+			path = PersistentData;
+			sourceTree = "<group>";
+		};
 		2286F4DD270EF27A00ED809E /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -195,6 +231,37 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		22C71C14271EFC72005C4466 /* FileManager */ = {
+			isa = PBXGroup;
+			children = (
+				225D6183271A8D9A00A5D678 /* FileManagerProtocols.swift */,
+				22C71C12271EEEDA005C4466 /* AsyncFileManagerProtocols.swift */,
+				225D6189271D850F00A5D678 /* AsyncFileManager.swift */,
+				225D618B271D8B4500A5D678 /* FileReadOperation.swift */,
+				225D618D271D8F2700A5D678 /* FileWriteOperation.swift */,
+			);
+			path = FileManager;
+			sourceTree = "<group>";
+		};
+		22C71C16271EFC91005C4466 /* AsyncOperation */ = {
+			isa = PBXGroup;
+			children = (
+				225D6185271D66B500A5D678 /* AsyncOperation.swift */,
+				22C71C10271EE8C8005C4466 /* AsyncResultOperation.swift */,
+			);
+			path = AsyncOperation;
+			sourceTree = "<group>";
+		};
+		22C71C2527219BE9005C4466 /* InAppNotification */ = {
+			isa = PBXGroup;
+			children = (
+				22C71C2127209219005C4466 /* InAppNotificationBanner.swift */,
+				22C44A302726BE2E003D106C /* InAppNotificationView.swift */,
+				22C71C2627219C02005C4466 /* InAppNotificationViewModel.swift */,
+			);
+			path = InAppNotification;
+			sourceTree = "<group>";
+		};
 		22CC53AC26FAC8220036F6F9 = {
 			isa = PBXGroup;
 			children = (
@@ -222,6 +289,7 @@
 				22E69D282701E0D3009CAAC0 /* ProfileModule */,
 				22B50F7926FB0E760099436A /* Application */,
 				22D104C2270529AE006CF686 /* Utility */,
+				225D6182271A8D6300A5D678 /* PersistentData */,
 				22E69D192701D9AA009CAAC0 /* Flow */,
 				22D104B52704D4F0006CF686 /* Components */,
 				22D104BA2704DCA9006CF686 /* Extensions */,
@@ -235,6 +303,7 @@
 			isa = PBXGroup;
 			children = (
 				22D104B62704D55E006CF686 /* BlurredView.swift */,
+				22C71C2527219BE9005C4466 /* InAppNotification */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -260,8 +329,10 @@
 				22FFB22E2716845D001884BA /* ThemeManager.swift */,
 				22D104C3270529D1006CF686 /* ImagePickerManager.swift */,
 				22D104C5270535D3006CF686 /* Dynamic.swift */,
+				22C71C1F27201763005C4466 /* DynamicPreservable.swift */,
 				2286F4E2270F064600ED809E /* Protocols.swift */,
 				22FFB22727162245001884BA /* StoredProperty.swift */,
+				22C71C16271EFC91005C4466 /* AsyncOperation */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -576,6 +647,9 @@
 				22CC53BD26FAC8220036F6F9 /* ConversationsViewController.swift in Sources */,
 				22FFB22F2716845D001884BA /* ThemeManager.swift in Sources */,
 				221729F4270DA4B00022D174 /* UIViewController+SetNavTitleWithImage.swift in Sources */,
+				22C71C1A271F047E005C4466 /* PersistenceManagerProtocols.swift in Sources */,
+				225D6186271D66B500A5D678 /* AsyncOperation.swift in Sources */,
+				22C71C222720921A005C4466 /* InAppNotificationBanner.swift in Sources */,
 				22D104C6270535D3006CF686 /* Dynamic.swift in Sources */,
 				22FFB22427160BEA001884BA /* UIColor+contrastingColor.swift in Sources */,
 				222A55B3270C06C10047CA24 /* Conversation.swift in Sources */,
@@ -583,11 +657,13 @@
 				22E69D2A2701E0E8009CAAC0 /* ProfileViewController.swift in Sources */,
 				22E69D202701DACA009CAAC0 /* ConversationsViewModel.swift in Sources */,
 				22FFB22A2716550B001884BA /* UIColor+makeColorLigherDarker.swift in Sources */,
+				22C71C11271EE8C8005C4466 /* AsyncResultOperation.swift in Sources */,
 				22D104BD2704DCDA006CF686 /* UIImageView+AddProfilePlaceholder.swift in Sources */,
 				222A55B6270C0FA90047CA24 /* Date+TimeSince.swift in Sources */,
 				22FFB2352716963F001884BA /* ThemesViewControllerObjc.m in Sources */,
 				22CC53B926FAC8220036F6F9 /* AppDelegate.swift in Sources */,
 				221729E8270D93D60022D174 /* MessageCell.swift in Sources */,
+				225D6184271A8D9A00A5D678 /* FileManagerProtocols.swift in Sources */,
 				22E69D332701E2C1009CAAC0 /* ConversationCell.swift in Sources */,
 				22FFB21927149A97001884BA /* ThemesViewController.swift in Sources */,
 				22E69D182701D9A4009CAAC0 /* Router.swift in Sources */,
@@ -595,6 +671,8 @@
 				22D104B22704A12C006CF686 /* ProfileView.swift in Sources */,
 				22FFB22627160E76001884BA /* UIColor+isLight.swift in Sources */,
 				22CC53BB26FAC8220036F6F9 /* SceneDelegate.swift in Sources */,
+				225D618A271D850F00A5D678 /* AsyncFileManager.swift in Sources */,
+				22C71C2027201763005C4466 /* DynamicPreservable.swift in Sources */,
 				2286F4E3270F064600ED809E /* Protocols.swift in Sources */,
 				2247F96F2712A4F800BFFC69 /* R.generated.swift in Sources */,
 				2286F4E7270F7FFA00ED809E /* UIImage+Resize.swift in Sources */,
@@ -602,14 +680,20 @@
 				22FFB22827162245001884BA /* StoredProperty.swift in Sources */,
 				221729EE270D94040022D174 /* MessageViewModel.swift in Sources */,
 				22E69D2C2701E0EF009CAAC0 /* ProfileViewModel.swift in Sources */,
+				22C71C18271F003B005C4466 /* PersistenceManager.swift in Sources */,
 				22FFB21F2714BE9E001884BA /* ThemesView.swift in Sources */,
 				22D104C4270529D1006CF686 /* ImagePickerManager.swift in Sources */,
 				22E69D352701E2D8009CAAC0 /* ConversationCellViewModel.swift in Sources */,
+				22C71C13271EEEDA005C4466 /* AsyncFileManagerProtocols.swift in Sources */,
+				225D618C271D8B4500A5D678 /* FileReadOperation.swift in Sources */,
 				22FFB22D27165C47001884BA /* ThemeSettings.swift in Sources */,
 				22FFB23B2716AE4B001884BA /* ThemeObjcModel.m in Sources */,
+				22C71C2727219C02005C4466 /* InAppNotificationViewModel.swift in Sources */,
 				22D104B72704D55E006CF686 /* BlurredView.swift in Sources */,
 				22B50F7726FB01810099436A /* Log.swift in Sources */,
 				2286F4E9270F842800ED809E /* UITableView+ScrollToBottom.swift in Sources */,
+				22C44A312726BE2E003D106C /* InAppNotificationView.swift in Sources */,
+				225D618E271D8F2700A5D678 /* FileWriteOperation.swift in Sources */,
 				2286F4DC270EF27700ED809E /* Message.swift in Sources */,
 				22E69D252701E0B7009CAAC0 /* DMViewModel.swift in Sources */,
 			);

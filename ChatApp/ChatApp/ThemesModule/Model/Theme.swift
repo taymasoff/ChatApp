@@ -7,7 +7,7 @@
 
 import UIKit
 
-enum Theme: String, CaseIterable {
+enum Theme: String, CaseIterable, Codable {
 
     case defaultLight = "Default Light"
     case darkAndWhite = "Dark and White"
@@ -25,6 +25,20 @@ enum Theme: String, CaseIterable {
             return ThemeSettings.charcoal
         case .imperialRed:
             return ThemeSettings.imperialRed
+        }
+    }
+    
+    /// Какой индекс выбран
+    var selectedIndex: Int {
+        switch self {
+        case .defaultLight:
+            return 0
+        case .darkAndWhite:
+            return 1
+        case .charcoal:
+            return 2
+        case .imperialRed:
+            return 3
         }
     }
 }

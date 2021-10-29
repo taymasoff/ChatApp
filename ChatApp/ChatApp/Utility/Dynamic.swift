@@ -19,8 +19,12 @@ class Dynamic<T> {
         }
     }
     
-    init(_ value: T) {
+    let id: String
+    
+    init(_ value: T, id: String? = nil) {
         self.value = value
+        
+        self.id = id ?? UUID().uuidString
     }
     
     func bind(listener: Listener?) {

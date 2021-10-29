@@ -22,7 +22,6 @@ extension UIImageView {
                                formattedBy formatter: PersonNameComponentsFormatter = PersonNameComponentsFormatter()) {
         guard let fullName = fullName,
               let components = formatter.personNameComponents(from: fullName) else {
-                  Log.error("Невозможно получить инициалы из строки: \(fullName ?? "")")
                   showPlaceholder("?")
                   return
               }
@@ -45,6 +44,10 @@ extension UIImageView {
     }
     
     private func showPlaceholder(_ initials: String) {
+        // Если у нас уже установлен placeholder, удаляем предыдущие инициалы
+        if let initialsLabel = self.subviews.last as? UILabel {
+            initialsLabel.removeFromSuperview()
+        }
         self.image = R.image.yellowCircle()
         let label = UILabel()
         // Тут магия по уменьшению шрифта так, чтобы он вписывался в лейбу
@@ -71,7 +74,7 @@ extension UIImageView {
     ///   - target: target
     ///   - action: selector
     func addAction(target: Any?, action: Selector) {
-        let button = UIButton(type: .custom)
+        let button = UIButton(type: .system)
         button.addTarget(target, action: action, for: .touchUpInside)
         self.addSubview(button)
         button.snp.makeConstraints { make in

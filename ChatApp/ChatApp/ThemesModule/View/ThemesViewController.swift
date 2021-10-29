@@ -82,6 +82,11 @@ final class ThemesViewController: UIViewController, ViewModelBased {
         themesView.snp.remakeConstraints { make in
             make.bottom.right.left.equalToSuperview()
         }
+        themesView.themesPickerView.selectRow(
+            ThemeManager.currentTheme.selectedIndex,
+            inComponent: 0,
+            animated: false
+        )
         if animated {
             UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseOut) {
                 self.view.layoutIfNeeded()
