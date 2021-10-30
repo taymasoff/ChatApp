@@ -35,8 +35,8 @@ final class ProfileViewController: UIViewController, ViewModelBased {
         setupGestureRecognizers()
         
         bindWithViewModel()
-        viewModel?.loadLastUIStateFromPersistentStorage()
         setSaveButtonState(.off)
+        viewModel?.viewDidLoad()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -160,7 +160,7 @@ extension ProfileViewController: ViewModelBindable {
             // если userAvatar все еще nil
             if self.viewModel?.userAvatar.value == nil {
                 self.profileView.profileImageView.addProfilePlaceholder(fullName: name)
-                self.animateImageViewTextChange()
+                self.animateImageViewChange()
             }
         })
         // MARK: Bind userDescription to userDescriptionTextField
@@ -181,7 +181,7 @@ extension ProfileViewController: ViewModelBindable {
                     initialsLabel.removeFromSuperview()
                 }
                 self.profileView.profileImageView.image = image
-                self.animateImageViewImageChange()
+                self.animateImageViewChange()
             } else {
                 self.profileView.profileImageView.addProfilePlaceholder(
                     fullName: viewModel?.userName.value,
@@ -277,7 +277,7 @@ private extension ProfileViewController {
             self?.inAppNotification.dismiss()
         }
         inAppNotification.onButtonTwoPress = { [weak self, weak viewModel] in
-            viewModel?.saveCurrentUIState()
+            viewModel?.requestDataSaveIfChanged()
             self?.inAppNotification.dismiss()
         }
     }
@@ -448,26 +448,13 @@ private extension ProfileViewController {
 // MARK: - Animations
 private extension ProfileViewController {
     
-    func animateImageViewTextChange() {
+    func animateImageViewChange() {
         UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseIn, animations: { [weak self] in
             self?.profileView.profileImageView.transform = CGAffineTransform(
                 scaleX: 1.4, y: 1.4
             )
         }, completion: { [weak self] _ in
             UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut) {
-                self?.profileView.profileImageView.transform = .identity
-            }
-        })
-    }
-    
-    func animateImageViewImageChange() {
-        UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveEaseIn, animations: {
-            [weak self] in
-            self?.profileView.profileImageView.transform = CGAffineTransform(
-                scaleX: -1, y: 1
-            )
-        }, completion: { [weak self] _ in
-            UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveEaseOut) {
                 self?.profileView.profileImageView.transform = .identity
             }
         })
