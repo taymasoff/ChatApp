@@ -152,32 +152,8 @@ internal class Log {
     }
 }
 
-fileprivate extension Date {
+private extension Date {
     func toString() -> String {
         return Log.dateFormatter.string(from: self as Date)
     }
-}
-
-/// Persistence Manager Logger
-internal class PMLog: Log {
-    
-    override class func setup(loggerState: Log.LoggerState,
-                              includeDate: Bool,
-                              includeFileNames: Bool = false,
-                              includeFuncNames: Bool = false) {
-        Self.isLoggingEnabled = loggerState.isEnabled
-        Self.includesDate = includeDate
-    }
-    
-    override fileprivate class func createPrefix(
-        fileName: String,
-        funcName: String,
-        loggerOutput: LoggerOutputType) -> String {
-            let emojiComponent = "📂"
-            let dateComponent = includesDate ? Date().toString() : nil
-            return [dateComponent, emojiComponent, "[FileManager]:"]
-                .compactMap { $0 }
-                .joined(separator: " ")
-        }
-    
 }
