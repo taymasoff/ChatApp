@@ -8,8 +8,6 @@
 import Foundation
 import UIKit
 
-enum ProfileAvatarUpdateInfo { case avatar(UIImage), name(String) }
-
 /// Вью-модель экрана диалогов
 final class ConversationsViewModel: NSObject, Routable {
     
@@ -24,15 +22,12 @@ final class ConversationsViewModel: NSObject, Routable {
     var notificationCallback: Dynamic<NotificationState?> = Dynamic(nil)
     var profileAvatarUpdateInfo: Dynamic<ProfileAvatarUpdateInfo?> = Dynamic(nil)
     
-    let persistenceManager: PersistenceManagerProtocol
     let repository: ConversationsRepositoryProtocol
     
     // MARK: - Initializer
     init(router: MainRouterProtocol,
-         persistenceManager: PersistenceManagerProtocol? = nil,
          repository: ConversationsRepositoryProtocol? = nil) {
         self.router = router
-        self.persistenceManager = persistenceManager ?? PersistenceManager()
         self.repository = repository ?? ConversationsRepository()
         super.init()
     }
@@ -152,38 +147,7 @@ final class ConversationsViewModel: NSObject, Routable {
     }
 }
 
-// MARK: - PersistentManager Methods
-extension ConversationsViewModel {
-    // Ищем аватарку пользователя
-    // если ее нет - возвращаем имя для генерации плейсхолдера
-    // если и имя пустое - то ничего
-    func fetchUserAvatarOrName() {
-        persistenceManager.fetchImage(
-            key: AppFileNames.userAvatar.rawValue
-        ) { [weak self] result in
-            if case .success(let image) = result {
-                DispatchQueue.main.async {
-                    self?.profileAvatarUpdateInfo.value = .avatar(image)
-                }
-            } else {
-                self?.persistenceManager.fetchString(
-                    key: AppFileNames.userName.rawValue
-                ) { result in
-                    if case .success(let name) = result {
-                        DispatchQueue.main.async {
-                            self?.profileAvatarUpdateInfo.value = .name(name)
-                        }
-                    } else {
-                        DispatchQueue.main.async {
-                            self?.profileAvatarUpdateInfo.value = nil
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
+// MARK: - ProfileDelegate
 extension ConversationsViewModel: ProfileDelegate {
     func didUpdateProfileAvatar(with info: ProfileAvatarUpdateInfo?) {
         profileAvatarUpdateInfo.value = info
@@ -204,6 +168,14 @@ extension ConversationsViewModel {
     func viewDidLoad() {
         bindToRepositoryUpdates()
         repository.subscribeToUpdates()
+        repository.fetchAvatarOrName { [weak self] result in
+            switch result {
+            case .success(let info):
+                self?.profileAvatarUpdateInfo.value = info
+            case .failure(let error):
+                Log.error("Не удалось загрузить аватар или имя \(error.localizedDescription)")
+            }
+        }
     }
 }
 

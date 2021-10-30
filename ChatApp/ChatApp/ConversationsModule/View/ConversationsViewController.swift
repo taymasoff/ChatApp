@@ -60,7 +60,6 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
         extendedLayoutIncludesOpaqueBars = true
         
         setupRefreshControl()
-        viewModel?.fetchUserAvatarOrName()
         bindWithViewModel()
         subscribeToNotificationUpdates()
         viewModel?.viewDidLoad()

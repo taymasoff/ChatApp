@@ -9,9 +9,12 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import UIKit
 
+enum ProfileAvatarUpdateInfo { case avatar(UIImage), name(String) }
+
 // MARK: - ConversationsRepositoryProtocol
 protocol ConversationsRepositoryProtocol {
     var conversations: Dynamic<[Conversation]> { get }
+    // Firestore Operations
     func subscribeToUpdates()
     func unsubscribeFromUpdates()
     func updateConversationsOnce(completion: @escaping () -> Void)
@@ -19,6 +22,8 @@ protocol ConversationsRepositoryProtocol {
                          completion: CompletionHandler<String>)
     func deleteConversation(withID id: String?,
                             completion: @escaping CompletionHandler<String>)
+    // FileManager Operations
+    func fetchAvatarOrName(completion: @escaping CompletionHandler<ProfileAvatarUpdateInfo>)
 }
 
 final class ConversationsRepository: ConversationsRepositoryProtocol {
@@ -29,6 +34,19 @@ final class ConversationsRepository: ConversationsRepositoryProtocol {
     private var listener: ListenerRegistration?
     
     let conversations: Dynamic<[Conversation]> = Dynamic([])
+    let fileManager: AsyncFileManagerProtocol
+    let fmPreferences: FileManagerPreferences
+    
+    // MARK: - Init
+    init(fileManager: AsyncFileManagerProtocol = GCDFileManager(),
+         fmPreferences: FileManagerPreferences = FileManagerPreferences(
+            .txt,
+            .jpeg(1.0),
+            .userProfile)
+    ) {
+        self.fileManager = fileManager
+        self.fmPreferences = fmPreferences
+    }
     
     // MARK: - Subscribe to stream
     func subscribeToUpdates() {
@@ -116,6 +134,38 @@ final class ConversationsRepository: ConversationsRepositoryProtocol {
                 completion(
                     .success("Беседа успешно удалена из списка каналов!")
                 )
+            }
+        }
+    }
+}
+
+// MARK: - FileManager Operatable Methods
+extension ConversationsRepository: FMImageOperatable, FMStringOperatable {
+    
+    // MARK: Fetch Avatar or Name
+    func fetchAvatarOrName(completion: @escaping CompletionHandler<ProfileAvatarUpdateInfo>) {
+        /*
+         Ищем аватарку пользователя
+         если ее нет - возвращаем имя для генерации плейсхолдера
+         если и имя пустое - то ошибка
+         */
+        fetchImage(key: AppFileNames.userAvatar.rawValue) { [weak self] result in
+            if case .success(let image) = result {
+                DispatchQueue.main.async {
+                    completion(.success(.avatar(image)))
+                }
+            } else {
+                self?.fetchString(key: AppFileNames.userName.rawValue) { result in
+                    if case .success(let name) = result {
+                        DispatchQueue.main.async {
+                            completion(.success(.name(name)))
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            completion(.failure(FMError.fileNotFound))
+                        }
+                    }
+                }
             }
         }
     }
