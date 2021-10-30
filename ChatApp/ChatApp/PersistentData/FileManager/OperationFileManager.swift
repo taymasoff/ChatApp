@@ -31,8 +31,8 @@ class OperationFileManagera: AsyncFileManagerProtocol, FMOperationQueueSupportab
     
     // MARK: - OperationQueueSupportable Init
     required init(fileManager: FileManager = FileManager.default,
-         qos: QualityOfService = .default,
-         operationQueue: OperationQueue = OperationQueue()) {
+                  qos: QualityOfService = .default,
+                  operationQueue: OperationQueue = OperationQueue()) {
         self.fileManager = fileManager
         self.qos = qos
         self.operationQueue = operationQueue
