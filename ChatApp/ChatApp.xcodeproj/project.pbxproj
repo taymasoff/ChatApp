@@ -29,6 +29,12 @@
 		22765EB9272C737400AD0F15 /* FMImageOperatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22765EB8272C737400AD0F15 /* FMImageOperatable.swift */; };
 		22765EBB272C769900AD0F15 /* FMModelOperatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22765EBA272C769900AD0F15 /* FMModelOperatable.swift */; };
 		22765EBD272C787B00AD0F15 /* FMRemoveSupportable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22765EBC272C787B00AD0F15 /* FMRemoveSupportable.swift */; };
+		22765EC1272DF41B00AD0F15 /* FSOperatableBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22765EC0272DF41B00AD0F15 /* FSOperatableBase.swift */; };
+		22765EC4272E053C00AD0F15 /* FSSubscribable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22765EC3272E053C00AD0F15 /* FSSubscribable.swift */; };
+		22765EC6272E216C00AD0F15 /* FSAddable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22765EC5272E216C00AD0F15 /* FSAddable.swift */; };
+		22765EC8272E25A600AD0F15 /* FSIdentifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22765EC7272E25A600AD0F15 /* FSIdentifiable.swift */; };
+		22765ECA272E3B3B00AD0F15 /* FSRemovable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22765EC9272E3B3B00AD0F15 /* FSRemovable.swift */; };
+		22765ECC272E41F600AD0F15 /* FSUpdatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22765ECB272E41F600AD0F15 /* FSUpdatable.swift */; };
 		2286F4DC270EF27700ED809E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2286F4DB270EF27700ED809E /* Message.swift */; };
 		2286F4E3270F064600ED809E /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2286F4E2270F064600ED809E /* Protocols.swift */; };
 		2286F4E7270F7FFA00ED809E /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2286F4E6270F7FFA00ED809E /* UIImage+Resize.swift */; };
@@ -119,6 +125,12 @@
 		22765EB8272C737400AD0F15 /* FMImageOperatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FMImageOperatable.swift; sourceTree = "<group>"; };
 		22765EBA272C769900AD0F15 /* FMModelOperatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FMModelOperatable.swift; sourceTree = "<group>"; };
 		22765EBC272C787B00AD0F15 /* FMRemoveSupportable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FMRemoveSupportable.swift; sourceTree = "<group>"; };
+		22765EC0272DF41B00AD0F15 /* FSOperatableBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSOperatableBase.swift; sourceTree = "<group>"; };
+		22765EC3272E053C00AD0F15 /* FSSubscribable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSSubscribable.swift; sourceTree = "<group>"; };
+		22765EC5272E216C00AD0F15 /* FSAddable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSAddable.swift; sourceTree = "<group>"; };
+		22765EC7272E25A600AD0F15 /* FSIdentifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSIdentifiable.swift; sourceTree = "<group>"; };
+		22765EC9272E3B3B00AD0F15 /* FSRemovable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSRemovable.swift; sourceTree = "<group>"; };
+		22765ECB272E41F600AD0F15 /* FSUpdatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSUpdatable.swift; sourceTree = "<group>"; };
 		2286F4DB270EF27700ED809E /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		2286F4E2270F064600ED809E /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		2286F4E6270F7FFA00ED809E /* UIImage+Resize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
@@ -287,6 +299,35 @@
 			path = DataOperationsProtocols;
 			sourceTree = "<group>";
 		};
+		22765EBE272DF3DC00AD0F15 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				22765EBF272DF40B00AD0F15 /* Firestore */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		22765EBF272DF40B00AD0F15 /* Firestore */ = {
+			isa = PBXGroup;
+			children = (
+				22765EC7272E25A600AD0F15 /* FSIdentifiable.swift */,
+				22765EC2272DF43800AD0F15 /* FirestoreOperatable */,
+			);
+			path = Firestore;
+			sourceTree = "<group>";
+		};
+		22765EC2272DF43800AD0F15 /* FirestoreOperatable */ = {
+			isa = PBXGroup;
+			children = (
+				22765EC0272DF41B00AD0F15 /* FSOperatableBase.swift */,
+				22765EC3272E053C00AD0F15 /* FSSubscribable.swift */,
+				22765EC5272E216C00AD0F15 /* FSAddable.swift */,
+				22765EC9272E3B3B00AD0F15 /* FSRemovable.swift */,
+				22765ECB272E41F600AD0F15 /* FSUpdatable.swift */,
+			);
+			path = FirestoreOperatable;
+			sourceTree = "<group>";
+		};
 		2286F4DD270EF27A00ED809E /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -417,6 +458,7 @@
 				22E69D282701E0D3009CAAC0 /* ProfileModule */,
 				22B50F7926FB0E760099436A /* Application */,
 				22D104C2270529AE006CF686 /* Utility */,
+				22765EBE272DF3DC00AD0F15 /* Networking */,
 				225D6182271A8D6300A5D678 /* PersistentData */,
 				22E69D192701D9AA009CAAC0 /* Flow */,
 				22D104B52704D4F0006CF686 /* Components */,
@@ -829,11 +871,14 @@
 				22FFB22F2716845D001884BA /* ThemeManager.swift in Sources */,
 				22C44A40272747F5003D106C /* GroupedConversations.swift in Sources */,
 				22C71C1A271F047E005C4466 /* DataSaveable.swift in Sources */,
+				22765EC8272E25A600AD0F15 /* FSIdentifiable.swift in Sources */,
 				225D6186271D66B500A5D678 /* AsyncOperation.swift in Sources */,
 				22765EB9272C737400AD0F15 /* FMImageOperatable.swift in Sources */,
+				22765EC4272E053C00AD0F15 /* FSSubscribable.swift in Sources */,
 				22C44A362726EE45003D106C /* UIImageView+addAction.swift in Sources */,
 				22C71C222720921A005C4466 /* InAppNotificationBanner.swift in Sources */,
 				22D104C6270535D3006CF686 /* Dynamic.swift in Sources */,
+				22765ECC272E41F600AD0F15 /* FSUpdatable.swift in Sources */,
 				22210D8327245C77005ED4B6 /* Constants.swift in Sources */,
 				22FFB22427160BEA001884BA /* UIColor+contrastingColor.swift in Sources */,
 				222A55B3270C06C10047CA24 /* Conversation.swift in Sources */,
@@ -843,6 +888,7 @@
 				22FEEA2C2729BF6E003C8B62 /* GroupedMessages.swift in Sources */,
 				22765EA6272C66D700AD0F15 /* FMOperatableBase.swift in Sources */,
 				22E69D2A2701E0E8009CAAC0 /* ProfileViewController.swift in Sources */,
+				22765EC1272DF41B00AD0F15 /* FSOperatableBase.swift in Sources */,
 				22FEEA33272AC92C003C8B62 /* Date+minutesSince.swift in Sources */,
 				22FEEA2327275BF4003C8B62 /* NewConversationView.swift in Sources */,
 				22765EAC272C6A5500AD0F15 /* FileManagerPreferences.swift in Sources */,
@@ -867,6 +913,7 @@
 				22D104B22704A12C006CF686 /* ProfileView.swift in Sources */,
 				22210D85272485AA005ED4B6 /* UIButton+setBackgroundForState.swift in Sources */,
 				22FFB22627160E76001884BA /* UIColor+isLight.swift in Sources */,
+				22765ECA272E3B3B00AD0F15 /* FSRemovable.swift in Sources */,
 				22FEEA3C272AD098003C8B62 /* Date+isYesterday.swift in Sources */,
 				22765EBB272C769900AD0F15 /* FMModelOperatable.swift in Sources */,
 				22FEEA2E2729C089003C8B62 /* DMRepository.swift in Sources */,
@@ -901,6 +948,7 @@
 				22C44A312726BE2E003D106C /* InAppNotificationView.swift in Sources */,
 				22FEEA3E272AD357003C8B62 /* Date+isThisYear.swift in Sources */,
 				225D618E271D8F2700A5D678 /* FileWriteOperation.swift in Sources */,
+				22765EC6272E216C00AD0F15 /* FSAddable.swift in Sources */,
 				22FEEA2527284AFF003C8B62 /* String+containsLetters.swift in Sources */,
 				2286F4DC270EF27700ED809E /* Message.swift in Sources */,
 				22E69D252701E0B7009CAAC0 /* DMViewModel.swift in Sources */,
