@@ -9,12 +9,14 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import UIKit
 
+typealias ConversationsRepositoryFSOperatable = FSSubscribable & FSAddable & FSRemovable & FSUpdatable
+
 enum ProfileAvatarUpdateInfo { case avatar(UIImage), name(String) }
 
 // MARK: - ConversationsRepositoryProtocol
 protocol ConversationsRepositoryProtocol {
-    var conversations: Dynamic<[Conversation]> { get }
-    // Firestore Operations
+    var model: Dynamic<[Conversation]> { get }
+    
     func subscribeToUpdates()
     func unsubscribeFromUpdates()
     func updateConversationsOnce(completion: @escaping () -> Void)
@@ -22,18 +24,19 @@ protocol ConversationsRepositoryProtocol {
                          completion: CompletionHandler<String>)
     func deleteConversation(withID id: String?,
                             completion: @escaping CompletionHandler<String>)
-    // FileManager Operations
+    
     func fetchAvatarOrName(completion: @escaping CompletionHandler<ProfileAvatarUpdateInfo>)
 }
 
 final class ConversationsRepository: ConversationsRepositoryProtocol {
     
     // MARK: - Properties
-    private lazy var db = Firestore.firestore()
-    private lazy var channelsReference = db.collection(FBCollections.channels.rawValue)
-    private var listener: ListenerRegistration?
+    let db = Firestore.firestore()
+    lazy var reference = db.collection(FBCollections.channels.rawValue)
+    var listener: ListenerRegistration?
     
-    let conversations: Dynamic<[Conversation]> = Dynamic([])
+    let model: Dynamic<[Conversation]> = Dynamic([])
+    
     let fileManager: AsyncFileManagerProtocol
     let fmPreferences: FileManagerPreferences
     
@@ -47,57 +50,32 @@ final class ConversationsRepository: ConversationsRepositoryProtocol {
         self.fileManager = fileManager
         self.fmPreferences = fmPreferences
     }
-    
-    // MARK: - Subscribe to stream
+}
+
+// MARK: - Firestore Operatable Methods
+extension ConversationsRepository: ConversationsRepositoryFSOperatable {
+    // MARK: Subscribe to stream
     func subscribeToUpdates() {
-        listener = channelsReference.addSnapshotListener { [weak self] snapshot, error in
-            guard error == nil else {
-                Log.error(error.debugDescription)
-                return
-            }
-            
-            self?.conversations.value = snapshot?.documents
-                .compactMap { (document) -> Conversation? in
-                    if var conversation = try? document.data(as: Conversation.self) {
-                        // id не декодится, т.к. он берется из documentID,
-                        // поэтому вставляем вручную
-                        conversation.identifier = document.documentID
-                        return conversation
-                    } else {
-                        return nil
-                    }
-                } ?? []
+        subscribeToUpdates { updateLog, error in
+            guard error == nil else { Log.error(error!.localizedDescription); return }
+            if let updateLog = updateLog { print(updateLog) }
         }
     }
     
-    // MARK: - Unsubscribe from stream
-    func unsubscribeFromUpdates() {
-        _ = listener?.remove()
-    }
-    
-    // MARK: - Update Conversations Once
+    // MARK: Update Conversations Once
     func updateConversationsOnce(completion: @escaping () -> Void) {
-        channelsReference.getDocuments { [weak self] snapshot, error in
-            guard error == nil else {
-                Log.error(error.debugDescription)
-                return
+        updateModel { result in
+            switch result {
+            case .success(let message):
+                print(message)
+                completion()
+            case .failure(let error):
+                Log.error(error)
             }
-            
-            self?.conversations.value = snapshot?.documents
-                .compactMap { (document) -> Conversation? in
-                    if var conversation = try? document.data(as: Conversation.self) {
-                        conversation.identifier = document.documentID
-                        return conversation
-                    } else {
-                        return nil
-                    }
-                } ?? []
-            
-            completion()
         }
     }
     
-    // MARK: - Add Conversation
+    // MARK: Add Conversation
     func addConversation(with name: String?,
                          completion: CompletionHandler<String>) {
         guard let name = name,
@@ -108,16 +86,21 @@ final class ConversationsRepository: ConversationsRepositoryProtocol {
         
         let conversation = Conversation(name: name)
         
-        do {
-            _ = try channelsReference.addDocument(from: conversation)
-            completion(
-                .success("Новая беседа с именем \(name) успешно создана!")
-            )
-        } catch {
-            completion(.failure(FirestoreError.documentAddError))
+        addDocument(from: conversation) { result in
+            switch result {
+            case .success:
+                completion(
+                    .success("Беседа с именем \(name) успешно создана!")
+                )
+            case .failure(let error):
+                completion(
+                    .failure(error)
+                )
+            }
         }
     }
     
+    // MARK: DeleteConversation
     func deleteConversation(withID id: String?,
                             completion: @escaping CompletionHandler<String>) {
         guard let id = id, id != "" else {
@@ -125,14 +108,15 @@ final class ConversationsRepository: ConversationsRepositoryProtocol {
             return
         }
         
-        channelsReference.document(id).delete { error in
-            if let error = error {
-                completion(
-                    .failure(error)
-                )
-            } else {
+        deleteDocument(withID: id) { result in
+            switch result {
+            case .success:
                 completion(
                     .success("Беседа успешно удалена из списка каналов!")
+                )
+            case .failure(let error):
+                completion(
+                    .failure(error)
                 )
             }
         }

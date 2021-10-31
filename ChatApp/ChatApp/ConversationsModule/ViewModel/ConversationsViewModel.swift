@@ -63,7 +63,7 @@ final class ConversationsViewModel: NSObject, Routable {
     }
     
     private func bindToRepositoryUpdates() {
-        repository.conversations.bind(listener: { [weak self] conversations in
+        repository.model.bind(listener: { [weak self] conversations in
             self?.conversations
                 .value = self?.mapConversationsByActivity(conversations)
             self?.onDataUpdate?()
