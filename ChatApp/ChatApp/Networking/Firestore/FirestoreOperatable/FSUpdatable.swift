@@ -13,14 +13,14 @@ protocol FSUpdatable: FSOperatableBase {
     
     /// Обновляет модель данных один раз
     /// - Parameter completion: сообщение об успехе или ошибка
-    func updateModel(completion: @escaping CompletionHandler<String>)
+    func updateModel(completion: @escaping ResultHandler<String>)
 }
 
 // MARK: - FSUpdatable Default Implementation
 extension FSUpdatable where ModelType: Decodable {
     
     // MARK: Update
-    func updateModel(completion: @escaping CompletionHandler<String>) {
+    func updateModel(completion: @escaping ResultHandler<String>) {
         reference.getDocuments { [weak self] snapshot, error in
             if let error = error {
                 completion(.failure(error))

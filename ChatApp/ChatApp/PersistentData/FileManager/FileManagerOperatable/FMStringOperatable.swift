@@ -14,7 +14,7 @@ protocol FMStringOperatable: FMOperatableBase, StringSaveable, StringFetchable {
 extension FMStringOperatable {
     
     // MARK: Fetch String Default Implementation
-    func fetchString(key: String, completion: @escaping CompletionHandler<String>) {
+    func fetchString(key: String, completion: @escaping ResultHandler<String>) {
         let fullFileName = key.appending(fmPreferences.preferredTextExtension.fileExtension)
         fileManager.read(fromFileNamed: fullFileName,
                          at: fmPreferences.preferredDirectory) { result in
@@ -29,7 +29,7 @@ extension FMStringOperatable {
     }
     
     // MARK: Save String Default Implementation
-    func save(_ string: String, key: String, completion: @escaping CompletionHandler<Bool>) {
+    func save(_ string: String, key: String, completion: @escaping ResultHandler<Bool>) {
         let fullFileName = key + "." + "txt"
         let data = convertToData(string)
         fileManager.write(data: data,
@@ -48,7 +48,7 @@ extension FMStringOperatable {
 // MARK: - Optional String Support -> Delete File If nil
 extension FMStringOperatable where Self: FMRemoveSupportable {
     // MARK: - Save Optional String
-    func save(_ string: String?, key: String, completion: @escaping CompletionHandler<Bool>) {
+    func save(_ string: String?, key: String, completion: @escaping ResultHandler<Bool>) {
         if let string = string, string != "" {
             save(string, key: key, completion: completion)
         } else {

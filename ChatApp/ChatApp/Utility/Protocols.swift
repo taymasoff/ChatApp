@@ -8,8 +8,8 @@
 import Foundation
 import UIKit
 
-// MARK: - CompletionHandler With Generic Result
-typealias CompletionHandler<T> = (Result<T, Error>) -> Void
+// MARK: - ResultHandler With Generic Result
+typealias ResultHandler<T> = (Result<T, Error>) -> Void
 
 // MARK: - Routable
 /// Протокол, которому соответствуют все объекты, имеющие возможность совершать переходы в приложении

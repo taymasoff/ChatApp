@@ -26,8 +26,8 @@ enum OperationSuccess {
 protocol ProfileRepositoryProtocol {
     var user: Dynamic<User?> { get }
     func saveUserSeparately(_ user: User,
-                            completion: @escaping CompletionHandler<OperationSuccess>)
-    func fetchUser(completion: @escaping CompletionHandler<OperationSuccess>)
+                            completion: @escaping ResultHandler<OperationSuccess>)
+    func fetchUser(completion: @escaping ResultHandler<OperationSuccess>)
 }
 
 final class ProfileRepository: ProfileRepositoryProtocol, ProfileRepositoryFMSupportable {
@@ -42,9 +42,9 @@ final class ProfileRepository: ProfileRepositoryProtocol, ProfileRepositoryFMSup
     // MARK: - Init
     init(fileManager: AsyncFileManagerProtocol = GCDFileManager(),
          fmPreferences: FileManagerPreferences = FileManagerPreferences(
-            .txt,
-            .jpeg(1.0),
-            .userProfile)
+            textExtension: .txt,
+            imageExtension: .jpeg(1.0),
+            directory: .userProfile)
     ) {
         self.fileManager = fileManager
         self.fmPreferences = fmPreferences
@@ -63,7 +63,7 @@ extension ProfileRepository {
      в виде enumа OperationSuccess(allGood/hadErrors) вью-модели и обновляем модель пользователя
      */
     func saveUserSeparately(_ user: User,
-                            completion: @escaping CompletionHandler<OperationSuccess>) {
+                            completion: @escaping ResultHandler<OperationSuccess>) {
         
         let savingGroup = DispatchGroup()
         var successOperations = [String]()
@@ -135,7 +135,7 @@ extension ProfileRepository {
      По завершению всех 3 операций суммаризируем сообщения и возвращаем результат в виде enumа OperationSuccess(allGood/hadErrors) вью-модели
      Еще обновляем модель юзера с теми полями, что удалось загрузить - вью-модель на нее подписана
      */
-    func fetchUser(completion: @escaping CompletionHandler<OperationSuccess>) {
+    func fetchUser(completion: @escaping ResultHandler<OperationSuccess>) {
         
         let loadingGroup = DispatchGroup()
         var successOperations = [String]()

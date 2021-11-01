@@ -83,7 +83,7 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
     
     @objc
     private func didPullToRefresh() {
-        viewModel?.didRequestRefresh { [unowned self] in
+        viewModel?.didRequestRefresh { [unowned self] _ in
             self.conversationsTableView.refreshControl?.endRefreshing()
         }
     }

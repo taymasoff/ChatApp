@@ -9,5 +9,5 @@ import Foundation
 
 /// Тип, представляющий возможность удаления записи по ключу
 protocol DataRemovable {
-    func removeRecord(key: String, completion: @escaping CompletionHandler<Bool>)
+    func removeRecord(key: String, completion: @escaping ResultHandler<Bool>)
 }

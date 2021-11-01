@@ -15,7 +15,7 @@ extension FMModelOperatable {
 
     // MARK: Fetch Model Default Implementation
     func fetchModel<T>(key: String,
-                       completion: @escaping CompletionHandler<T>) where T: Decodable {
+                       completion: @escaping ResultHandler<T>) where T: Decodable {
         let fullFileName = key + ".json"
         fileManager.read(fromFileNamed: fullFileName,
                          at: fmPreferences.preferredDirectory) { result in
@@ -36,7 +36,7 @@ extension FMModelOperatable {
     
     // MARK: Save Model Default Implementation
     func save<T>(_ model: T, key: String,
-                 completion: @escaping CompletionHandler<Bool>) where T: Encodable {
+                 completion: @escaping ResultHandler<Bool>) where T: Encodable {
         let fullFileName = key + ".json"
         do {
             let data = try convertToData(model)
@@ -60,7 +60,7 @@ extension FMModelOperatable {
 extension FMImageOperatable where Self: FMRemoveSupportable {
     // MARK: - Save Optional String
     func save<T>(_ model: T?, key: String,
-                 completion: @escaping CompletionHandler<Bool>) where T: Encodable {
+                 completion: @escaping ResultHandler<Bool>) where T: Encodable {
         if let model = model {
             save(model, key: key, completion: completion)
         } else {

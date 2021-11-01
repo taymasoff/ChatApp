@@ -19,13 +19,13 @@ protocol ConversationsRepositoryProtocol {
     
     func subscribeToUpdates()
     func unsubscribeFromUpdates()
-    func updateConversationsOnce(completion: @escaping () -> Void)
+    func updateConversationsOnce(completion: @escaping (Bool) -> Void)
     func addConversation(with name: String?,
-                         completion: CompletionHandler<String>)
+                         completion: ResultHandler<String>)
     func deleteConversation(withID id: String?,
-                            completion: @escaping CompletionHandler<String>)
+                            completion: @escaping ResultHandler<String>)
     
-    func fetchAvatarOrName(completion: @escaping CompletionHandler<ProfileAvatarUpdateInfo>)
+    func fetchAvatarOrName(completion: @escaping ResultHandler<ProfileAvatarUpdateInfo>)
 }
 
 final class ConversationsRepository: ConversationsRepositoryProtocol {
@@ -43,9 +43,9 @@ final class ConversationsRepository: ConversationsRepositoryProtocol {
     // MARK: - Init
     init(fileManager: AsyncFileManagerProtocol = GCDFileManager(),
          fmPreferences: FileManagerPreferences = FileManagerPreferences(
-            .txt,
-            .jpeg(1.0),
-            .userProfile)
+            textExtension: .txt,
+            imageExtension: .jpeg(1.0),
+            directory: .userProfile)
     ) {
         self.fileManager = fileManager
         self.fmPreferences = fmPreferences
@@ -63,21 +63,22 @@ extension ConversationsRepository: ConversationsRepositoryFSOperatable {
     }
     
     // MARK: Update Conversations Once
-    func updateConversationsOnce(completion: @escaping () -> Void) {
+    func updateConversationsOnce(completion: @escaping (Bool) -> Void) {
         updateModel { result in
             switch result {
             case .success(let message):
                 print(message)
-                completion()
+                completion(true)
             case .failure(let error):
                 Log.error(error)
+                completion(false)
             }
         }
     }
     
     // MARK: Add Conversation
     func addConversation(with name: String?,
-                         completion: CompletionHandler<String>) {
+                         completion: ResultHandler<String>) {
         guard let name = name,
               name.isntEmptyOrWhitespaced() else {
                   completion(.failure(FirestoreError.emptyString))
@@ -102,7 +103,7 @@ extension ConversationsRepository: ConversationsRepositoryFSOperatable {
     
     // MARK: DeleteConversation
     func deleteConversation(withID id: String?,
-                            completion: @escaping CompletionHandler<String>) {
+                            completion: @escaping ResultHandler<String>) {
         guard let id = id, id != "" else {
             completion(.failure(FirestoreError.emptyString))
             return
@@ -127,7 +128,7 @@ extension ConversationsRepository: ConversationsRepositoryFSOperatable {
 extension ConversationsRepository: FMImageOperatable, FMStringOperatable {
     
     // MARK: Fetch Avatar or Name
-    func fetchAvatarOrName(completion: @escaping CompletionHandler<ProfileAvatarUpdateInfo>) {
+    func fetchAvatarOrName(completion: @escaping ResultHandler<ProfileAvatarUpdateInfo>) {
         /*
          Ищем аватарку пользователя
          если ее нет - возвращаем имя для генерации плейсхолдера

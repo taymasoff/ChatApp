@@ -13,9 +13,11 @@ struct FileManagerPreferences {
     var preferredImageExtension: ImageExtension
     var preferredDirectory: FMDirectory
     
-    init(_ textExt: TextExtension, _ imageExt: ImageExtension, _ dir: FMDirectory) {
-        self.preferredTextExtension = textExt
-        self.preferredImageExtension = imageExt
-        self.preferredDirectory = dir
+    init(textExtension: TextExtension,
+         imageExtension: ImageExtension,
+         directory: FMDirectory) {
+        self.preferredTextExtension = textExtension
+        self.preferredImageExtension = imageExtension
+        self.preferredDirectory = directory
     }
 }

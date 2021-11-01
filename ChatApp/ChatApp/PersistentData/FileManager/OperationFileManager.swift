@@ -41,7 +41,7 @@ class OperationFileManagera: AsyncFileManagerProtocol, FMOperationQueueSupportab
     // MARK: - Async Read
     func read(fromFileNamed name: String,
               at directory: FMDirectory,
-              completion: @escaping CompletionHandler<Data>) {
+              completion: @escaping ResultHandler<Data>) {
         
         let readOperation = FileReadOperation(fileManager: self,
                                               fileName: name,
@@ -54,7 +54,7 @@ class OperationFileManagera: AsyncFileManagerProtocol, FMOperationQueueSupportab
     }
     
     // MARK: - Async Write
-    func write(data: Data, inFileNamed name: String, at directory: FMDirectory, completion: @escaping CompletionHandler<Bool>) {
+    func write(data: Data, inFileNamed name: String, at directory: FMDirectory, completion: @escaping ResultHandler<Bool>) {
         
         let writeOperation = FileWriteOperation(data: data,
                                                 fileName: name,

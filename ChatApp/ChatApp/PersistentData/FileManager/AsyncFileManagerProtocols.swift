@@ -28,7 +28,7 @@ protocol FMAsyncReadable {
     ///   - completion: результат в виде Data или ошибка
     func read(fromFileNamed name: String,
               at directory: FMDirectory,
-              completion: @escaping CompletionHandler<Data>)
+              completion: @escaping ResultHandler<Data>)
 }
 
 // MARK: - File Manager Async Writable
@@ -43,5 +43,5 @@ protocol FMAsyncWritable {
     func write(data: Data,
                inFileNamed name: String,
                at directory: FMDirectory,
-               completion: @escaping CompletionHandler<Bool>)
+               completion: @escaping ResultHandler<Bool>)
 }

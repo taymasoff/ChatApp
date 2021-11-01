@@ -34,12 +34,9 @@ extension FromDataConvertable {
     }
     
     func convertToModel<T: Decodable>(_ data: Data?) throws -> T {
+        guard let data = data else { throw CodingError.nilValue }
         do {
-            if let data = data {
-                return try JSONDecoder().decode(T.self, from: data)
-            } else {
-                throw CodingError.nilValue
-            }
+            return try JSONDecoder().decode(T.self, from: data)
         } catch {
             throw CodingError.jsonDecodingError
         }

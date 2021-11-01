@@ -15,7 +15,7 @@ protocol FSRemovable: FSOperatableBase {
     /// - Parameters:
     ///   - key: ID документа
     ///   - completion: Result с сообщением успеха или ошибки
-    func deleteDocument(withID id: String, completion: @escaping CompletionHandler<String>)
+    func deleteDocument(withID id: String, completion: @escaping ResultHandler<String>)
 }
 
 // MARK: - FSRemovable Default Implementation
@@ -23,7 +23,7 @@ extension FSRemovable {
     
     // MARK: Delete Document
     func deleteDocument(withID id: String,
-                        completion: @escaping CompletionHandler<String>) {
+                        completion: @escaping ResultHandler<String>) {
         reference.document(id).delete { error in
             if let error = error {
                 completion(.failure(error))

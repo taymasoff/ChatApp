@@ -21,7 +21,7 @@ final class GCDFileManager: AsyncFileManagerProtocol {
     }
     
     // MARK: - Read Operation
-    func read(fromFileNamed name: String, at directory: FMDirectory, completion: @escaping CompletionHandler<Data>) {
+    func read(fromFileNamed name: String, at directory: FMDirectory, completion: @escaping ResultHandler<Data>) {
         
         DispatchQueue.global(qos: qos).async {
             completion(
@@ -34,7 +34,7 @@ final class GCDFileManager: AsyncFileManagerProtocol {
     }
     
     // MARK: - Write Operation
-    func write(data: Data, inFileNamed name: String, at directory: FMDirectory, completion: @escaping CompletionHandler<Bool>) {
+    func write(data: Data, inFileNamed name: String, at directory: FMDirectory, completion: @escaping ResultHandler<Bool>) {
         
         DispatchQueue.global(qos: qos).async {
             completion(

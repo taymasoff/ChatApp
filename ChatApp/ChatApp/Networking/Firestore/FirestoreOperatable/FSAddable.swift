@@ -15,14 +15,14 @@ protocol FSAddable: FSOperatableBase {
     /// - Parameters:
     ///   - model: encodable модель
     ///   - completion: Result с сообщением успеха или ошибки
-    func addDocument(from model: ModelType, completion: CompletionHandler<String>)
+    func addDocument(from model: ModelType, completion: ResultHandler<String>)
 }
 
 // MARK: - FSAddable Default Implementation
 extension FSAddable where ModelType: Encodable {
 
     // MARK: Add Document
-    func addDocument(from model: ModelType, completion: CompletionHandler<String>) {
+    func addDocument(from model: ModelType, completion: ResultHandler<String>) {
         do {
             _ = try reference.addDocument(from: model)
             completion(

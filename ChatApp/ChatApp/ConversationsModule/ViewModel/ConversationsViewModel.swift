@@ -41,9 +41,9 @@ final class ConversationsViewModel: NSObject, Routable {
         askToPickController()
     }
     
-    func didRequestRefresh(completion: @escaping () -> Void) {
-        repository.updateConversationsOnce {
-            completion()
+    func didRequestRefresh(completion: @escaping (Bool) -> Void) {
+        repository.updateConversationsOnce { isSuccessful in
+            completion(isSuccessful)
         }
     }
     

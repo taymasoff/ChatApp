@@ -14,7 +14,7 @@ protocol FMImageOperatable: FMOperatableBase, ImageSaveable, ImageFetchable { }
 extension FMImageOperatable {
     
     // MARK: Fetch Image Default Implementation
-    func fetchImage(key: String, completion: @escaping CompletionHandler<UIImage>) {
+    func fetchImage(key: String, completion: @escaping ResultHandler<UIImage>) {
         let prefImageExtension = fmPreferences.preferredImageExtension
         let fullFileName = key.appending(prefImageExtension.fileExtension)
         fileManager.read(fromFileNamed: fullFileName,
@@ -34,7 +34,7 @@ extension FMImageOperatable {
     }
     
     // MARK: Save Image Default Implementation
-    func save(_ image: UIImage, key: String, completion: @escaping CompletionHandler<Bool>) {
+    func save(_ image: UIImage, key: String, completion: @escaping ResultHandler<Bool>) {
         let prefImageExtension = fmPreferences.preferredImageExtension
         let fullFileName = key.appending(prefImageExtension.fileExtension)
         
@@ -69,7 +69,7 @@ extension FMImageOperatable {
 // MARK: - Optional Image Support -> Delete File If nil
 extension FMImageOperatable where Self: FMRemoveSupportable {
     // MARK: - Save Optional String
-    func save(_ image: UIImage?, key: String, completion: @escaping CompletionHandler<Bool>) {
+    func save(_ image: UIImage?, key: String, completion: @escaping ResultHandler<Bool>) {
         if let image = image {
             save(image, key: key, completion: completion)
         } else {

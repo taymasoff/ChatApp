@@ -12,15 +12,15 @@ typealias DataFetchable = StringFetchable & ImageFetchable & ModelFetchable
 
 /// Тип, представляющий возможность получения строки по ключу
 protocol StringFetchable {
-    func fetchString(key: String, completion: @escaping CompletionHandler<String>)
+    func fetchString(key: String, completion: @escaping ResultHandler<String>)
 }
 
 /// Тип, представляющий возможность получения картинки по ключу
 protocol ImageFetchable {
-    func fetchImage(key: String, completion: @escaping CompletionHandler<UIImage>)
+    func fetchImage(key: String, completion: @escaping ResultHandler<UIImage>)
 }
 
 /// Тип, представляющий возможность получения модели по ключу
 protocol ModelFetchable {
-    func fetchModel<T: Decodable>(key: String, completion: @escaping CompletionHandler<T>)
+    func fetchModel<T: Decodable>(key: String, completion: @escaping ResultHandler<T>)
 }
