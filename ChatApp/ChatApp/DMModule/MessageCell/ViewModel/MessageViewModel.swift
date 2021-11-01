@@ -14,8 +14,6 @@ final class MessageCellViewModel {
     let isSender: Dynamic<Bool?> = Dynamic(nil)
     let senderName: Dynamic<String?> = Dynamic(nil)
     
-    lazy var dateFormatter: DateFormatter = DateFormatter()
-    
     init(with message: Message? = nil) {
         updateValues(with: message)
     }
@@ -36,7 +34,7 @@ final class MessageCellViewModel {
     
     private func formatToTime(date: Date?) -> String? {
         guard let date = date else { return nil }
-        dateFormatter.dateFormat = "hh:mm"
-        return dateFormatter.string(from: date)
+        DateFormatter.shared.dateFormat = "hh:mm"
+        return DateFormatter.shared.string(from: date)
     }
 }

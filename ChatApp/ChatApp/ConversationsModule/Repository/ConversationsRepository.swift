@@ -83,7 +83,7 @@ final class ConversationsRepository: ConversationsRepositoryProtocol {
     func addConversation(with name: String?,
                          completion: CompletionHandler<String>) {
         guard let name = name,
-              name.isntEmptyOrWhitespaced() else {
+              name.isntEmptyOrWhitespaced else {
                   completion(.failure(FirestoreError.emptyString))
                   return
               }

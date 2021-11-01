@@ -60,7 +60,7 @@ final class ConversationsViewModel: NSObject, Routable {
     
     func isTextSendable(text: String?) -> Bool {
         if let text = text,
-           text.isntEmptyOrWhitespaced() {
+           text.isntEmptyOrWhitespaced {
             return true
         } else {
             return false

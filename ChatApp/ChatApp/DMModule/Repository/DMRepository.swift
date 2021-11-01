@@ -59,7 +59,7 @@ final class DMRepository: DMRepositoryProtocol {
     func newMessage(with content: String?,
                     completion: CompletionHandler<String>) {
         guard let content = content,
-              content.isntEmptyOrWhitespaced() else {
+              content.isntEmptyOrWhitespaced else {
                   completion(.failure(FirestoreError.emptyString))
                   return
               }
