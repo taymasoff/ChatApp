@@ -9,11 +9,9 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import UIKit
 
-typealias DMRepositoryFSOperatable = FSSubscribable & FSAddable
-
 // MARK: - ConversationsRepositoryProtocol
 protocol DMRepositoryProtocol {
-    var model: Dynamic<[Message]> { get }
+    var messages: Dynamic<[Message]> { get }
     func subscribeToUpdates()
     func unsubscribeFromUpdates()
     func newMessage(with content: String?)
@@ -22,28 +20,43 @@ protocol DMRepositoryProtocol {
 final class DMRepository: DMRepositoryProtocol {
     
     // MARK: - Properties
-    let db = Firestore.firestore()
-    let reference: CollectionReference
-    var listener: ListenerRegistration?
+    private let cloudStore: FirestoreManager<Message>
     
-    let model: Dynamic<[Message]> = Dynamic([])
+    let messages: Dynamic<[Message]> = Dynamic([])
     
-    init(with dialogueID: String) {
-        self.reference = db.collection(FBCollections.channels.rawValue).document(dialogueID).collection(FBCollections.messages.rawValue)
+    init(with dialogueID: String,
+         cloudStore: FirestoreManager<Message> = FirestoreManager(
+            collectionName: FBCollections.channels.rawValue
+         )) {
+             let reference = cloudStore.db.collection(FBCollections.channels.rawValue).document(dialogueID).collection(FBCollections.messages.rawValue)
+             cloudStore.reference = reference
+             self.cloudStore = cloudStore
+         }
+    
+    private func bindCloudWithModel() {
+        self.cloudStore.model.bind { [weak self] messages in
+            self?.messages.value = messages
+        }
     }
 }
 
-// MARK: - DMRepository Firestore Operatable
-extension DMRepository: DMRepositoryFSOperatable {
-    // MARK: - Subscribe to stream
+// MARK: - CloudStore Methods
+extension DMRepository {
+    // MARK: Subscribe to stream
     func subscribeToUpdates() {
-        subscribeToUpdates { updateLog, error in
+        bindCloudWithModel()
+        cloudStore.subscribeToUpdates { updateLog, error in
             guard error == nil else { Log.error(error!.localizedDescription); return }
             if let updateLog = updateLog { print(updateLog) }
         }
     }
     
-    // MARK: - Add Conversation
+    // MARK: Unsubscribe
+    func unsubscribeFromUpdates() {
+        cloudStore.unsubscribeFromUpdates()
+    }
+    
+    // MARK: Add Conversation
     func newMessage(with content: String?) {
         guard let content = content,
               content.isntEmptyOrWhitespaced() else {
@@ -53,7 +66,7 @@ extension DMRepository: DMRepositoryFSOperatable {
         
         let message = Message(content: content)
         
-        addDocument(from: message) { result in
+        cloudStore.addEntity(from: message) { result in
             switch result {
             case .success(let message):
                 Log.info(message)

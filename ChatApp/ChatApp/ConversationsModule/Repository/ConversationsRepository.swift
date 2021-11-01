@@ -9,13 +9,11 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import UIKit
 
-typealias ConversationsRepositoryFSOperatable = FSSubscribable & FSAddable & FSRemovable & FSUpdatable
-
 enum ProfileAvatarUpdateInfo { case avatar(UIImage), name(String) }
 
 // MARK: - ConversationsRepositoryProtocol
 protocol ConversationsRepositoryProtocol {
-    var model: Dynamic<[Conversation]> { get }
+    var conversations: Dynamic<[Conversation]> { get }
     
     func subscribeToUpdates()
     func unsubscribeFromUpdates()
@@ -31,11 +29,9 @@ protocol ConversationsRepositoryProtocol {
 final class ConversationsRepository: ConversationsRepositoryProtocol {
     
     // MARK: - Properties
-    let db = Firestore.firestore()
-    lazy var reference = db.collection(FBCollections.channels.rawValue)
-    var listener: ListenerRegistration?
+    let cloudStore: FirestoreManager<Conversation>
     
-    let model: Dynamic<[Conversation]> = Dynamic([])
+    let conversations: Dynamic<[Conversation]> = Dynamic([])
     
     let fileManager: AsyncFileManagerProtocol
     let fmPreferences: FileManagerPreferences
@@ -45,26 +41,41 @@ final class ConversationsRepository: ConversationsRepositoryProtocol {
          fmPreferences: FileManagerPreferences = FileManagerPreferences(
             textExtension: .txt,
             imageExtension: .jpeg(1.0),
-            directory: .userProfile)
+            directory: .userProfile),
+         cloudStore: FirestoreManager<Conversation> = FirestoreManager<Conversation>(
+            collectionName: FBCollections.channels.rawValue
+         )
     ) {
         self.fileManager = fileManager
         self.fmPreferences = fmPreferences
+        self.cloudStore = cloudStore
+    }
+    
+    private func bindCloudWithModel() {
+        self.cloudStore.model.bind { [weak self] conversations in
+            self?.conversations.value = conversations
+        }
     }
 }
 
-// MARK: - Firestore Operatable Methods
-extension ConversationsRepository: ConversationsRepositoryFSOperatable {
+// MARK: - CloudStore Methods
+extension ConversationsRepository {
     // MARK: Subscribe to stream
     func subscribeToUpdates() {
-        subscribeToUpdates { updateLog, error in
+        bindCloudWithModel()
+        cloudStore.subscribeToUpdates { updateLog, error in
             guard error == nil else { Log.error(error!.localizedDescription); return }
             if let updateLog = updateLog { print(updateLog) }
         }
     }
     
+    func unsubscribeFromUpdates() {
+        //
+    }
+    
     // MARK: Update Conversations Once
     func updateConversationsOnce(completion: @escaping (Bool) -> Void) {
-        updateModel { result in
+        cloudStore.updateModel { result in
             switch result {
             case .success(let message):
                 print(message)
@@ -87,7 +98,7 @@ extension ConversationsRepository: ConversationsRepositoryFSOperatable {
         
         let conversation = Conversation(name: name)
         
-        addDocument(from: conversation) { result in
+        cloudStore.addEntity(from: conversation) { result in
             switch result {
             case .success:
                 completion(
@@ -109,7 +120,7 @@ extension ConversationsRepository: ConversationsRepositoryFSOperatable {
             return
         }
         
-        deleteDocument(withID: id) { result in
+        cloudStore.deleteEntity(withID: id) { result in
             switch result {
             case .success:
                 completion(

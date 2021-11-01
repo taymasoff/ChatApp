@@ -55,7 +55,7 @@ final class DMViewModel: Routable {
     
     // MARK: - Bind to Repository Updates
     private func bindToRepositoryUpdates() {
-        repository.model.bind { [unowned self] messages in
+        repository.messages.bind { [unowned self] messages in
             self.messages
                 .value = self.mapMessagesByDate(messages)
             self.onDataUpdate?()
