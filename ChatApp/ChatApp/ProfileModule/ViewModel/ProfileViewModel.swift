@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol ProfileDelegate {
+protocol ProfileDelegate: AnyObject {
     func didUpdateProfileAvatar(with info: ProfileAvatarUpdateInfo?)
 }
 
@@ -27,7 +27,7 @@ final class ProfileViewModel: Routable {
     let userDescription: DynamicPreservable<String?>
     let userAvatar: DynamicPreservable<UIImage?>
 
-    var delegate: ProfileDelegate?
+    weak var delegate: ProfileDelegate?
 
     let operationState: Dynamic<OperationState?> = Dynamic(nil)
     
