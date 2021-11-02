@@ -28,7 +28,7 @@ private enum LoggerOutputType {
     }
 }
 
-internal class Log {
+class Log {
     
     enum LoggerState {
         case enabled
@@ -159,7 +159,7 @@ fileprivate extension Date {
 }
 
 /// Persistence Manager Logger
-internal class PMLog: Log {
+class PMLog: Log {
     
     override class func setup(loggerState: Log.LoggerState,
                               includeDate: Bool,

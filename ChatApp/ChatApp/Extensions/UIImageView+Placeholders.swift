@@ -28,7 +28,7 @@ enum PlaceholderType {
     }
 }
 
-internal extension UIImageView {
+extension UIImageView {
     
     /// Добавляет желтый фон с инициалами на родительский ImageView
     /// - Parameter fullName: Имя Фамилия
@@ -111,7 +111,7 @@ internal extension UIImageView {
 }
 
 // MARK: - SetPlaceholder
-internal extension UIImageView {
+extension UIImageView {
     fileprivate func setPlaceholder(_ initials: String, _ type: PlaceholderType) {
         // Если у нас уже установлен placeholder, удаляем предыдущие инициалы
         if let initialsLabel = self.subviews.last as? UILabel {
