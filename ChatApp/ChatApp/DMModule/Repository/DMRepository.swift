@@ -26,8 +26,23 @@ final class DMRepository: DMRepositoryProtocol {
     private let cloudStore: FirestoreManager<Message>
     private let cdContextProvider: CDContextProviderProtocol
     
+    private lazy var bgContext = cdContextProvider.newBackgroundContext
+    
+    private lazy var saveWorker = CDWorker<Message, DBMessage>(
+        context: bgContext,
+        mergePolicy: .mergeByPropertyObjectTrumpMergePolicyType
+    )
+    
+    private lazy var fetchWorker = CDWorker<Conversation, DBChannel>(
+        context: bgContext
+    )
+    
+    lazy var conversationEntity = fetchWorker.coreDataManager
+        .fetchEntity(withID: dialogueID)
+    
     let messages: Dynamic<[Message]> = Dynamic([])
     
+    // MARK: - Init
     init(with dialogueID: String,
          cloudStore: FirestoreManager<Message> = FirestoreManager(
             collectionName: FBCollections.channels.rawValue
@@ -40,6 +55,7 @@ final class DMRepository: DMRepositoryProtocol {
         self.cdContextProvider = cdContextProvider
     }
     
+    // MARK: - Private Methods
     private func bindCloudWithModel() {
         self.cloudStore.model.bind { [weak self] messages in
             self?.messages.value = messages
@@ -105,43 +121,30 @@ extension DMRepository {
     private func updateCoreData(with updateLog: CSModelUpdateLog<Message>?) {
         guard let updateLog = updateLog else { return }
         
-        let context = cdContextProvider.newBackgroundContext
-        
-        // Создаем воркера в бекграунд треде
-        let saveWorker = CDWorker<Message, DBMessage>(
-            context: context,
-            mergePolicy: .mergeByPropertyObjectTrumpMergePolicyType
-        )
-        
-        lazy var fetchWorker = CDWorker<Conversation, DBChannel>(
-            context: context
-        )
-        lazy var conversationEntity = fetchWorker.coreDataManager
-            .fetchEntity(withID: dialogueID)
-        
         // Если мы только что подписались на изменения - чистим базу сообщений этого чата
         // и перезаписываем так как мы не можем знать какие изменения там произошли с прошлого запуска
         if isFirstFetch {
             let chatRelPredicate = NSPredicate(format: "channel.identifier == %@",
                                                dialogueID)
-            saveWorker.coreDataManager.removeAll(matching: chatRelPredicate)
+            saveWorker.coreDataManager.removeAll(matching: chatRelPredicate) { _ in }
             isFirstFetch = false
         }
         
         if updateLog.addedCount != 0 {
             // Для каждого добавленного сообщения также меняем канал
             for object in updateLog.addedObjects {
-                let entity = saveWorker.coreDataManager.insert(object)
-                entity.channel = conversationEntity
+                saveWorker.coreDataManager.insert(object) { [weak self] entity in
+                    entity.channel = self?.conversationEntity
+                }
             }
         }
         
         if updateLog.updatedCount != 0 {
             // При выбранной merge политике, insert должен работать как update
             for object in updateLog.updatedObjects {
-                print(object)
-                let entity = saveWorker.coreDataManager.insert(object)
-                entity.channel = conversationEntity
+                saveWorker.coreDataManager.insert(object) { [weak self] entity in
+                    entity.channel = self?.conversationEntity
+                }
             }
         }
         
@@ -151,10 +154,10 @@ extension DMRepository {
             for object in updateLog.removedObjects {
                 let predicate = NSPredicate(format: "created == %@",
                                             object.created as NSDate)
-                saveWorker.coreDataManager.removeAll(matching: predicate)
+                saveWorker.coreDataManager.removeAll(matching: predicate) { _ in }
             }
         }
         
-        saveWorker.saveIfNeeded()
+        saveWorker.saveIfNeeded { _ in }
     }
 }

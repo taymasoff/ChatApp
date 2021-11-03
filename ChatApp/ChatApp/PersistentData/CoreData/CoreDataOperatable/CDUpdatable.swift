@@ -11,10 +11,10 @@ import CoreData
 protocol CDUpdatable: CDOperatableBase {
     
     /// Обновляет элементы типа ModelType во вью-контексте
-    func update(_ objects: [ModelType])
+    func update(_ objects: [ModelType], completion: @escaping (Bool) -> Void)
     
     /// Обновляет элемент типа ModelType во вью-контексте
-    func update(_ object: ModelType)
+    func update(_ object: ModelType, completion: @escaping (Entity) -> Void)
 }
 
 // MARK: - CDUpdatable Default Implementation
@@ -26,14 +26,14 @@ extension CDUpdatable where Self: CDInserable {
      */
     
     // MARK: Update Objects
-    func update(_ objects: [ModelType]) {
+    func update(_ objects: [ModelType], completion: @escaping (Bool) -> Void) {
         print("🗄 [CoreData]: Update is not implemented yet, using insert instead!")
-        insert(objects)
+        insert(objects, completion: completion)
     }
     
     // MARK: Update Object
-    func update(_ object: ModelType) {
+    func update(_ object: ModelType, completion: @escaping (Entity) -> Void) {
         print("🗄 [CoreData]: Update is not implemented yet, using insert instead!")
-        insert(object)
+        insert(object, completion: completion)
     }
 }

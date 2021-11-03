@@ -11,32 +11,38 @@ import CoreData
 protocol CDInserable: CDOperatableBase {
     
     /// Вставляет элементы типа ModelType во вью-контекст
-    func insert(_ objects: [ModelType])
+    func insert(_ objects: [ModelType], completion: @escaping (Bool) -> Void)
     
     /// Вставляет 1 элемент типа ModelType во вью-контекст
-    @discardableResult
-    func insert(_ object: ModelType) -> Entity
+    func insert(_ object: ModelType, completion: @escaping (Entity) -> Void)
 }
 
 // MARK: - CDInsertable Default Implementation
 extension CDInserable where ModelType.Entity == Entity {
     
     // MARK: Insert Objects
-    func insert(_ objects: [ModelType]) {
-    
-        objects.forEach {
-            insert($0)
+    func insert(_ objects: [ModelType], completion: @escaping (Bool) -> Void) {
+        context.perform {
+            objects.forEach {
+                let name = String(describing: Entity.self)
+                let entityDescription = NSEntityDescription.entity(forEntityName: name,
+                                                                   in: context)!
+                let entity = Entity(entity: entityDescription, insertInto: context)
+                $0.insertInto(entity: entity)
+            }
+            completion(true)
         }
     }
     
     // MARK: Insert Object
-    @discardableResult
-    func insert(_ object: ModelType) -> Entity {
-        let name = String(describing: Entity.self)
-        let entityDescription = NSEntityDescription.entity(forEntityName: name,
-                                                           in: context)!
-        let entity = Entity(entity: entityDescription, insertInto: context)
-        object.insertInto(entity: entity)
-        return entity
+    func insert(_ object: ModelType, completion: @escaping (Entity) -> Void) {
+        context.perform {
+            let name = String(describing: Entity.self)
+            let entityDescription = NSEntityDescription.entity(forEntityName: name,
+                                                               in: context)!
+            let entity = Entity(entity: entityDescription, insertInto: context)
+            object.insertInto(entity: entity)
+            completion(entity)
+        }
     }
 }

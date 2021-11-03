@@ -28,21 +28,24 @@ final class CDWorker<
         self.coreDataManager = CoreDataManager<Model, Entity>(context: context)
     }
     
-    @discardableResult public func saveIfNeeded() -> Bool {
-        let hasPurpose = context.parent != nil || context.persistentStoreCoordinator?.persistentStores.isEmpty == false
-        guard hasPersistentChanges && hasPurpose else {
-            return false
-        }
-        do {
-            let startTime = CFAbsoluteTimeGetCurrent()
-            try context.save()
-            let diff = CFAbsoluteTimeGetCurrent() - startTime
-            print("🗄 [CoreData]: Saved some changes. Took \(diff) seconds to save!")
-            return true
-        } catch {
-            context.rollback()
-            Log.error("🗄 [CoreData]: Failed to save context: \(error)")
-            return false
+    func saveIfNeeded(completion: @escaping (Bool) -> Void) {
+        let startTime = CFAbsoluteTimeGetCurrent()
+        context.perform {
+            let hasPurpose = self.context.parent != nil || self.context.persistentStoreCoordinator?.persistentStores.isEmpty == false
+            guard self.hasPersistentChanges && hasPurpose else {
+                completion(false)
+                return
+            }
+            do {
+                try self.context.save()
+                let diff = CFAbsoluteTimeGetCurrent() - startTime
+                print("🗄 [CoreData]: Saved some changes. Took \(diff) seconds to save!")
+                completion(true)
+            } catch {
+                self.context.rollback()
+                Log.error("🗄 [CoreData]: Failed to save context: \(error)")
+                completion(false)
+            }
         }
     }
 }

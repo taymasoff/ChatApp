@@ -34,6 +34,11 @@ final class ConversationsRepository: ConversationsRepositoryProtocol {
     private let cloudStore: FirestoreManager<Conversation>
     private let cdContextProvider: CDContextProviderProtocol
     
+    private lazy var saveWorker = CDWorker<Conversation, DBChannel>(
+        context: cdContextProvider.newBackgroundContext,
+        mergePolicy: .mergeByPropertyObjectTrumpMergePolicyType
+    )
+    
     let conversations: Dynamic<[Conversation]> = Dynamic([])
     
     let fileManager: AsyncFileManagerProtocol
@@ -186,12 +191,6 @@ extension ConversationsRepository {
     // MARK: Save changes to Core Data
     private func updateCoreData(with updateLog: CSModelUpdateLog<Conversation>?) {
         guard let updateLog = updateLog else { return }
-    
-        // Создаем воркера в бекграунд треде
-        let saveWorker = CDWorker<Conversation, DBChannel>(
-            context: cdContextProvider.newBackgroundContext,
-            mergePolicy: .mergeByPropertyObjectTrumpMergePolicyType
-        )
         
         // Если мы только что подписались на изменения - чистим базу, и перезаписываем
         // так как мы не можем знать какие изменения там произошли с прошлого запуска
@@ -202,21 +201,21 @@ extension ConversationsRepository {
         }
         
         if updateLog.addedCount != 0 {
-            saveWorker.coreDataManager.insert(updateLog.addedObjects)
+            saveWorker.coreDataManager.insert(updateLog.addedObjects) { _ in }
         }
         
         if updateLog.updatedCount != 0 {
             // При выбранной merge политике, insert должен работать как update
-            saveWorker.coreDataManager.insert(updateLog.updatedObjects)
+            saveWorker.coreDataManager.insert(updateLog.updatedObjects) { _ in }
         }
         
         if updateLog.removedCount != 0 {
             for object in updateLog.removedObjects {
                 guard let id = object.identifier else { continue }
-                saveWorker.coreDataManager.removeEntity(withID: id)
+                saveWorker.coreDataManager.removeEntity(withID: id) { _ in }
             }
         }
         
-        saveWorker.saveIfNeeded()
+        saveWorker.saveIfNeeded { _ in }
     }
 }

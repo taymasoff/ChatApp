@@ -11,12 +11,10 @@ import CoreData
 protocol CDRemovable: CDOperatableBase {
     
     /// Удаляет NSManagedObject из контекста по его универсальному id
-    @discardableResult
-    func removeEntity(withID id: String) -> Bool
+    func removeEntity(withID id: String, completion: @escaping (Bool) -> Void)
     
     /// Удаляет все NSManagedObject типа Entity по предикату
-    @discardableResult
-    func removeAll(matching predicate: NSPredicate) -> Bool
+    func removeAll(matching predicate: NSPredicate, completion: @escaping (Bool) -> Void)
     
     /// Удаляет все NSManagedObject типа Entity в контексте с сохранением контекста после
     func removeAllAndSave(completion: @escaping ResultHandler<String>)
@@ -26,45 +24,49 @@ protocol CDRemovable: CDOperatableBase {
 extension CDRemovable where Self: CDFetchable {
     
     // MARK: Remove Object
-    @discardableResult
-    func removeEntity(withID id: String) -> Bool {
-        let predicate = NSPredicate(format: "identifier == %@", id)
-        if let entity = try? fetchFirstEntity(matching: predicate) {
-            context.delete(entity)
-            return true
-        } else {
-            return false
+    func removeEntity(withID id: String, completion: @escaping (Bool) -> Void) {
+        context.perform {
+            let predicate = NSPredicate(format: "identifier == %@", id)
+            if let entity = try? fetchFirstEntity(matching: predicate) {
+                context.delete(entity)
+                completion(true)
+            } else {
+                completion(false)
+            }
         }
     }
     
     // MARK: Remove All matching predicate
-    @discardableResult
-    func removeAll(matching predicate: NSPredicate) -> Bool {
-        var deletedAny = false
-        let entities = try? fetchEntities(matching: predicate, sortDescriptors: nil)
-        entities?.forEach {
-            context.delete($0)
-            deletedAny = true
+    func removeAll(matching predicate: NSPredicate, completion: @escaping (Bool) -> Void) {
+        context.perform {
+            var deletedAny = false
+            let entities = try? fetchEntities(matching: predicate, sortDescriptors: nil)
+            entities?.forEach {
+                context.delete($0)
+                deletedAny = true
+            }
+            completion(deletedAny)
         }
-        return deletedAny
     }
     
     // MARK: Remove All Entities
     func removeAllAndSave(completion: @escaping ResultHandler<String>) {
-        let batchDeleteRequest = NSBatchDeleteRequest(
-            fetchRequest: Entity.fetchRequest()
-        )
-        batchDeleteRequest.resultType = .resultTypeCount
-        
-        do {
-            let batchDeleteResult = try context.execute(batchDeleteRequest) as? NSBatchDeleteResult
-            try context.save()
-            context.reset()
-            completion(
-                .success("🗄 [CoreData]: Deleted in the batch: \(String(describing: batchDeleteResult?.result))")
+        context.perform {
+            let batchDeleteRequest = NSBatchDeleteRequest(
+                fetchRequest: Entity.fetchRequest()
             )
-        } catch {
-            completion(.failure(error))
+            batchDeleteRequest.resultType = .resultTypeCount
+            
+            do {
+                let batchDeleteResult = try context.execute(batchDeleteRequest) as? NSBatchDeleteResult
+                try context.save()
+                context.reset()
+                completion(
+                    .success("🗄 [CoreData]: Deleted in the batch: \(String(describing: batchDeleteResult?.result))")
+                )
+            } catch {
+                completion(.failure(error))
+            }
         }
     }
 }
