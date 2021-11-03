@@ -9,7 +9,7 @@ import Foundation
 import FirebaseFirestore
 
 /// Модель диалога
-struct Conversation {
+struct Conversation: FSIdentifiable {
     static let minutesToDefineConversationActive = 10
     
     // Не энкодим/не декодим, а берем из DocumentID

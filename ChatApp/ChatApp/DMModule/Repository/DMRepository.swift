@@ -14,50 +14,50 @@ protocol DMRepositoryProtocol {
     var messages: Dynamic<[Message]> { get }
     func subscribeToUpdates()
     func unsubscribeFromUpdates()
-    func newMessage(with content: String?,
-                    completion: CompletionHandler<String>)
+    func newMessage(with content: String?)
 }
 
 final class DMRepository: DMRepositoryProtocol {
     
     // MARK: - Properties
-    private let db = Firestore.firestore()
-    private let messagesReference: CollectionReference
-    private var listener: ListenerRegistration?
+    private let cloudStore: FirestoreManager<Message>
     
     let messages: Dynamic<[Message]> = Dynamic([])
     
-    init(with dialogueID: String) {
-        self.messagesReference = db.collection(FBCollections.channels.rawValue).document(dialogueID).collection(FBCollections.messages.rawValue)
-    }
+    init(with dialogueID: String,
+         cloudStore: FirestoreManager<Message> = FirestoreManager(
+            collectionName: FBCollections.channels.rawValue
+         )) {
+             let reference = cloudStore.db.collection(FBCollections.channels.rawValue).document(dialogueID).collection(FBCollections.messages.rawValue)
+             cloudStore.reference = reference
+             self.cloudStore = cloudStore
+         }
     
-    // MARK: - Subscribe to stream
+    private func bindCloudWithModel() {
+        self.cloudStore.model.bind { [weak self] messages in
+            self?.messages.value = messages
+        }
+    }
+}
+
+// MARK: - CloudStore Methods
+extension DMRepository {
+    // MARK: Subscribe to stream
     func subscribeToUpdates() {
-        listener = messagesReference.addSnapshotListener { [weak self] snapshot, error in
-            guard error == nil else {
-                Log.error(error.debugDescription)
-                return
-            }
-            
-            self?.messages.value = snapshot?.documents
-                .compactMap { (document) -> Message? in
-                    if let message = try? document.data(as: Message.self) {
-                        return message
-                    } else {
-                        return nil
-                    }
-                } ?? []
+        bindCloudWithModel()
+        cloudStore.subscribeToUpdates { updateLog, error in
+            guard error == nil else { Log.error(error!.localizedDescription); return }
+            if let updateLog = updateLog { print(updateLog) }
         }
     }
     
-    // MARK: - Unsubscribe from stream
+    // MARK: Unsubscribe
     func unsubscribeFromUpdates() {
-        _ = listener?.remove()
+        cloudStore.unsubscribeFromUpdates()
     }
     
-    // MARK: - Add Conversation
-    func newMessage(with content: String?,
-                    completion: CompletionHandler<String>) {
+    // MARK: Add Conversation
+    func newMessage(with content: String?) {
         guard let content = content,
               content.isntEmptyOrWhitespaced else {
                   completion(.failure(FirestoreError.emptyString))
@@ -66,13 +66,13 @@ final class DMRepository: DMRepositoryProtocol {
         
         let message = Message(content: content)
         
-        do {
-            _ = try messagesReference.addDocument(from: message)
-            completion(
-                .success("Сообщение успешно отправлено")
-            )
-        } catch {
-            completion(.failure(FirestoreError.documentAddError))
+        cloudStore.addEntity(from: message) { result in
+            switch result {
+            case .success(let message):
+                Log.info(message)
+            case .failure(let error):
+                Log.error(error.localizedDescription)
+            }
         }
     }
 }

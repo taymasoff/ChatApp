@@ -34,23 +34,7 @@ class MainRouter: MainRouterProtocol {
     /// Инициализировать первый экран приложения
     func initiateFirstViewController() {
         if let navigationController = navigationController {
-            let fileManager = AsyncFileManager(
-                fileManager: FileManager.default,
-                asyncHandler: .gcd,
-                qos: .userInteractive
-            )
-    
-            let fileManagerPreferences = FileManagerPreferences(
-                preferredTextExtension: .txt,
-                preferredImageExtension: .jpeg,
-                preferredDirectory: .userProfile
-            )
-            let persistenceManager = PersistenceManager(
-                storageType: .fileManger(fileManager, fileManagerPreferences)
-            )
-            let conversationsViewModel = ConversationsViewModel(
-                router: self, persistenceManager: persistenceManager
-            )
+            let conversationsViewModel = ConversationsViewModel(router: self)
             let conversationsViewController = ConversationsViewController(with: conversationsViewModel)
             navigationController.viewControllers = [conversationsViewController]
         }
@@ -70,23 +54,8 @@ class MainRouter: MainRouterProtocol {
     /// Инициализировать и представить модально экран выбора тем (Swift)
     func presentThemesViewController(onThemeChanged: @escaping (UIColor) -> Void) {
         if let navigationController = navigationController {
-            let fileManager = AsyncFileManager(
-                fileManager: FileManager.default,
-                asyncHandler: .gcd,
-                qos: .userInitiated
-            )
-    
-            let fileManagerPreferences = FileManagerPreferences(
-                preferredTextExtension: .txt,
-                preferredImageExtension: .jpeg,
-                preferredDirectory: .themes
-            )
-            let persistenceManager = PersistenceManager(
-                storageType: .fileManger(fileManager, fileManagerPreferences)
-            )
             let themesViewModel = ThemesViewModel(router: self,
-                                                  onThemeChanged: onThemeChanged,
-                                                  persistenceManager: persistenceManager)
+                                                  onThemeChanged: onThemeChanged)
             let themesViewController = ThemesViewController(with: themesViewModel)
             // Представляем модально с прозрачным эффектом
             themesViewController.modalPresentationStyle = .overCurrentContext
@@ -114,17 +83,7 @@ class MainRouter: MainRouterProtocol {
     /// Инициализировать и представить модально экран профиля в своем собственном NC
     func presentProfileViewController(delegate: ProfileDelegate? = nil) {
         if let navigationController = navigationController {
-            let fileManager = AsyncFileManager(fileManager: FileManager.default, asyncHandler: .gcd, qos: .userInitiated)
-            let fileManagerPreferences = FileManagerPreferences(
-                preferredTextExtension: .txt,
-                preferredImageExtension: .jpeg,
-                preferredDirectory: .userProfile
-            )
-            let persistenceManager = PersistenceManager(
-                storageType: .fileManger(fileManager, fileManagerPreferences)
-            )
             let profileViewModel = ProfileViewModel(router: self,
-                                                    persistenceManager: persistenceManager,
                                                     delegate: delegate)
             let profileViewController = ProfileViewController(with: profileViewModel)
             // Представляем модально с прозрачным эффектом

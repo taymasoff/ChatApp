@@ -13,7 +13,7 @@ class FileWriteOperation: AsyncResultOperation<Bool, Error> {
     private let fileName: String
     private let directory: FMDirectory
     
-    init(fileManager: AsyncFileManagerProtocol = AsyncFileManager(),
+    init(fileManager: AsyncFileManagerProtocol = GCDFileManager(),
          data: Data,
          fileName: String,
          directory: FMDirectory) {

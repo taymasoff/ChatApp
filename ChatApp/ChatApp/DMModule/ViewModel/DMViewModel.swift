@@ -35,14 +35,7 @@ final class DMViewModel: Routable {
     
     // MARK: - Action Methods
     func sendMessagePressed(with text: String?) {
-        repository.newMessage(with: text) { result in
-            switch result {
-            case .success(let message):
-                Log.info(message)
-            case .failure(let error):
-                Log.error(error.localizedDescription)
-            }
-        }
+        repository.newMessage(with: text)
     }
     
     func addButtonPressed() {

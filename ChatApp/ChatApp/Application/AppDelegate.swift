@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         FirebaseApp.configure()
         
-        setupLoggers()
+        setupLogger()
         
         ThemeManager.updateCurrentTheme()
         if #available(iOS 13, *) {} else {
@@ -28,13 +28,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
     
-    private func setupLoggers() {
+    private func setupLogger() {
         Log.setup(loggerState: .onlyInDebug,
                   includeDate: true,
                   includeFileNames: true,
                   includeFuncNames: true)
-        PMLog.setup(loggerState: .onlyInDebug,
-                    includeDate: true)
     }
     
     // MARK: - Create and Show First Scene

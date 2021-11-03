@@ -45,8 +45,8 @@ class DynamicPreservable<T: Equatable>: Dynamic<T> {
     }
     
     func setAndPreserve(_ value: T) {
+        self.preservedValue = value
         self.value = value
-        preserve()
     }
     
     func restore() {
