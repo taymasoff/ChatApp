@@ -626,19 +626,6 @@
 			path = Repository;
 			sourceTree = "<group>";
 		};
-		22FEEA34272AC984003C8B62 /* Date */ = {
-			isa = PBXGroup;
-			children = (
-				222A55B5270C0FA90047CA24 /* Date+timeSince.swift */,
-				22FEEA32272AC92B003C8B62 /* Date+minutesSince.swift */,
-				22FEEA37272ACD2C003C8B62 /* Date+noTime.swift */,
-				22FEEA39272AD000003C8B62 /* Date+isToday.swift */,
-				22FEEA3B272AD098003C8B62 /* Date+isYesterday.swift */,
-				22FEEA3D272AD357003C8B62 /* Date+isThisYear.swift */,
-			);
-			path = Date;
-			sourceTree = "<group>";
-		};
 		22FEEA49272B5502003C8B62 /* Repository */ = {
 			isa = PBXGroup;
 			children = (
@@ -852,7 +839,6 @@
 			files = (
 				22CC53BD26FAC8220036F6F9 /* ConversationsViewController.swift in Sources */,
 				22765EB1272C6D6100AD0F15 /* DataRemovable.swift in Sources */,
-				22FEEA38272ACD2C003C8B62 /* Date+noTime.swift in Sources */,
 				22FFB22F2716845D001884BA /* ThemeManager.swift in Sources */,
 				22C44A40272747F5003D106C /* GroupedConversations.swift in Sources */,
 				22C71C1A271F047E005C4466 /* DataSaveable.swift in Sources */,

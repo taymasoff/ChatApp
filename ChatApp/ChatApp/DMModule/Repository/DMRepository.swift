@@ -60,7 +60,7 @@ extension DMRepository {
     func newMessage(with content: String?) {
         guard let content = content,
               content.isntEmptyOrWhitespaced else {
-                  completion(.failure(FirestoreError.emptyString))
+                  Log.error("Невозможно создать сообщение с пустым контентом.")
                   return
               }
         
