@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import CoreData
 
 // MARK: - ResultHandler With Generic Result
 typealias ResultHandler<T> = (Result<T, Error>) -> Void
@@ -56,4 +57,16 @@ extension ReuseIdentifiable {
     static var reuseID: String {
         return String(describing: Self.self)
     }
+}
+
+// MARK: - To Domain Model Convertable
+protocol ToDomainModelConvertable {
+    associatedtype DomainModel
+    func toDomainModel() -> DomainModel
+}
+
+// MARK: - To DataBase Entity Insertable
+protocol DomainModel {
+    associatedtype Entity
+    func insertInto(entity: Entity)
 }

@@ -122,7 +122,7 @@ extension FirestoreManager: CloudStoreUpdatable {
                 .compactMap { (document) -> ModelType? in
                     if let resultModel = try? document.data(as: ModelType.self) {
                         // Проверяем, если модель Identifiable - то задаем ей documentID
-                        if var identifiableModel = resultModel as? FSIdentifiable {
+                        if var identifiableModel = resultModel as? DBIdentifiable {
                             identifiableModel.identifier = document.documentID
                             return identifiableModel as? ModelType
                         }

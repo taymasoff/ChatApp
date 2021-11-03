@@ -7,9 +7,10 @@
 
 import Foundation
 import FirebaseFirestore
+import CoreData
 
 /// Модель диалога
-struct Conversation: FSIdentifiable {
+struct Conversation: DBIdentifiable {
     static let minutesToDefineConversationActive = 10
     
     // Не энкодим/не декодим, а берем из DocumentID
@@ -87,5 +88,16 @@ extension Conversation: Encodable {
         } else {
             try container.encodeNil(forKey: .lastActivity)
         }
+    }
+}
+
+// MARK: - To Entity Convertable
+extension Conversation: DomainModel {
+    
+    func insertInto(entity: DBChannel) {
+        entity.identifier = self.identifier ?? UUID().uuidString
+        entity.name = self.name
+        entity.lastMessage = self.lastMessage
+        entity.lastActivity = self.lastActivity
     }
 }
