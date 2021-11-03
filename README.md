@@ -46,3 +46,14 @@
 
 
 </details>
+<details> 
+  <summary>Home Work #6</summary>
+
+Интегрировал Firebase/Firestore и SwiftLint в проект. Отрефакторил data layer.
+
+Видео демка:
+
+<a href="https://www.youtube.com/watch?v=ZfIYMB60DYo"><img src="https://i.imgur.com/69OErSe.png" height="350"/></a>
+
+
+</details>
