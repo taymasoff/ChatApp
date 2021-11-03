@@ -35,54 +35,69 @@ final class FirestoreManager<T: Codable>: DynamicModelBasedCloudStore {
         self.init(database: database, reference: reference)
     }
     
+    // MARK: Map Document To Model
+    private func mapDocumentToModel(document: QueryDocumentSnapshot) -> ModelType? {
+        if let resultModel = try? document.data(as: ModelType.self) {
+            // Проверяем, если модель Identifiable - то задаем ей documentID
+            if var identifiableModel = resultModel as? FSIdentifiable {
+                identifiableModel.identifier = document.documentID
+                return identifiableModel as? ModelType
+            }
+            return resultModel
+        } else {
+            return nil
+        }
+    }
+    
     // MARK: Compose an Update Log Method
-    private func composeUpdateLog(snapshot: QuerySnapshot?) -> String? {
-        // Считаем изменения и выводим их количество
-        return snapshot?.documentChanges.reduce(into: [String: Int](), { dict, change in
-            if change.type == .added {
-                dict["added", default: 0] += 1
+    private func composeUpdateLog(snapshot: QuerySnapshot?) -> CSModelUpdateLog<T> {
+        // Разбиваем изменения на 3 группы: Added/Modified/Removed, вписываем список
+        // каждой группы в updateLog
+        var updateLog = CSModelUpdateLog<T>()
+        snapshot?.documentChanges.forEach { [weak self] diff in
+            if diff.type == .added {
+                if let model = self?.mapDocumentToModel(document: diff.document) {
+                    updateLog.addedObjects.append(model)
+                }
             }
-            if change.type == .modified {
-                dict["modified", default: 0] += 1
+            if diff.type == .modified {
+                if let model = self?.mapDocumentToModel(document: diff.document) {
+                    updateLog.updatedObjects.append(model)
+                }
             }
-            if change.type == .removed {
-                dict["removed", default: 0] += 1
+            if diff.type == .removed {
+                if let model = self?.mapDocumentToModel(document: diff.document) {
+                    updateLog.removedObjects.append(model)
+                }
             }
-        }).compactMap {
-            return "🔥 [FSUpdates] Documents \($0.key): \($0.value)"
-        }.joined(separator: "\n")
+        }
+        return updateLog
     }
 }
 
 // MARK: - CloudStore Subscribable
 extension FirestoreManager: CloudStoreSubscribable where ModelType: Decodable {
     
-    // MARK: Subscribe To Updates Method
-    func subscribeToUpdates(listener: @escaping FSUpdatesListener) {
+    func subscribeToUpdates(enableLogging: Bool,
+                            listener: @escaping ResultHandler<CSModelUpdateLog<ModelType>?>) {
         self.listener = reference.addSnapshotListener { [weak self] snapshot, error in
-            guard error == nil else {
-                listener(nil, error)
+            // Сначала проверяем ошибку
+            if let error = error {
+                listener(.failure(error))
                 return
             }
             
+            // Обновляем модель
             self?.model.value = snapshot?.documents
                 .compactMap { (document) -> ModelType? in
-                    if let resultModel = try? document.data(as: ModelType.self) {
-                        // Проверяем, если модель Identifiable - то задаем ей documentID
-                        if var identifiableModel = resultModel as? FSIdentifiable {
-                            identifiableModel.identifier = document.documentID
-                            return identifiableModel as? ModelType
-                        }
-                        return resultModel
-                    } else {
-                        return nil
-                    }
+                    return self?.mapDocumentToModel(document: document)
                 } ?? [ModelType]()
             
-            listener(
-                self?.composeUpdateLog(snapshot: snapshot),
-                nil
-            )
+            // Если включено логирование, создаем и возвращаем CSModelUpdateLog
+            guard enableLogging else { listener(.success(nil)); return }
+            listener(.success(
+                self?.composeUpdateLog(snapshot: snapshot)
+            ))
         }
     }
     

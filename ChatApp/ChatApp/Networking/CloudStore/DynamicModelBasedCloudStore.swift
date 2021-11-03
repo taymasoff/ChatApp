@@ -9,7 +9,7 @@ import Foundation
 
 /// Тип, утверждающий о наличии динамической модели данных в облачном хранилище
 protocol DynamicModelBasedCloudStore {
-    associatedtype ModelType
+    associatedtype ModelType: Codable
     
     var model: Dynamic<[ModelType]> { get set }
 }

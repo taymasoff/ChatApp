@@ -7,17 +7,15 @@
 
 import Foundation
 
-typealias FSUpdatesListener = (_ updateLog: String?, _ error: Error?) -> Void
-
 /// Тип, представляющий поддержку методов подписки и отписки облачного хранилища
-protocol CloudStoreSubscribable {
+protocol CloudStoreSubscribable: DynamicModelBasedCloudStore {
     
     /// Подписывается на обновления и обновляет model при любом изменении
     /// - Parameters:
-    /// - listener: замыкание, принимающее опциональный список изменений updateLog или ошибку error
-    /// - updateLog: оцпиональная строка, содержащая в себе список изменений
-    /// - error: опциональный Error
-    func subscribeToUpdates(listener: @escaping FSUpdatesListener)
+    /// - enableLogging: при включенной опции listener будет возвращать тип CSModelUpdateLog, в котором содержатся массивы объектов, разбитых на группы added/updated/removed
+    /// - listener: замыкание, принимающее опциональный список изменений CSModelUpdateLog или ошибку error
+    func subscribeToUpdates(enableLogging: Bool,
+                            listener: @escaping ResultHandler<CSModelUpdateLog<ModelType>?>)
     
     /// Отписывается от обновлений
     func unsubscribeFromUpdates()

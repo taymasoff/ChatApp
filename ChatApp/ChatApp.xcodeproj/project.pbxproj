@@ -13,6 +13,7 @@
 		222A55B3270C06C10047CA24 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222A55B2270C06C10047CA24 /* Conversation.swift */; };
 		222A55B6270C0FA90047CA24 /* Date+Formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222A55B5270C0FA90047CA24 /* Date+Formatting.swift */; };
 		2247F96F2712A4F800BFFC69 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2247F96E2712A4F800BFFC69 /* R.generated.swift */; };
+		225D00FB27323C7E00C12BB4 /* CSModelUpdateLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D00FA27323C7E00C12BB4 /* CSModelUpdateLog.swift */; };
 		225D6184271A8D9A00A5D678 /* FileManagerProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D6183271A8D9A00A5D678 /* FileManagerProtocols.swift */; };
 		225D6186271D66B500A5D678 /* AsyncOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D6185271D66B500A5D678 /* AsyncOperation.swift */; };
 		225D618A271D850F00A5D678 /* GCDFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D6189271D850F00A5D678 /* GCDFileManager.swift */; };
@@ -105,6 +106,7 @@
 		222A55B2270C06C10047CA24 /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		222A55B5270C0FA90047CA24 /* Date+Formatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Formatting.swift"; sourceTree = "<group>"; };
 		2247F96E2712A4F800BFFC69 /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
+		225D00FA27323C7E00C12BB4 /* CSModelUpdateLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSModelUpdateLog.swift; sourceTree = "<group>"; };
 		225D6183271A8D9A00A5D678 /* FileManagerProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerProtocols.swift; sourceTree = "<group>"; };
 		225D6185271D66B500A5D678 /* AsyncOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncOperation.swift; sourceTree = "<group>"; };
 		225D6189271D850F00A5D678 /* GCDFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GCDFileManager.swift; sourceTree = "<group>"; };
@@ -249,6 +251,14 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		225D00F927323C6800C12BB4 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				225D00FA27323C7E00C12BB4 /* CSModelUpdateLog.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		225D6182271A8D6300A5D678 /* PersistentData */ = {
 			isa = PBXGroup;
 			children = (
@@ -311,6 +321,7 @@
 		22765ECF2730807300AD0F15 /* CloudStore */ = {
 			isa = PBXGroup;
 			children = (
+				225D00F927323C6800C12BB4 /* Helpers */,
 				22765ED8273082FE00AD0F15 /* DynamicModelBasedCloudStore.swift */,
 				22765ED02730809500AD0F15 /* CloudStoreSubscribable.swift */,
 				22765ED6273080FE00AD0F15 /* CloudStoreUpdatable.swift */,
@@ -898,6 +909,7 @@
 				22765EA9272C695100AD0F15 /* FileExtensions.swift in Sources */,
 				221729EE270D94040022D174 /* MessageViewModel.swift in Sources */,
 				22C44A3E2726FF4D003D106C /* ConversationsRepository.swift in Sources */,
+				225D00FB27323C7E00C12BB4 /* CSModelUpdateLog.swift in Sources */,
 				22E69D2C2701E0EF009CAAC0 /* ProfileViewModel.swift in Sources */,
 				22FFB21F2714BE9E001884BA /* ThemesView.swift in Sources */,
 				227E17E82730AFAD004D5529 /* DateFormatter+shared.swift in Sources */,

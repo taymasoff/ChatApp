@@ -60,17 +60,30 @@ final class ConversationsRepository: ConversationsRepositoryProtocol {
 
 // MARK: - CloudStore Methods
 extension ConversationsRepository {
+    
+    // MARK: Print Update Log
+    private func printUpdateLog(updateLog: CSModelUpdateLog<Conversation>?) {
+        // Логирование не включено, или updateLog пустой
+        guard let updateLog = updateLog else { return }
+        print("🔥 [FirestoreUpdate]: Documents added: \(updateLog.addedCount) modified: \(updateLog.updatedCount) removed: \(updateLog.removedCount)")
+    }
+    
     // MARK: Subscribe to stream
     func subscribeToUpdates() {
         bindCloudWithModel()
-        cloudStore.subscribeToUpdates { updateLog, error in
-            guard error == nil else { Log.error(error!.localizedDescription); return }
-            if let updateLog = updateLog { print(updateLog) }
+        cloudStore.subscribeToUpdates(enableLogging: true) { [weak self] result in
+            switch result {
+            case .success(let updateLog):
+                self?.printUpdateLog(updateLog: updateLog)
+                // Этим будет пользоваться CoreData для обновления БД
+            case .failure(let error):
+                Log.error(error.localizedDescription)
+            }
         }
     }
     
     func unsubscribeFromUpdates() {
-        //
+        cloudStore.unsubscribeFromUpdates()
     }
     
     // MARK: Update Conversations Once
