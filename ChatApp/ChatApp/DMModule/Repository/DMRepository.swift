@@ -59,8 +59,8 @@ extension DMRepository {
     // MARK: Add Conversation
     func newMessage(with content: String?) {
         guard let content = content,
-              content.isntEmptyOrWhitespaced() else {
-                  Log.error("Невозможно создать сообщение с пустым контентом.")
+              content.isntEmptyOrWhitespaced else {
+                  completion(.failure(FirestoreError.emptyString))
                   return
               }
         

@@ -28,7 +28,7 @@ private enum LoggerOutputType {
     }
 }
 
-internal class Log {
+class Log {
     
     enum LoggerState {
         case enabled

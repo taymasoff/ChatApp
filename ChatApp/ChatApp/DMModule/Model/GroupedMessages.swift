@@ -23,17 +23,17 @@ struct GroupedMessages {
 
 // MARK: - Get Formatted Date
 extension GroupedMessages {
-    func getFormattedDate(_ formatter: DateFormatter) -> String {
+    var formattedDate: String {
         if self.date.isToday() {
             return "Today"
         } else if self.date.isYesterday() {
             return "Yesterday"
         } else if self.date.isThisYear() {
-            formatter.dateFormat = "MMMM d"
-            return formatter.string(from: self.date)
+            DateFormatter.shared.dateFormat = "MMMM d"
+            return DateFormatter.shared.string(from: self.date)
         } else {
-            formatter.dateFormat = "MMMM d, yyyy"
-            return formatter.string(from: self.date)
+            DateFormatter.shared.dateFormat = "MMMM d, yyyy"
+            return DateFormatter.shared.string(from: self.date)
         }
     }
 }

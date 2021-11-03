@@ -21,8 +21,6 @@ final class DMViewModel: Routable {
     let messages: Dynamic<[GroupedMessages]?> = Dynamic(nil)
     var onDataUpdate: (() -> Void)?
     
-    lazy var dateFormatter: DateFormatter = DateFormatter()
-    
     // MARK: - Init
     init(router: MainRouterProtocol,
          dialogueID: String,
@@ -46,7 +44,7 @@ final class DMViewModel: Routable {
     
     func isTextSendable(text: String?) -> Bool {
         if let text = text,
-           text.isntEmptyOrWhitespaced() {
+           text.isntEmptyOrWhitespaced {
             return true
         } else {
             return false
@@ -101,7 +99,7 @@ extension DMViewModel {
             Log.error("Не удалось получить секцию для хедера")
             return nil
         }
-        return section.getFormattedDate(dateFormatter)
+        return section.formattedDate
     }
     
     func messageCellViewModel(forIndexPath indexPath: IndexPath) -> MessageCellViewModel? {

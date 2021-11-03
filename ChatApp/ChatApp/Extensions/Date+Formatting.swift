@@ -1,5 +1,5 @@
 //
-//  Date+TimeSince.swift
+//  Date+Formatting.swift
 //  ChatApp
 //
 //  Created by Тимур Таймасов on 05.10.2021.
@@ -8,11 +8,12 @@
 import Foundation
 
 /*
- 👉 Выводит отформатировнную строку, сколько времени прошло с определенной даты.
- 📲 Пример вывода: "2 days ago"
+ 👉 Содержит расширения по форматированию вывода даты
  */
 
 extension Date {
+    
+    // MARK: Time Since
     func timeSince() -> String {
         
         let calendar = Calendar.current
@@ -35,5 +36,37 @@ extension Date {
         }
         let diff = Calendar.current.dateComponents([.weekOfYear], from: self, to: Date()).weekOfYear ?? 0
         return "\(diff) weeks ago"
+    }
+    
+    // MARK: Minutes Since
+    func minutesSince() -> Int {
+        return Calendar.current.dateComponents([.minute], from: self, to: Date()).minute ?? 0
+    }
+    
+    // MARK: No Time
+    /// Функция по вырезанию компонентов времени из даты
+    /// - Returns: дату без времени (год месяц день)
+    func noTime() -> Date {
+        let components = Calendar.current.dateComponents([.year, .month, .day], from: self)
+        let date = Calendar.current.date(from: components)
+        return date!
+    }
+    
+    // MARK: Is Today
+    func isToday() -> Bool {
+        return Calendar.current.isDateInToday(self)
+    }
+    
+    // MARK: Is Yesterday
+    func isYesterday() -> Bool {
+        return Calendar.current.isDateInYesterday(self)
+    }
+    
+    // MARK: Is this Year
+    func isThisYear() -> Bool {
+        let calendar = Calendar.current
+        let currentYear = calendar.component(.year, from: Date())
+        let passedYear = calendar.component(.year, from: self)
+        return passedYear == currentYear
     }
 }

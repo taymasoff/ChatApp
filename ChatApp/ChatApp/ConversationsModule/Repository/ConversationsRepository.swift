@@ -91,7 +91,7 @@ extension ConversationsRepository {
     func addConversation(with name: String?,
                          completion: ResultHandler<String>) {
         guard let name = name,
-              name.isntEmptyOrWhitespaced() else {
+              name.isntEmptyOrWhitespaced else {
                   completion(.failure(FirestoreError.emptyString))
                   return
               }

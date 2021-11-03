@@ -55,7 +55,7 @@ extension Conversation: Decodable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         // Нам 100% нужно имя, поэтому декодим его там
         if let name = try? values.decode(String.self, forKey: .name),
-           name.isntEmptyOrWhitespaced() {
+           name.isntEmptyOrWhitespaced {
             self.name = name
         } else {
             throw FirestoreError.emptyString

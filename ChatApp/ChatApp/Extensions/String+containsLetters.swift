@@ -12,8 +12,10 @@ import Foundation
     чтобы не отправлять пустые строки на бек
  */
 
-internal extension String {
-    func containsLetters() -> Bool {
+extension String {
+    
+    // MARK: Contains Letters
+    var containsLetters: Bool {
         if self.rangeOfCharacter(from: NSCharacterSet.letters) != nil {
             return true
         } else {
@@ -21,7 +23,8 @@ internal extension String {
         }
     }
     
-    func isntEmptyOrWhitespaced() -> Bool {
+    // MARK: IsntEmptyOrWhitespaced
+    var isntEmptyOrWhitespaced: Bool {
         guard !self.isEmpty else { return false }
         return (self.trimmingCharacters(in: .whitespaces) != "")
     }
