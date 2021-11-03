@@ -96,7 +96,7 @@ extension CDFetchable {
     
     // MARK: FetchEntity with ID
     func fetchEntity(withID id: String) -> Entity? {
-        let predicate = NSPredicate(format: "identifier = %@", id)
+        let predicate = NSPredicate(format: "identifier == %@", id)
         return try? fetchFirstEntity(matching: predicate)
     }
     

@@ -172,8 +172,8 @@ extension ConversationsViewModel {
             switch result {
             case .success(let info):
                 self?.profileAvatarUpdateInfo.value = info
-            case .failure(let error):
-                Log.error("Не удалось загрузить аватар или имя \(error.localizedDescription)")
+            case .failure:
+                break // Нет ни имени, ни аватарки
             }
         }
     }

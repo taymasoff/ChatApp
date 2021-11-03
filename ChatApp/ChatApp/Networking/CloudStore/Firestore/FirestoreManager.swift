@@ -111,7 +111,8 @@ extension FirestoreManager: CloudStoreSubscribable where ModelType: Decodable {
 extension FirestoreManager: CloudStoreUpdatable {
     
     // MARK: Update Model Method
-    func updateModel(completion: @escaping ResultHandler<String>) {
+    func updateModel(enableLogging: Bool,
+                     completion: @escaping ResultHandler<CSModelUpdateLog<ModelType>?>) {
         reference.getDocuments { [weak self] snapshot, error in
             if let error = error {
                 completion(.failure(error))
@@ -132,15 +133,11 @@ extension FirestoreManager: CloudStoreUpdatable {
                     }
                 } ?? [ModelType]()
             
-            if let modelsUpdated = self?.model.value.count {
-                completion(
-                    .success("🔥 [FSUpdates] \(modelsUpdated) documents updated")
-                )
-            } else {
-                completion(
-                    .failure(FirestoreError.updatingError)
-                )
-            }
+            // Если включено логирование, создаем и возвращаем CSModelUpdateLog
+            guard enableLogging else { completion(.success(nil)); return }
+            completion(.success(
+                self?.composeUpdateLog(snapshot: snapshot)
+            ))
         }
     }
 }

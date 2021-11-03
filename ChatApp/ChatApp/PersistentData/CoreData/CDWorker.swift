@@ -34,7 +34,10 @@ final class CDWorker<
             return false
         }
         do {
+            let startTime = CFAbsoluteTimeGetCurrent()
             try context.save()
+            let diff = CFAbsoluteTimeGetCurrent() - startTime
+            print("🗄 [CoreData]: Saved some changes. Took \(diff) seconds to save!")
             return true
         } catch {
             context.rollback()

@@ -14,7 +14,8 @@ protocol CDInserable: CDOperatableBase {
     func insert(_ objects: [ModelType])
     
     /// Вставляет 1 элемент типа ModelType во вью-контекст
-    func insert(_ object: ModelType)
+    @discardableResult
+    func insert(_ object: ModelType) -> Entity
 }
 
 // MARK: - CDInsertable Default Implementation
@@ -24,13 +25,18 @@ extension CDInserable where ModelType.Entity == Entity {
     func insert(_ objects: [ModelType]) {
     
         objects.forEach {
-            let entity = Entity(context: context)
-            $0.insertInto(entity: entity)
+            insert($0)
         }
     }
     
     // MARK: Insert Object
-    func insert(_ object: ModelType) {
-        insert([object])
+    @discardableResult
+    func insert(_ object: ModelType) -> Entity {
+        let name = String(describing: Entity.self)
+        let entityDescription = NSEntityDescription.entity(forEntityName: name,
+                                                           in: context)!
+        let entity = Entity(entity: entityDescription, insertInto: context)
+        object.insertInto(entity: entity)
+        return entity
     }
 }

@@ -11,9 +11,11 @@ import CoreData
 protocol CDRemovable: CDOperatableBase {
     
     /// Удаляет NSManagedObject из контекста по его универсальному id
+    @discardableResult
     func removeEntity(withID id: String) -> Bool
     
     /// Удаляет все NSManagedObject типа Entity по предикату
+    @discardableResult
     func removeAll(matching predicate: NSPredicate) -> Bool
     
     /// Удаляет все NSManagedObject типа Entity в контексте с сохранением контекста после
@@ -24,8 +26,9 @@ protocol CDRemovable: CDOperatableBase {
 extension CDRemovable where Self: CDFetchable {
     
     // MARK: Remove Object
+    @discardableResult
     func removeEntity(withID id: String) -> Bool {
-        let predicate = NSPredicate(format: "identifier = %@", id)
+        let predicate = NSPredicate(format: "identifier == %@", id)
         if let entity = try? fetchFirstEntity(matching: predicate) {
             context.delete(entity)
             return true
@@ -35,6 +38,7 @@ extension CDRemovable where Self: CDFetchable {
     }
     
     // MARK: Remove All matching predicate
+    @discardableResult
     func removeAll(matching predicate: NSPredicate) -> Bool {
         var deletedAny = false
         let entities = try? fetchEntities(matching: predicate, sortDescriptors: nil)

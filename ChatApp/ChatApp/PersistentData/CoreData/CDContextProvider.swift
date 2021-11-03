@@ -8,7 +8,7 @@
 import CoreData
 
 protocol CDContextProviderProtocol {
-    var context: NSManagedObjectContext { get }
+    var mainContext: NSManagedObjectContext { get }
     var newBackgroundContext: NSManagedObjectContext { get }
     func performBackgroundTask(_ block: @escaping (NSManagedObjectContext) -> Void)
 }
@@ -16,7 +16,11 @@ protocol CDContextProviderProtocol {
 /// Core Data Context Provider
 final class CDContextProvider: CDContextProviderProtocol {
     
-    var context: NSManagedObjectContext {
+    private init() { }
+    
+    static let shared = CDContextProvider()
+    
+    var mainContext: NSManagedObjectContext {
         return persistentContainer.viewContext
     }
     

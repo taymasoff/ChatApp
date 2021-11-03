@@ -47,7 +47,7 @@ final class NewConversationView: UIView {
         button.setTitleColor(ThemeManager.currentTheme.settings.tintColor
                                 .withAlphaComponent(0.6),
                              for: .disabled)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
         button.isEnabled = false
         return button
     }()
@@ -57,7 +57,7 @@ final class NewConversationView: UIView {
         button.setTitle("Cancel", for: .normal)
         button.setTitleColor(ThemeManager.currentTheme.settings.tintColor,
                              for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
         return button
     }()
     

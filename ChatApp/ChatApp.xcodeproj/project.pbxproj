@@ -156,18 +156,9 @@
 		22765ED6273080FE00AD0F15 /* CloudStoreUpdatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudStoreUpdatable.swift; sourceTree = "<group>"; };
 		22765ED8273082FE00AD0F15 /* DynamicModelBasedCloudStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicModelBasedCloudStore.swift; sourceTree = "<group>"; };
 		227E17E72730AFAD004D5529 /* DateFormatter+shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+shared.swift"; sourceTree = "<group>"; };
-		227E17EB2730B626004D5529 /* ChatAppDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ChatAppDataModel.xcdatamodel; sourceTree = "<group>"; };
-		227E17ED2730B8CC004D5529 /* CDContextProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDContextProvider.swift; sourceTree = "<group>"; };
-		227E17F92730C420004D5529 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		227E18072730D0BF004D5529 /* DBChannel+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DBChannel+CoreDataClass.swift"; sourceTree = "<group>"; };
 		227E18082730D0BF004D5529 /* DBChannel+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DBChannel+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		227E180B2730D306004D5529 /* CoreDataError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataError.swift; sourceTree = "<group>"; };
-		227E180D273150C1004D5529 /* CDOperatableBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDOperatableBase.swift; sourceTree = "<group>"; };
-		227E181027316AB5004D5529 /* CDFetchable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDFetchable.swift; sourceTree = "<group>"; };
-		227E181227316ADC004D5529 /* CDInsertable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDInsertable.swift; sourceTree = "<group>"; };
-		227E181427316D69004D5529 /* CDUpdatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDUpdatable.swift; sourceTree = "<group>"; };
-		227E181627316FE5004D5529 /* CDRemovable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDRemovable.swift; sourceTree = "<group>"; };
-		227E18182731752F004D5529 /* CDWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDWorker.swift; sourceTree = "<group>"; };
 		2286F4DB270EF27700ED809E /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		2286F4E2270F064600ED809E /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		2286F4E6270F7FFA00ED809E /* UIImage+Resize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
@@ -300,15 +291,6 @@
 		225D00FC273247F500C12BB4 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
-				227E17EA2730B626004D5529 /* ChatAppDataModel.xcdatamodeld */,
-				227E18182731752F004D5529 /* CDWorker.swift */,
-				227E17ED2730B8CC004D5529 /* CDContextProvider.swift */,
-				227E180D273150C1004D5529 /* CDOperatableBase.swift */,
-				227E181227316ADC004D5529 /* CDInsertable.swift */,
-				227E17F92730C420004D5529 /* CoreDataManager.swift */,
-				227E181027316AB5004D5529 /* CDFetchable.swift */,
-				227E181427316D69004D5529 /* CDUpdatable.swift */,
-				227E181627316FE5004D5529 /* CDRemovable.swift */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -1280,16 +1262,6 @@
 				225D010127324B1F00C12BB4 /* ChatAppDataModel.xcdatamodel */,
 			);
 			currentVersion = 225D010127324B1F00C12BB4 /* ChatAppDataModel.xcdatamodel */;
-			path = ChatAppDataModel.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-		227E17EA2730B626004D5529 /* ChatAppDataModel.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				227E17EB2730B626004D5529 /* ChatAppDataModel.xcdatamodel */,
-			);
-			currentVersion = 227E17EB2730B626004D5529 /* ChatAppDataModel.xcdatamodel */;
 			path = ChatAppDataModel.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
