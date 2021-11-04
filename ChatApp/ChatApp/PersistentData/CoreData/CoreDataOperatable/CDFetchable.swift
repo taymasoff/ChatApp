@@ -41,8 +41,8 @@ protocol CDFetchable: CDOperatableBase {
 extension CDFetchable {
     
     // MARK: FetchEntities matching predicate and sortDescriptors
-    func fetchEntities(matching predicate: NSPredicate?,
-                       sortDescriptors: [NSSortDescriptor]?) throws -> [Entity] {
+    func fetchEntities(matching predicate: NSPredicate? = nil,
+                       sortDescriptors: [NSSortDescriptor]? = nil) throws -> [Entity] {
         
         let fetchRequest = Entity.fetchRequest()
         fetchRequest.predicate = predicate
@@ -56,8 +56,8 @@ extension CDFetchable {
     }
     
     // MARK: FetchObjects matching predicate and sortDescriptors
-    func fetchObjects(matching predicate: NSPredicate?,
-                      sortDescriptors: [NSSortDescriptor]?) throws -> [ModelType] {
+    func fetchObjects(matching predicate: NSPredicate? = nil,
+                      sortDescriptors: [NSSortDescriptor]? = nil) throws -> [ModelType] {
         
         do {
             return try fetchEntities(matching: predicate, sortDescriptors: sortDescriptors)
