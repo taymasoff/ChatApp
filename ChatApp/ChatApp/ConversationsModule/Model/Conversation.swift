@@ -23,7 +23,7 @@ struct Conversation: FSIdentifiable {
     // Вычисляем активность
     var isActive: Bool {
         if let lastActivity = lastActivity {
-            return lastActivity.minutesSince() < 10
+            return lastActivity.minutesSince() < Conversation.minutesToDefineConversationActive
         } else {
             return false
         }
