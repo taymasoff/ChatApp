@@ -37,15 +37,10 @@ final class DMViewController: UIViewController, ViewModelBased {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = ThemeManager.currentTheme.settings.mainColor
-        navigationItem.largeTitleDisplayMode = .never
-        setupSubviews()
-        setupSubviewsHierarchy()
-        setupSubviewsLayout()
+        setupSubviewsAndAppearence()
         
-        clearBackButtonText()
-        configureTableView()
         bindWithViewModel()
+        subscribeToMessagesProviderUpdates()
         viewModel?.viewDidLoad()
     }
     
@@ -54,14 +49,27 @@ final class DMViewController: UIViewController, ViewModelBased {
         addKeyboardObserver()
     }
     
-    // MARK: - Private Methods
+    // MARK: - Config Methods
+    private func setupSubviewsAndAppearence() {
+        view.backgroundColor = ThemeManager.currentTheme.settings.mainColor
+        navigationItem.largeTitleDisplayMode = .never
+        setupSubviews()
+        setupSubviewsHierarchy()
+        setupSubviewsLayout()
+        clearBackButtonText()
+        configureTableView()
+    }
+    
     private func configureTableView() {
         tableView.register(MessageCell.self,
                            forCellReuseIdentifier: MessageCell.reuseID)
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = calculateEstimatedRowHeight()
+        tableView.dataSource = viewModel?.messagesProvider
+        tableView.delegate = self
     }
     
+    // MARK: - Private Methods
     private func clearBackButtonText() {
         let backButton = UIBarButtonItem()
         backButton.tintColor = ThemeManager.currentTheme.settings.tintColor
@@ -73,8 +81,10 @@ final class DMViewController: UIViewController, ViewModelBased {
         return CGFloat(MessageCell.estimatedContentHeight)
     }
     
-    private func scrollTableToButtom(animated: Bool = true) {
-        
+    private func updateSendableState(text: String?) {
+        if let isSendable = viewModel?.isTextSendable(text: text) {
+            newMessageCanBeSent = isSendable
+        }
     }
     
     @objc
@@ -83,11 +93,17 @@ final class DMViewController: UIViewController, ViewModelBased {
             with: newMessageTextField.text
         )
         newMessageTextField.text = ""
+        updateSendableState(text: "")
     }
     
     @objc
     func addButtonPressed() {
         Log.info("Add Button Pressed")
+    }
+    
+    private func scrollTableViewToBottom() {
+        view.layoutIfNeeded()
+        tableView.scrollToBottom(animated: false)
     }
 }
 
@@ -104,48 +120,59 @@ extension DMViewController: ViewModelBindable {
             }
             self.navigationItem.titleView = titleView
         })
-        viewModel?.onDataUpdate = { [unowned self] in
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-                self.view.layoutIfNeeded()
-                self.tableView.scrollToBottom(animated: false)
+    }
+}
+
+// MARK: - TableViewProvider Updates
+extension DMViewController {
+    private func subscribeToMessagesProviderUpdates() {
+        viewModel?.messagesProvider.changes.bind { [weak self] changes in
+            guard !changes.isEmpty else { return }
+            
+            self?.updateTableView(withChanges: changes)
+        }
+    }
+    
+    private func updateTableView(withChanges changes: [DataSourceChange]) {
+        tableView.performBatchUpdates {
+            for change in changes {
+                switch change {
+                case let .section(sectionUpdate):
+                    switch sectionUpdate {
+                    case let .inserted(ind):
+                        tableView.insertSections([ind],
+                                                 with: .none)
+                    case let .deleted(ind):
+                        tableView.deleteSections([ind],
+                                                 with: .none)
+                    }
+                case let .object(objectUpdate):
+                    switch objectUpdate {
+                    case let .inserted(at: indexPath):
+                        tableView.insertRows(at: [indexPath],
+                                             with: .none)
+                    case let .deleted(from: indexPath):
+                        tableView.deleteRows(at: [indexPath],
+                                             with: .fade)
+                    case let .updated(at: indexPath):
+                        tableView.reloadRows(at: [indexPath],
+                                             with: .none)
+                    case let .moved(from: fromIndexPath, to: toIndexPath):
+                        tableView.deleteRows(at: [fromIndexPath],
+                                             with: .none)
+                        tableView.insertRows(at: [toIndexPath],
+                                             with: .none)
+                    }
+                }
             }
+        } completion: { [weak self] _ in
+            self?.scrollTableViewToBottom()
         }
     }
 }
 
 // MARK: - UITableView Delegate & Data Source
-extension DMViewController: UITableViewDataSource, UITableViewDelegate {
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return viewModel?.numberOfSections() ?? 0
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel?.numberOfRowsInSection(section) ?? 0
-    }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return viewModel?.titleForHeaderInSection(section) ?? ""
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: MessageCell.reuseID,
-                                                 for: indexPath) as? MessageCell
-        
-        guard let cell = cell else {
-            Log.error("Не удалось найти MessageCell по идентификатору \(MessageCell.reuseID). Возможно введен не верный ID.")
-            return UITableViewCell()
-        }
-        
-        guard let messageCellViewModel = viewModel?.messageCellViewModel(forIndexPath: indexPath) else {
-            Log.error("Не удалось создать MessageCellViewModel по indexPath: \(indexPath).")
-            return UITableViewCell()
-        }
-        
-        cell.configure(with: messageCellViewModel)
-        
-        return cell
-    }
+extension DMViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = UITableViewHeaderFooterView()
@@ -166,9 +193,7 @@ extension DMViewController: UITextFieldDelegate {
     
     @objc
     func nameTextFieldDidChange(_ textField: UITextField) {
-        if let isSendable = viewModel?.isTextSendable(text: textField.text) {
-            newMessageCanBeSent = isSendable
-        }
+        updateSendableState(text: textField.text)
     }
 }
 
@@ -200,6 +225,9 @@ private extension DMViewController {
                 make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(10).offset(-keyboardSize.height)
             }
             
+            let tableOffsetY = tableView.contentSize.height - keyboardSize.height
+            tableView.contentOffset = CGPoint(x: 0, y: tableOffsetY + 15)
+            
             UIView.animate(withDuration: duration) {
                 self.view.layoutIfNeeded()
             }
@@ -227,8 +255,6 @@ private extension DMViewController {
     // MARK: - Create Subviews
     func makeTableView() -> UITableView {
         let tableView = UITableView()
-        tableView.delegate = self
-        tableView.dataSource = self
         tableView.keyboardDismissMode = .onDrag
         tableView.separatorStyle = .none
         tableView.backgroundColor = .clear
@@ -262,7 +288,7 @@ private extension DMViewController {
         textField.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         textField.textAlignment = .left
         textField.borderStyle = .roundedRect
-        textField.autocorrectionType = .default
+        textField.autocorrectionType = .no
         textField.keyboardType = .default
         textField.returnKeyType = .send
         textField.clearButtonMode = .whileEditing
@@ -323,7 +349,7 @@ private extension DMViewController {
         newMessageTextField.snp.makeConstraints { make in
             make.left.equalTo(addButton.snp.right).offset(13)
             make.right.equalTo(sendButton.snp.left).offset(-13)
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(10)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(20)
             make.height.equalTo(newMessageTextField.intrinsicContentSize.height + 6)
         }
         
