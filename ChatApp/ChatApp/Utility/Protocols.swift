@@ -84,4 +84,11 @@ protocol CDIdentifiable {
 protocol FSIdentifiable {
     var identifier: String? { get set }
 }
+
+// MARK: - TableView Provider
+protocol TableViewProviderProtocol: UITableViewDataSource {
+    associatedtype Model
+    
+    var changes: Dynamic<[DataSourceChange]> { get }
+    func object(at indexPath: IndexPath) -> Model
 }
