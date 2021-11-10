@@ -10,7 +10,7 @@ import CoreData
 /// Базовый тип работы с CoreData
 protocol CDOperatableBase {
     associatedtype ModelType: DomainModel
-    associatedtype Entity: NSManagedObject & ToDomainModelConvertable
+    associatedtype Entity: NSManagedObject & ManagedObjectModel
     
     var context: NSManagedObjectContext { get }
 }

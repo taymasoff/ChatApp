@@ -14,7 +14,7 @@ protocol CoreDataManagerProtocol: CoreDataOperatable { }
 
 final class CoreDataManager<
     ModelType: DomainModel,
-    Entity: NSManagedObject & ToDomainModelConvertable
+    Entity: NSManagedObject & ManagedObjectModel
 >: CoreDataManagerProtocol where Entity.DomainModel == ModelType,
                                  ModelType.Entity == Entity {
     typealias ModelType = ModelType

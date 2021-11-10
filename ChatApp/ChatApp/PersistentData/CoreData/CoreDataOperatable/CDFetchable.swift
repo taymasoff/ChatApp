@@ -28,13 +28,9 @@ protocol CDFetchable: CDOperatableBase {
     /// - Returns: опциональную модель
     func fetchFirstObject(matching predicate: NSPredicate) throws -> ModelType?
     
-    /// Получить модель типа NSManagedObject, соответствующую уникальному идентификатору
+    /// Получить модель типа NSManagedObject, передав соответствующий ей объект доменной модели
     /// - Returns: опциональную модель
-    func fetchEntity(withID id: String) -> Entity?
-    
-    /// Получить модель, соответствующую уникальному идентификатору
-    /// - Returns: опциональную модель
-    func fetchObject(withID id: String) -> ModelType?
+    func fetchEntity(ofObject object: ModelType) -> Entity?
 }
 
 // MARK: - CDFetchable Default Implementation
@@ -94,14 +90,9 @@ extension CDFetchable {
         }
     }
     
-    // MARK: FetchEntity with ID
-    func fetchEntity(withID id: String) -> Entity? {
-        let predicate = NSPredicate(format: "identifier == %@", id)
+    // MARK: - Fetch Entity of object
+    func fetchEntity(ofObject object: ModelType) -> Entity? {
+        guard let predicate = object.uniqueSearchPredicate else { return nil }
         return try? fetchFirstEntity(matching: predicate)
-    }
-    
-    // MARK: FetchObject with ID
-    func fetchObject(withID id: String) -> ModelType? {
-        return fetchEntity(withID: id)?.toDomainModel() as? ModelType
     }
 }

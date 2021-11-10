@@ -10,7 +10,7 @@ import CoreData
 
 final class CDWorker<
     Model: DomainModel,
-    Entity: NSManagedObject & ToDomainModelConvertable
+    Entity: NSManagedObject & ManagedObjectModel
 > where Model.Entity == Entity, Entity.DomainModel == Model {
     
     private let context: NSManagedObjectContext
@@ -29,17 +29,17 @@ final class CDWorker<
     }
     
     func saveIfNeeded(completion: @escaping (Bool) -> Void) {
-        let startTime = CFAbsoluteTimeGetCurrent()
         context.perform {
             let hasPurpose = self.context.parent != nil || self.context.persistentStoreCoordinator?.persistentStores.isEmpty == false
+            
             guard self.hasPersistentChanges && hasPurpose else {
                 completion(false)
                 return
             }
+            
             do {
+                try? self.context.obtainPermanentIDsForInsertedObjectsIfNeeded()
                 try self.context.save()
-                let diff = CFAbsoluteTimeGetCurrent() - startTime
-                print("🗄 [CoreData]: Saved some changes. Took \(diff) seconds to save!")
                 completion(true)
             } catch {
                 self.context.rollback()
