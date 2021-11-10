@@ -5,31 +5,49 @@
 //  Created by Тимур Таймасов on 27.09.2021.
 //
 
-import Foundation
 import UIKit
+import CoreData
 
 /// Вью-модель экрана диалогов
 final class ConversationsViewModel: NSObject, Routable {
-    
     enum NotificationState { case showSucces(InAppNotificationViewModel),
                                   showError(InAppNotificationViewModel) }
     
     // MARK: - Properties
     let router: MainRouterProtocol
     let title = "Conversations"
-    let conversations: Dynamic<[GroupedConversations]?> = Dynamic(nil)
-    var onDataUpdate: (() -> Void)?
     var notificationCallback: Dynamic<NotificationState?> = Dynamic(nil)
     var profileAvatarUpdateInfo: Dynamic<ProfileAvatarUpdateInfo?> = Dynamic(nil)
     
     let repository: ConversationsRepositoryProtocol
     
+    let conversationsProvider: ConversationsProvider
+    
     // MARK: - Initializer
     init(router: MainRouterProtocol,
-         repository: ConversationsRepositoryProtocol? = nil) {
+         repository: ConversationsRepositoryProtocol? = nil,
+         tableViewProvider: ConversationsProvider? = nil) {
         self.router = router
         self.repository = repository ?? ConversationsRepository()
-        super.init()
+        
+        // Знаю, что тут собирать нельзя. Потом вынесу
+        self.conversationsProvider = tableViewProvider ?? createProvider()
+        
+        func createProvider() -> ConversationsProvider {
+            let request = DBChannel.fetchRequest()
+            let sortByActivityDescriptor = NSSortDescriptor(
+                keyPath: \DBChannel.lastActivity,
+                ascending: false
+            )
+            request.sortDescriptors = [sortByActivityDescriptor]
+            let frc = NSFetchedResultsController(
+                fetchRequest: request,
+                managedObjectContext: CoreDataStack.shared.mainContext,
+                sectionNameKeyPath: #keyPath(DBChannel.sectionName),
+                cacheName: nil
+            )
+            return ConversationsProvider(fetchedResultsController: frc)
+        }
     }
     
     // MARK: - Private Methods
@@ -59,42 +77,6 @@ final class ConversationsViewModel: NSObject, Routable {
             return true
         } else {
             return false
-        }
-    }
-    
-    private func bindToRepositoryUpdates() {
-        repository.conversations.bind(listener: { [weak self] conversations in
-            self?.conversations
-                .value = self?.mapConversationsByActivity(conversations)
-            self?.onDataUpdate?()
-        })
-    }
-    
-    // Группируем модель по полю активности, структуру используем для отрисовки таблицы
-    private func mapConversationsByActivity(
-        _ conversations: [Conversation]
-    ) -> [GroupedConversations] {
-        return Dictionary(grouping: conversations) { $0.isActive }
-        .map { (element) -> GroupedConversations in
-            let sortedConversations = element.value.sorted {
-                $0.lastActivity ?? .distantPast > $1.lastActivity ?? .distantPast
-            }
-            if element.key {
-                return GroupedConversations(title: "Currently Active",
-                                            conversations: sortedConversations,
-                                            indexInTable: 0)
-            } else {
-                return GroupedConversations(title: "Inactive",
-                                            conversations: sortedConversations,
-                                            indexInTable: 1)
-            }
-        }
-        .sorted { (lhs, rhs) -> Bool in
-            switch (lhs.indexInTable, rhs.indexInTable) {
-            case let(l?, r?): return l < r
-            case (nil, _): return false
-            case (_?, nil): return true
-            }
         }
     }
     
@@ -166,8 +148,6 @@ extension ConversationsViewModel: ThemesViewControllerDelegate {
 // MARK: - ConversationsViewController Lifecycle Updates
 extension ConversationsViewModel {
     func viewDidLoad() {
-        bindToRepositoryUpdates()
-        repository.subscribeToUpdates()
         repository.fetchAvatarOrName { [weak self] result in
             switch result {
             case .success(let info):
@@ -177,51 +157,39 @@ extension ConversationsViewModel {
             }
         }
     }
+    
+    func viewWillAppear() {
+        repository.subscribeToUpdates()
+    }
+    
+    func viewWillDisappear() {
+        repository.unsubscribeFromUpdates()
+    }
 }
 
-// MARK: - TableView Methods
+// MARK: - TableView Delegate Methods
 extension ConversationsViewModel {
-    func numberOfSections() -> Int {
-        return conversations.value?.count ?? 0
-    }
-    
-    func numberOfRowsInSection(_ section: Int) -> Int {
-        return conversations.value?[section].numberOfItems ?? 0
-    }
-    
-    func titleForHeaderInSection(_ section: Int) -> String? {
-        return conversations.value?[section].title.capitalized
-    }
-    
-    func conversationCellViewModel(forIndexPath indexPath: IndexPath) -> ConversationCellViewModel? {
-        let conversation = getConversation(for: indexPath)
-        return ConversationCellViewModel(with: conversation)
-    }
     
     func didSelectRowAt(_ indexPath: IndexPath) {
-        let conversation = getConversation(for: indexPath)
-        guard let conversationID = conversation?.identifier else {
+        let conversation = conversationsProvider.object(at: indexPath)
+        guard let conversationID = conversation.identifier else {
             Log.error("Conversation ID = nil, невозможно совершить переход")
             return
         }
         let dmViewModel = DMViewModel(router: router,
                                       dialogueID: conversationID,
-                                      chatName: conversation?.name)
+                                      chatName: conversation.name)
         router.showDMViewController(animated: true, withViewModel: dmViewModel)
     }
-    
-    func didSwipeToDelete(at indexPath: IndexPath) {
-        let conversation = getConversation(for: indexPath)
+
+    func didSwipeToDelete(at indexPath: IndexPath, completion: @escaping (Bool) -> Void) {
+        let conversation = conversationsProvider.object(at: indexPath)
         repository.deleteConversation(
-            withID: conversation?.identifier
+            withID: conversation.identifier
         ) { [weak self] result in
             self?.notifyViewWithUpdates(result)
+            completion(true)
         }
-    }
-    
-    private func getConversation(for indexPath: IndexPath) -> Conversation? {
-        let conversationSection = conversations.value?[indexPath.section]
-        return conversationSection?[indexPath.row]
     }
 }
 
