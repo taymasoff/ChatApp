@@ -7,16 +7,14 @@
 
 import FirebaseFirestore
 
-typealias CloudStoreProtocol = DynamicModelBasedCloudStore & CloudStoreSubscribable & CloudStoreAddable & CloudStoreRemovable & CloudStoreUpdatable
+typealias CloudStoreProtocol = CloudStoreSubscribable & CloudStoreAddable & CloudStoreRemovable & CloudStoreUpdatable
 
-final class FirestoreManager<T: Codable>: DynamicModelBasedCloudStore {
+final class FirestoreManager<ModelType: Codable> {
     
     // MARK: - Properties
     let db: Firestore
     var reference: CollectionReference
     private var listener: ListenerRegistration?
-    
-    var model: Dynamic<[T]> = Dynamic([])
     
     // MARK: - Initializers
     init(database: Firestore?, reference: CollectionReference) {
@@ -39,7 +37,7 @@ final class FirestoreManager<T: Codable>: DynamicModelBasedCloudStore {
     private func mapDocumentToModel(document: QueryDocumentSnapshot) -> ModelType? {
         if let resultModel = try? document.data(as: ModelType.self) {
             // Проверяем, если модель Identifiable - то задаем ей documentID
-            if var identifiableModel = resultModel as? DBIdentifiable {
+            if var identifiableModel = resultModel as? FSIdentifiable {
                 identifiableModel.identifier = document.documentID
                 return identifiableModel as? ModelType
             }
@@ -50,10 +48,10 @@ final class FirestoreManager<T: Codable>: DynamicModelBasedCloudStore {
     }
     
     // MARK: Compose an Update Log Method
-    private func composeUpdateLog(snapshot: QuerySnapshot?) -> CSModelUpdateLog<T> {
+    private func composeUpdateLog(snapshot: QuerySnapshot?) -> CSModelUpdateLog<ModelType> {
         // Разбиваем изменения на 3 группы: Added/Modified/Removed, вписываем список
         // каждой группы в updateLog
-        var updateLog = CSModelUpdateLog<T>()
+        var updateLog = CSModelUpdateLog<ModelType>()
         snapshot?.documentChanges.forEach { [weak self] diff in
             if diff.type == .added {
                 if let model = self?.mapDocumentToModel(document: diff.document) {
@@ -87,12 +85,6 @@ extension FirestoreManager: CloudStoreSubscribable where ModelType: Decodable {
                 return
             }
             
-            // Обновляем модель
-            self?.model.value = snapshot?.documents
-                .compactMap { (document) -> ModelType? in
-                    return self?.mapDocumentToModel(document: document)
-                } ?? [ModelType]()
-            
             // Если включено логирование, создаем и возвращаем CSModelUpdateLog
             guard enableLogging else { listener(.success(nil)); return }
             listener(.success(
@@ -119,20 +111,6 @@ extension FirestoreManager: CloudStoreUpdatable {
                 return
             }
             
-            self?.model.value = snapshot?.documents
-                .compactMap { (document) -> ModelType? in
-                    if let resultModel = try? document.data(as: ModelType.self) {
-                        // Проверяем, если модель Identifiable - то задаем ей documentID
-                        if var identifiableModel = resultModel as? DBIdentifiable {
-                            identifiableModel.identifier = document.documentID
-                            return identifiableModel as? ModelType
-                        }
-                        return resultModel
-                    } else {
-                        return nil
-                    }
-                } ?? [ModelType]()
-            
             // Если включено логирование, создаем и возвращаем CSModelUpdateLog
             guard enableLogging else { completion(.success(nil)); return }
             completion(.success(
@@ -146,7 +124,7 @@ extension FirestoreManager: CloudStoreUpdatable {
 extension FirestoreManager: CloudStoreAddable {
     
     // MARK: Add Entity Method
-    func addEntity(from model: T, completion: (Result<String, Error>) -> Void) {
+    func addEntity(from model: ModelType, completion: (Result<String, Error>) -> Void) {
         do {
             _ = try reference.addDocument(from: model)
             completion(

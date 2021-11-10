@@ -30,7 +30,6 @@
 		225D011727324BF600C12BB4 /* DBMessage+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D011527324BF600C12BB4 /* DBMessage+CoreDataClass.swift */; };
 		225D011A27324E2500C12BB4 /* ChatAppDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 225D010027324B1F00C12BB4 /* ChatAppDataModel.xcdatamodeld */; };
 		225D011E2737F8B600C12BB4 /* ConversationsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D011D2737F8B600C12BB4 /* ConversationsProvider.swift */; };
-		225D012427398D6500C12BB4 /* NSPersistentStoreDescription+databasePath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D012327398D6500C12BB4 /* NSPersistentStoreDescription+databasePath.swift */; };
 		225D01262739B29B00C12BB4 /* NSManagedObjectContext+obtainPermanentIDs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D01252739B29A00C12BB4 /* NSManagedObjectContext+obtainPermanentIDs.swift */; };
 		225D6184271A8D9A00A5D678 /* FileManagerProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D6183271A8D9A00A5D678 /* FileManagerProtocols.swift */; };
 		225D6186271D66B500A5D678 /* AsyncOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D6185271D66B500A5D678 /* AsyncOperation.swift */; };
@@ -141,7 +140,6 @@
 		225D011427324BF600C12BB4 /* DBMessage+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DBMessage+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		225D011527324BF600C12BB4 /* DBMessage+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DBMessage+CoreDataClass.swift"; sourceTree = "<group>"; };
 		225D011D2737F8B600C12BB4 /* ConversationsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsProvider.swift; sourceTree = "<group>"; };
-		225D012327398D6500C12BB4 /* NSPersistentStoreDescription+databasePath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSPersistentStoreDescription+databasePath.swift"; sourceTree = "<group>"; };
 		225D01252739B29A00C12BB4 /* NSManagedObjectContext+obtainPermanentIDs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+obtainPermanentIDs.swift"; sourceTree = "<group>"; };
 		225D6183271A8D9A00A5D678 /* FileManagerProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerProtocols.swift; sourceTree = "<group>"; };
 		225D6185271D66B500A5D678 /* AsyncOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncOperation.swift; sourceTree = "<group>"; };
@@ -583,7 +581,6 @@
 				2286F4E8270F842800ED809E /* UITableView+ScrollToBottom.swift */,
 				22210D84272485AA005ED4B6 /* UIButton+setBackgroundForState.swift */,
 				22FEEA2427284AFF003C8B62 /* String+containsLetters.swift */,
-				225D012327398D6500C12BB4 /* NSPersistentStoreDescription+databasePath.swift */,
 				225D01252739B29A00C12BB4 /* NSManagedObjectContext+obtainPermanentIDs.swift */,
 			);
 			path = Extensions;
@@ -997,7 +994,6 @@
 				22D104B22704A12C006CF686 /* ProfileView.swift in Sources */,
 				22210D85272485AA005ED4B6 /* UIButton+setBackgroundForState.swift in Sources */,
 				22FFB22627160E76001884BA /* UIColor+isLight.swift in Sources */,
-				225D012427398D6500C12BB4 /* NSPersistentStoreDescription+databasePath.swift in Sources */,
 				22765ED5273080DC00AD0F15 /* CloudStoreRemovable.swift in Sources */,
 				22765EBB272C769900AD0F15 /* FMModelOperatable.swift in Sources */,
 				22FEEA2E2729C089003C8B62 /* DMRepository.swift in Sources */,
