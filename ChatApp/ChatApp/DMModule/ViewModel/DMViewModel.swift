@@ -43,11 +43,12 @@ final class DMViewModel: Routable {
                                                                ascending: true)
             request.predicate = predicate
             request.sortDescriptors = [sortByDateCreatedDescriptor]
+            request.fetchBatchSize = 10
             let frc = NSFetchedResultsController(
                 fetchRequest: request,
                 managedObjectContext: CoreDataStack.shared.mainContext,
                 sectionNameKeyPath: #keyPath(DBMessage.sectionName),
-                cacheName: nil
+                cacheName: "MessagesCache"
             )
             return MessagesProvider(fetchedResultsController: frc)
         }

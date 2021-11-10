@@ -40,11 +40,12 @@ final class ConversationsViewModel: NSObject, Routable {
                 ascending: false
             )
             request.sortDescriptors = [sortByActivityDescriptor]
+            request.fetchBatchSize = 10
             let frc = NSFetchedResultsController(
                 fetchRequest: request,
                 managedObjectContext: CoreDataStack.shared.mainContext,
                 sectionNameKeyPath: #keyPath(DBChannel.sectionName),
-                cacheName: nil
+                cacheName: "ConversationsCache"
             )
             return ConversationsProvider(fetchedResultsController: frc)
         }
