@@ -17,8 +17,16 @@ final class ConversationsProvider: NSObject, TableViewProviderProtocol {
     let changes: Dynamic<[DataSourceChange]> = Dynamic([])
     
     // MARK: - Init
-    init(fetchedResultsController: NSFetchedResultsController<DBChannel>) {
-        self.frc = fetchedResultsController
+    init(fetchRequest: NSFetchRequest<DBChannel>,
+         coreDataStack: CoreDataStackProtocol,
+         sectionKeyPath: String? = nil, cacheName: String? = nil) {
+        
+        self.frc = NSFetchedResultsController(
+            fetchRequest: fetchRequest,
+            managedObjectContext: coreDataStack.mainContext,
+            sectionNameKeyPath: sectionKeyPath,
+            cacheName: cacheName
+        )
 
         super.init()
         
