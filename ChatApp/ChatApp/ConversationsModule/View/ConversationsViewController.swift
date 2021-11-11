@@ -88,7 +88,7 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
         conversationsTableView.register(ConversationCell.self,
                                         forCellReuseIdentifier: ConversationCell.reuseID)
         conversationsTableView.rowHeight = Self.rowHeight
-        conversationsTableView.delegate = self
+        conversationsTableView.delegate = viewModel
         conversationsTableView.dataSource = viewModel?.conversationsProvider
     }
     
@@ -183,38 +183,6 @@ extension ConversationsViewController {
                 }
             }
         }
-    }
-}
-
-// MARK: - UITableView Delegate
-extension ConversationsViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let view = UITableViewHeaderFooterView()
-        view.contentView.backgroundColor = ThemeManager.currentTheme.settings.mainColor
-        view.textLabel?.textColor = ThemeManager.currentTheme.settings.titleTextColor
-        return view
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        viewModel?.didSelectRowAt(indexPath)
-        tableView.deselectRow(at: indexPath, animated: false)
-    }
-    
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        
-        let deleteAction = UIContextualAction(style: .destructive,
-                                              title: "Delete") { [unowned self] _, _, complete in
-            self.viewModel?.didSwipeToDelete(at: indexPath) { _ in
-                complete(true)
-            }
-        }
-        
-        deleteAction.backgroundColor = .red
-        
-        let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
-        configuration.performsFirstActionWithFullSwipe = true
-        return configuration
     }
 }
 

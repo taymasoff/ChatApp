@@ -9,7 +9,7 @@ import UIKit
 import CoreData
 
 /// Вью-модель экрана чата с собеседником
-final class DMViewModel: Routable {
+final class DMViewModel: NSObject, Routable {
     
     // MARK: - Properties
     let router: MainRouterProtocol
@@ -74,5 +74,16 @@ final class DMViewModel: Routable {
 extension DMViewModel {
     func viewDidLoad() {
         repository.subscribeToUpdates()
+    }
+}
+
+// MARK: - UITableViewDelegate
+extension DMViewModel: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = UITableViewHeaderFooterView()
+        view.contentView.backgroundColor = ThemeManager.currentTheme.settings.mainColor
+        view.textLabel?.textColor = ThemeManager.currentTheme.settings.titleTextColor
+        return view
     }
 }

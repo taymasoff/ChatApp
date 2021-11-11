@@ -66,7 +66,7 @@ final class DMViewController: UIViewController, ViewModelBased {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = calculateEstimatedRowHeight()
         tableView.dataSource = viewModel?.messagesProvider
-        tableView.delegate = self
+        tableView.delegate = viewModel
     }
     
     // MARK: - Private Methods
@@ -168,17 +168,6 @@ extension DMViewController {
         } completion: { [weak self] _ in
             self?.scrollTableViewToBottom()
         }
-    }
-}
-
-// MARK: - UITableView Delegate & Data Source
-extension DMViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let view = UITableViewHeaderFooterView()
-        view.contentView.backgroundColor = ThemeManager.currentTheme.settings.mainColor
-        view.textLabel?.textColor = ThemeManager.currentTheme.settings.titleTextColor
-        return view
     }
 }
 
