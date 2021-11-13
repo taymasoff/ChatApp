@@ -29,7 +29,15 @@ protocol ConversationsRepositoryProtocol {
 final class ConversationsRepository: ConversationsRepositoryProtocol {
     
     // MARK: - Properties
-    let cloudStore: FirestoreManager<Conversation>
+    private var isFirstFetch = true
+    
+    private let cloudStore: FirestoreManager<Conversation>
+    private let cdContextProvider: CDContextProviderProtocol
+    
+    private lazy var saveWorker = CDWorker<Conversation, DBChannel>(
+        context: cdContextProvider.newBackgroundContext,
+        mergePolicy: .mergeByPropertyObjectTrumpMergePolicyType
+    )
     
     let conversations: Dynamic<[Conversation]> = Dynamic([])
     
@@ -44,11 +52,13 @@ final class ConversationsRepository: ConversationsRepositoryProtocol {
             directory: .userProfile),
          cloudStore: FirestoreManager<Conversation> = FirestoreManager<Conversation>(
             collectionName: FBCollections.channels.rawValue
-         )
+         ),
+         cdContextProvider: CDContextProviderProtocol = CDContextProvider.shared
     ) {
         self.fileManager = fileManager
         self.fmPreferences = fmPreferences
         self.cloudStore = cloudStore
+        self.cdContextProvider = cdContextProvider
     }
     
     private func bindCloudWithModel() {
@@ -71,11 +81,13 @@ extension ConversationsRepository {
     // MARK: Subscribe to stream
     func subscribeToUpdates() {
         bindCloudWithModel()
+        isFirstFetch = true
         cloudStore.subscribeToUpdates(enableLogging: true) { [weak self] result in
             switch result {
             case .success(let updateLog):
                 self?.printUpdateLog(updateLog: updateLog)
-                // Этим будет пользоваться CoreData для обновления БД
+                // Передаем изменения CoreDat'е
+                self?.updateCoreData(with: updateLog)
             case .failure(let error):
                 Log.error(error.localizedDescription)
             }
@@ -88,15 +100,8 @@ extension ConversationsRepository {
     
     // MARK: Update Conversations Once
     func updateConversationsOnce(completion: @escaping (Bool) -> Void) {
-        cloudStore.updateModel { result in
-            switch result {
-            case .success(let message):
-                print(message)
-                completion(true)
-            case .failure(let error):
-                Log.error(error)
-                completion(false)
-            }
+        cloudStore.updateModel(enableLogging: true) { _ in
+            completion(true)
         }
     }
     
@@ -177,5 +182,40 @@ extension ConversationsRepository: FMImageOperatable, FMStringOperatable {
                 }
             }
         }
+    }
+}
+
+// MARK: - Core Data Methods
+extension ConversationsRepository {
+    
+    // MARK: Save changes to Core Data
+    private func updateCoreData(with updateLog: CSModelUpdateLog<Conversation>?) {
+        guard let updateLog = updateLog else { return }
+        
+        // Если мы только что подписались на изменения - чистим базу, и перезаписываем
+        // так как мы не можем знать какие изменения там произошли с прошлого запуска
+        if isFirstFetch {
+            saveWorker.coreDataManager.removeAllAndSave { [weak self] _ in
+                self?.isFirstFetch = false
+            }
+        }
+        
+        if updateLog.addedCount != 0 {
+            saveWorker.coreDataManager.insert(updateLog.addedObjects) { _ in }
+        }
+        
+        if updateLog.updatedCount != 0 {
+            // При выбранной merge политике, insert должен работать как update
+            saveWorker.coreDataManager.insert(updateLog.updatedObjects) { _ in }
+        }
+        
+        if updateLog.removedCount != 0 {
+            for object in updateLog.removedObjects {
+                guard let id = object.identifier else { continue }
+                saveWorker.coreDataManager.removeEntity(withID: id) { _ in }
+            }
+        }
+        
+        saveWorker.saveIfNeeded { _ in }
     }
 }

@@ -87,10 +87,8 @@ final class MessageCell: UITableViewCell, ReuseIdentifiable, ViewModelBased {
         switch direction {
         case .left:
             bgBubbleView.backgroundColor = R.color.dmGray()
-            textView.textAlignment = .left
         case .right:
             bgBubbleView.backgroundColor = R.color.dmGreen()
-            textView.textAlignment = .right
         }
         setupSubviewsLayout(direction: direction)
     }

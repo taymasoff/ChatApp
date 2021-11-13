@@ -39,7 +39,7 @@ final class FirestoreManager<T: Codable>: DynamicModelBasedCloudStore {
     private func mapDocumentToModel(document: QueryDocumentSnapshot) -> ModelType? {
         if let resultModel = try? document.data(as: ModelType.self) {
             // Проверяем, если модель Identifiable - то задаем ей documentID
-            if var identifiableModel = resultModel as? FSIdentifiable {
+            if var identifiableModel = resultModel as? DBIdentifiable {
                 identifiableModel.identifier = document.documentID
                 return identifiableModel as? ModelType
             }
@@ -111,7 +111,8 @@ extension FirestoreManager: CloudStoreSubscribable where ModelType: Decodable {
 extension FirestoreManager: CloudStoreUpdatable {
     
     // MARK: Update Model Method
-    func updateModel(completion: @escaping ResultHandler<String>) {
+    func updateModel(enableLogging: Bool,
+                     completion: @escaping ResultHandler<CSModelUpdateLog<ModelType>?>) {
         reference.getDocuments { [weak self] snapshot, error in
             if let error = error {
                 completion(.failure(error))
@@ -122,7 +123,7 @@ extension FirestoreManager: CloudStoreUpdatable {
                 .compactMap { (document) -> ModelType? in
                     if let resultModel = try? document.data(as: ModelType.self) {
                         // Проверяем, если модель Identifiable - то задаем ей documentID
-                        if var identifiableModel = resultModel as? FSIdentifiable {
+                        if var identifiableModel = resultModel as? DBIdentifiable {
                             identifiableModel.identifier = document.documentID
                             return identifiableModel as? ModelType
                         }
@@ -132,15 +133,11 @@ extension FirestoreManager: CloudStoreUpdatable {
                     }
                 } ?? [ModelType]()
             
-            if let modelsUpdated = self?.model.value.count {
-                completion(
-                    .success("🔥 [FSUpdates] \(modelsUpdated) documents updated")
-                )
-            } else {
-                completion(
-                    .failure(FirestoreError.updatingError)
-                )
-            }
+            // Если включено логирование, создаем и возвращаем CSModelUpdateLog
+            guard enableLogging else { completion(.success(nil)); return }
+            completion(.success(
+                self?.composeUpdateLog(snapshot: snapshot)
+            ))
         }
     }
 }

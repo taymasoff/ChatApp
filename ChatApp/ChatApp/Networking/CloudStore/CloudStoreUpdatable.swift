@@ -8,9 +8,10 @@
 import Foundation
 
 /// Тип, представляющий поддержку ручного обновления модели из облачного хранилища
-protocol CloudStoreUpdatable {
+protocol CloudStoreUpdatable: DynamicModelBasedCloudStore {
     
     /// Обновляет модель данных один раз
     /// - Parameter completion: сообщение об успехе или ошибка
-    func updateModel(completion: @escaping ResultHandler<String>)
+    func updateModel(enableLogging: Bool,
+                     completion: @escaping ResultHandler<CSModelUpdateLog<ModelType>?>)
 }

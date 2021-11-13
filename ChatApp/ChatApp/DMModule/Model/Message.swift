@@ -97,3 +97,12 @@ extension Message: Encodable {
         try container.encode(senderName, forKey: .senderName)
     }
 }
+
+extension Message: DomainModel {
+    func insertInto(entity: DBMessage) {
+        entity.content = self.content
+        entity.senderName = self.senderName
+        entity.created = self.created
+        entity.senderId = self.senderID
+    }
+}

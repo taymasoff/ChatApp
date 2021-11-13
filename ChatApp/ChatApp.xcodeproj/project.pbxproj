@@ -14,6 +14,17 @@
 		222A55B6270C0FA90047CA24 /* Date+Formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222A55B5270C0FA90047CA24 /* Date+Formatting.swift */; };
 		2247F96F2712A4F800BFFC69 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2247F96E2712A4F800BFFC69 /* R.generated.swift */; };
 		225D00FB27323C7E00C12BB4 /* CSModelUpdateLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D00FA27323C7E00C12BB4 /* CSModelUpdateLog.swift */; };
+		225D010A27324B1F00C12BB4 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D00FF27324B1F00C12BB4 /* CoreDataManager.swift */; };
+		225D010C27324B2000C12BB4 /* CDInsertable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D010327324B1F00C12BB4 /* CDInsertable.swift */; };
+		225D010D27324B2000C12BB4 /* CDRemovable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D010427324B1F00C12BB4 /* CDRemovable.swift */; };
+		225D010E27324B2000C12BB4 /* CDFetchable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D010527324B1F00C12BB4 /* CDFetchable.swift */; };
+		225D010F27324B2000C12BB4 /* CDUpdatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D010627324B1F00C12BB4 /* CDUpdatable.swift */; };
+		225D011027324B2000C12BB4 /* CDOperatableBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D010727324B1F00C12BB4 /* CDOperatableBase.swift */; };
+		225D011127324B2000C12BB4 /* CDContextProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D010827324B1F00C12BB4 /* CDContextProvider.swift */; };
+		225D011227324B2000C12BB4 /* CDWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D010927324B1F00C12BB4 /* CDWorker.swift */; };
+		225D011627324BF600C12BB4 /* DBMessage+CoreDataProperties copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D011427324BF600C12BB4 /* DBMessage+CoreDataProperties copy.swift */; };
+		225D011727324BF600C12BB4 /* DBMessage+CoreDataClass copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D011527324BF600C12BB4 /* DBMessage+CoreDataClass copy.swift */; };
+		225D011A27324E2500C12BB4 /* ChatAppDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 225D010027324B1F00C12BB4 /* ChatAppDataModel.xcdatamodeld */; };
 		225D6184271A8D9A00A5D678 /* FileManagerProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D6183271A8D9A00A5D678 /* FileManagerProtocols.swift */; };
 		225D6186271D66B500A5D678 /* AsyncOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D6185271D66B500A5D678 /* AsyncOperation.swift */; };
 		225D618A271D850F00A5D678 /* GCDFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D6189271D850F00A5D678 /* GCDFileManager.swift */; };
@@ -30,7 +41,7 @@
 		22765EB9272C737400AD0F15 /* FMImageOperatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22765EB8272C737400AD0F15 /* FMImageOperatable.swift */; };
 		22765EBB272C769900AD0F15 /* FMModelOperatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22765EBA272C769900AD0F15 /* FMModelOperatable.swift */; };
 		22765EBD272C787B00AD0F15 /* FMRemoveSupportable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22765EBC272C787B00AD0F15 /* FMRemoveSupportable.swift */; };
-		22765EC8272E25A600AD0F15 /* FSIdentifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22765EC7272E25A600AD0F15 /* FSIdentifiable.swift */; };
+		22765EC8272E25A600AD0F15 /* DBIdentifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22765EC7272E25A600AD0F15 /* DBIdentifiable.swift */; };
 		22765ECE27306B8500AD0F15 /* FirestoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22765ECD27306B8400AD0F15 /* FirestoreManager.swift */; };
 		22765ED12730809500AD0F15 /* CloudStoreSubscribable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22765ED02730809500AD0F15 /* CloudStoreSubscribable.swift */; };
 		22765ED3273080C900AD0F15 /* CloudStoreAddable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22765ED2273080C900AD0F15 /* CloudStoreAddable.swift */; };
@@ -38,6 +49,9 @@
 		22765ED7273080FE00AD0F15 /* CloudStoreUpdatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22765ED6273080FE00AD0F15 /* CloudStoreUpdatable.swift */; };
 		22765ED9273082FE00AD0F15 /* DynamicModelBasedCloudStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22765ED8273082FE00AD0F15 /* DynamicModelBasedCloudStore.swift */; };
 		227E17E82730AFAD004D5529 /* DateFormatter+shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227E17E72730AFAD004D5529 /* DateFormatter+shared.swift */; };
+		227E18092730D0BF004D5529 /* DBChannel+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227E18072730D0BF004D5529 /* DBChannel+CoreDataClass.swift */; };
+		227E180A2730D0BF004D5529 /* DBChannel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227E18082730D0BF004D5529 /* DBChannel+CoreDataProperties.swift */; };
+		227E180C2730D306004D5529 /* CoreDataError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227E180B2730D306004D5529 /* CoreDataError.swift */; };
 		2286F4DC270EF27700ED809E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2286F4DB270EF27700ED809E /* Message.swift */; };
 		2286F4E3270F064600ED809E /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2286F4E2270F064600ED809E /* Protocols.swift */; };
 		2286F4E7270F7FFA00ED809E /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2286F4E6270F7FFA00ED809E /* UIImage+Resize.swift */; };
@@ -107,6 +121,17 @@
 		222A55B5270C0FA90047CA24 /* Date+Formatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Formatting.swift"; sourceTree = "<group>"; };
 		2247F96E2712A4F800BFFC69 /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
 		225D00FA27323C7E00C12BB4 /* CSModelUpdateLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSModelUpdateLog.swift; sourceTree = "<group>"; };
+		225D00FF27324B1F00C12BB4 /* CoreDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
+		225D010127324B1F00C12BB4 /* ChatAppDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ChatAppDataModel.xcdatamodel; sourceTree = "<group>"; };
+		225D010327324B1F00C12BB4 /* CDInsertable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDInsertable.swift; sourceTree = "<group>"; };
+		225D010427324B1F00C12BB4 /* CDRemovable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDRemovable.swift; sourceTree = "<group>"; };
+		225D010527324B1F00C12BB4 /* CDFetchable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDFetchable.swift; sourceTree = "<group>"; };
+		225D010627324B1F00C12BB4 /* CDUpdatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDUpdatable.swift; sourceTree = "<group>"; };
+		225D010727324B1F00C12BB4 /* CDOperatableBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDOperatableBase.swift; sourceTree = "<group>"; };
+		225D010827324B1F00C12BB4 /* CDContextProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDContextProvider.swift; sourceTree = "<group>"; };
+		225D010927324B1F00C12BB4 /* CDWorker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDWorker.swift; sourceTree = "<group>"; };
+		225D011427324BF600C12BB4 /* DBMessage+CoreDataProperties copy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DBMessage+CoreDataProperties copy.swift"; sourceTree = "<group>"; };
+		225D011527324BF600C12BB4 /* DBMessage+CoreDataClass copy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DBMessage+CoreDataClass copy.swift"; sourceTree = "<group>"; };
 		225D6183271A8D9A00A5D678 /* FileManagerProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerProtocols.swift; sourceTree = "<group>"; };
 		225D6185271D66B500A5D678 /* AsyncOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncOperation.swift; sourceTree = "<group>"; };
 		225D6189271D850F00A5D678 /* GCDFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GCDFileManager.swift; sourceTree = "<group>"; };
@@ -123,7 +148,7 @@
 		22765EB8272C737400AD0F15 /* FMImageOperatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FMImageOperatable.swift; sourceTree = "<group>"; };
 		22765EBA272C769900AD0F15 /* FMModelOperatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FMModelOperatable.swift; sourceTree = "<group>"; };
 		22765EBC272C787B00AD0F15 /* FMRemoveSupportable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FMRemoveSupportable.swift; sourceTree = "<group>"; };
-		22765EC7272E25A600AD0F15 /* FSIdentifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSIdentifiable.swift; sourceTree = "<group>"; };
+		22765EC7272E25A600AD0F15 /* DBIdentifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBIdentifiable.swift; sourceTree = "<group>"; };
 		22765ECD27306B8400AD0F15 /* FirestoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreManager.swift; sourceTree = "<group>"; };
 		22765ED02730809500AD0F15 /* CloudStoreSubscribable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudStoreSubscribable.swift; sourceTree = "<group>"; };
 		22765ED2273080C900AD0F15 /* CloudStoreAddable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudStoreAddable.swift; sourceTree = "<group>"; };
@@ -131,6 +156,9 @@
 		22765ED6273080FE00AD0F15 /* CloudStoreUpdatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudStoreUpdatable.swift; sourceTree = "<group>"; };
 		22765ED8273082FE00AD0F15 /* DynamicModelBasedCloudStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicModelBasedCloudStore.swift; sourceTree = "<group>"; };
 		227E17E72730AFAD004D5529 /* DateFormatter+shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+shared.swift"; sourceTree = "<group>"; };
+		227E18072730D0BF004D5529 /* DBChannel+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DBChannel+CoreDataClass.swift"; sourceTree = "<group>"; };
+		227E18082730D0BF004D5529 /* DBChannel+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DBChannel+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		227E180B2730D306004D5529 /* CoreDataError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataError.swift; sourceTree = "<group>"; };
 		2286F4DB270EF27700ED809E /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		2286F4E2270F064600ED809E /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		2286F4E6270F7FFA00ED809E /* UIImage+Resize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
@@ -245,6 +273,7 @@
 		222A55B4270C06C50047CA24 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				227E18062730D0A7004D5529 /* DBModel */,
 				222A55B2270C06C10047CA24 /* Conversation.swift */,
 				22C44A3F272747F5003D106C /* GroupedConversations.swift */,
 			);
@@ -259,9 +288,50 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		225D00FC273247F500C12BB4 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
+		225D00FE27324B1F00C12BB4 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				225D010027324B1F00C12BB4 /* ChatAppDataModel.xcdatamodeld */,
+				225D010827324B1F00C12BB4 /* CDContextProvider.swift */,
+				225D010227324B1F00C12BB4 /* CoreDataOperatable */,
+				225D00FF27324B1F00C12BB4 /* CoreDataManager.swift */,
+				225D010927324B1F00C12BB4 /* CDWorker.swift */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
+		225D010227324B1F00C12BB4 /* CoreDataOperatable */ = {
+			isa = PBXGroup;
+			children = (
+				225D010327324B1F00C12BB4 /* CDInsertable.swift */,
+				225D010427324B1F00C12BB4 /* CDRemovable.swift */,
+				225D010527324B1F00C12BB4 /* CDFetchable.swift */,
+				225D010627324B1F00C12BB4 /* CDUpdatable.swift */,
+				225D010727324B1F00C12BB4 /* CDOperatableBase.swift */,
+			);
+			path = CoreDataOperatable;
+			sourceTree = "<group>";
+		};
+		225D011327324BF600C12BB4 /* DBModel */ = {
+			isa = PBXGroup;
+			children = (
+				225D011427324BF600C12BB4 /* DBMessage+CoreDataProperties copy.swift */,
+				225D011527324BF600C12BB4 /* DBMessage+CoreDataClass copy.swift */,
+			);
+			path = DBModel;
+			sourceTree = "<group>";
+		};
 		225D6182271A8D6300A5D678 /* PersistentData */ = {
 			isa = PBXGroup;
 			children = (
+				225D00FE27324B1F00C12BB4 /* CoreData */,
 				22765EAD272C6C4800AD0F15 /* DataOperationsProtocols */,
 				22C71C14271EFC72005C4466 /* FileManager */,
 			);
@@ -312,7 +382,7 @@
 		22765EBF272DF40B00AD0F15 /* Firestore */ = {
 			isa = PBXGroup;
 			children = (
-				22765EC7272E25A600AD0F15 /* FSIdentifiable.swift */,
+				22765EC7272E25A600AD0F15 /* DBIdentifiable.swift */,
 				22765ECD27306B8400AD0F15 /* FirestoreManager.swift */,
 			);
 			path = Firestore;
@@ -332,9 +402,19 @@
 			path = CloudStore;
 			sourceTree = "<group>";
 		};
+		227E18062730D0A7004D5529 /* DBModel */ = {
+			isa = PBXGroup;
+			children = (
+				227E18072730D0BF004D5529 /* DBChannel+CoreDataClass.swift */,
+				227E18082730D0BF004D5529 /* DBChannel+CoreDataProperties.swift */,
+			);
+			path = DBModel;
+			sourceTree = "<group>";
+		};
 		2286F4DD270EF27A00ED809E /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				225D011327324BF600C12BB4 /* DBModel */,
 				2286F4DB270EF27700ED809E /* Message.swift */,
 				22FEEA2B2729BF6D003C8B62 /* GroupedMessages.swift */,
 			);
@@ -345,6 +425,7 @@
 			isa = PBXGroup;
 			children = (
 				22B50F7626FB01810099436A /* Log.swift */,
+				227E180B2730D306004D5529 /* CoreDataError.swift */,
 				22FEEA29272995DC003C8B62 /* FirestoreError.swift */,
 				22FEEA47272B5354003C8B62 /* CodingError.swift */,
 			);
@@ -433,6 +514,7 @@
 				22CC53B626FAC8220036F6F9 /* Products */,
 				D7A6C4DCD4ACFC2AE5C4C0B4 /* Pods */,
 				11166FCCAB2A52BD6D7F2C75 /* Frameworks */,
+				225D00FC273247F500C12BB4 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -848,13 +930,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				225D011727324BF600C12BB4 /* DBMessage+CoreDataClass copy.swift in Sources */,
 				22CC53BD26FAC8220036F6F9 /* ConversationsViewController.swift in Sources */,
 				22765EB1272C6D6100AD0F15 /* DataRemovable.swift in Sources */,
 				22FFB22F2716845D001884BA /* ThemeManager.swift in Sources */,
 				22C44A40272747F5003D106C /* GroupedConversations.swift in Sources */,
 				22C71C1A271F047E005C4466 /* DataSaveable.swift in Sources */,
-				22765EC8272E25A600AD0F15 /* FSIdentifiable.swift in Sources */,
+				22765EC8272E25A600AD0F15 /* DBIdentifiable.swift in Sources */,
 				225D6186271D66B500A5D678 /* AsyncOperation.swift in Sources */,
+				225D010D27324B2000C12BB4 /* CDRemovable.swift in Sources */,
 				22765EB9272C737400AD0F15 /* FMImageOperatable.swift in Sources */,
 				22C71C222720921A005C4466 /* InAppNotificationBanner.swift in Sources */,
 				22D104C6270535D3006CF686 /* Dynamic.swift in Sources */,
@@ -877,15 +961,20 @@
 				22D104BD2704DCDA006CF686 /* UIImageView+Placeholders.swift in Sources */,
 				22FEEA4B272B551C003C8B62 /* ProfileRepository.swift in Sources */,
 				222A55B6270C0FA90047CA24 /* Date+Formatting.swift in Sources */,
+				225D011127324B2000C12BB4 /* CDContextProvider.swift in Sources */,
 				22FFB2352716963F001884BA /* ThemesViewControllerObjc.m in Sources */,
 				22FEEA46272B4F2C003C8B62 /* OperationFileManager.swift in Sources */,
 				22CC53B926FAC8220036F6F9 /* AppDelegate.swift in Sources */,
 				225D6184271A8D9A00A5D678 /* FileManagerProtocols.swift in Sources */,
 				22E69D332701E2C1009CAAC0 /* ConversationCell.swift in Sources */,
+				225D011627324BF600C12BB4 /* DBMessage+CoreDataProperties copy.swift in Sources */,
 				22FFB21927149A97001884BA /* ThemesViewController.swift in Sources */,
+				225D010C27324B2000C12BB4 /* CDInsertable.swift in Sources */,
+				225D010F27324B2000C12BB4 /* CDUpdatable.swift in Sources */,
 				22E69D182701D9A4009CAAC0 /* Router.swift in Sources */,
 				22FFB21727149A7F001884BA /* Theme.swift in Sources */,
 				22765EB7272C732C00AD0F15 /* FMStringOperatable.swift in Sources */,
+				225D011027324B2000C12BB4 /* CDOperatableBase.swift in Sources */,
 				22D104B22704A12C006CF686 /* ProfileView.swift in Sources */,
 				22210D85272485AA005ED4B6 /* UIButton+setBackgroundForState.swift in Sources */,
 				22FFB22627160E76001884BA /* UIColor+isLight.swift in Sources */,
@@ -896,11 +985,14 @@
 				22765ED7273080FE00AD0F15 /* CloudStoreUpdatable.swift in Sources */,
 				22CC53BB26FAC8220036F6F9 /* SceneDelegate.swift in Sources */,
 				225D618A271D850F00A5D678 /* GCDFileManager.swift in Sources */,
+				225D010E27324B2000C12BB4 /* CDFetchable.swift in Sources */,
 				22C71C2027201763005C4466 /* DynamicPreservable.swift in Sources */,
 				22FEEA312729CBF0003C8B62 /* TitleViewWithImage.swift in Sources */,
+				227E180C2730D306004D5529 /* CoreDataError.swift in Sources */,
 				2286F4E3270F064600ED809E /* Protocols.swift in Sources */,
 				22765ED9273082FE00AD0F15 /* DynamicModelBasedCloudStore.swift in Sources */,
 				2247F96F2712A4F800BFFC69 /* R.generated.swift in Sources */,
+				227E180A2730D0BF004D5529 /* DBChannel+CoreDataProperties.swift in Sources */,
 				2286F4E7270F7FFA00ED809E /* UIImage+Resize.swift in Sources */,
 				22FFB21B27149AA6001884BA /* ThemesViewModel.swift in Sources */,
 				22765EB5272C6F4200AD0F15 /* ToDataConvertable.swift in Sources */,
@@ -909,6 +1001,7 @@
 				22765EA9272C695100AD0F15 /* FileExtensions.swift in Sources */,
 				221729EE270D94040022D174 /* MessageViewModel.swift in Sources */,
 				22C44A3E2726FF4D003D106C /* ConversationsRepository.swift in Sources */,
+				225D011A27324E2500C12BB4 /* ChatAppDataModel.xcdatamodeld in Sources */,
 				225D00FB27323C7E00C12BB4 /* CSModelUpdateLog.swift in Sources */,
 				22E69D2C2701E0EF009CAAC0 /* ProfileViewModel.swift in Sources */,
 				22FFB21F2714BE9E001884BA /* ThemesView.swift in Sources */,
@@ -923,10 +1016,13 @@
 				22C71C2727219C02005C4466 /* InAppNotificationViewModel.swift in Sources */,
 				22D104B72704D55E006CF686 /* BlurredView.swift in Sources */,
 				22B50F7726FB01810099436A /* Log.swift in Sources */,
+				225D010A27324B1F00C12BB4 /* CoreDataManager.swift in Sources */,
 				2286F4E9270F842800ED809E /* UITableView+ScrollToBottom.swift in Sources */,
 				22C44A312726BE2E003D106C /* InAppNotificationView.swift in Sources */,
+				227E18092730D0BF004D5529 /* DBChannel+CoreDataClass.swift in Sources */,
 				225D618E271D8F2700A5D678 /* FileWriteOperation.swift in Sources */,
 				22FEEA2527284AFF003C8B62 /* String+containsLetters.swift in Sources */,
+				225D011227324B2000C12BB4 /* CDWorker.swift in Sources */,
 				22765ED12730809500AD0F15 /* CloudStoreSubscribable.swift in Sources */,
 				2286F4DC270EF27700ED809E /* Message.swift in Sources */,
 				22765ED3273080C900AD0F15 /* CloudStoreAddable.swift in Sources */,
@@ -1000,7 +1096,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1055,7 +1151,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -1158,6 +1254,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		225D010027324B1F00C12BB4 /* ChatAppDataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				225D010127324B1F00C12BB4 /* ChatAppDataModel.xcdatamodel */,
+			);
+			currentVersion = 225D010127324B1F00C12BB4 /* ChatAppDataModel.xcdatamodel */;
+			path = ChatAppDataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 22CC53AD26FAC8220036F6F9 /* Project object */;
 }
