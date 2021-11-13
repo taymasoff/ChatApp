@@ -11,98 +11,104 @@ import UIKit
 /// Вью-модель экрана чата с собеседником
 final class DMViewModel: Routable {
     
+    // MARK: - Properties
     let router: MainRouterProtocol
-    var chatBuddyName: Dynamic<String?> = Dynamic(nil)
-    var chatBuddyImageURL: Dynamic<String?> = Dynamic(nil)
-    var chatBuddyImage: Dynamic<UIImage?> = Dynamic(nil)
+    let repository: DMRepositoryProtocol
     
-    var groupedMessages: [GroupedMessages]?
+    let chatName: Dynamic<String?> = Dynamic(nil)
+    let chatImage: Dynamic<UIImage?> = Dynamic(nil)
     
+    let messages: Dynamic<[GroupedMessages]?> = Dynamic(nil)
+    var onDataUpdate: (() -> Void)?
+    
+    // MARK: - Init
     init(router: MainRouterProtocol,
-         chatBuddyName: String? = nil,
-         chatBuddyImageURL: String? = nil) {
+         dialogueID: String,
+         chatName: String? = nil,
+         chatImage: UIImage? = nil,
+         repository: DMRepositoryProtocol? = nil) {
         self.router = router
-        self.chatBuddyName.value = chatBuddyName
-        self.chatBuddyImageURL.value = chatBuddyImageURL
-        
-        groupedMessages = makeGroupedMessages(40)
-        
-        observeImageURL()
+        self.repository = repository ?? DMRepository(with: dialogueID)
+        self.chatName.value = chatName
+        self.chatImage.value = chatImage
     }
     
-    private func observeImageURL() {
-        self.chatBuddyImageURL.bind { [unowned self] url in
-            // Тут получаем пикчу, пока мок
-            let mockImages: [UIImage?] = [UIImage(named: "ArthurBell"),
-                                          UIImage(named: "JaneWarren"), nil]
-            chatBuddyImage.value = mockImages.randomElement()!
-        }
-    }
-    
-    func sendMessagePressed() {
-        Log.info("Send Message Pressed")
+    // MARK: - Action Methods
+    func sendMessagePressed(with text: String?) {
+        repository.newMessage(with: text)
     }
     
     func addButtonPressed() {
         Log.info("Add Message Pressed")
+    }
+    
+    func isTextSendable(text: String?) -> Bool {
+        if let text = text,
+           text.isntEmptyOrWhitespaced {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    // MARK: - Bind to Repository Updates
+    private func bindToRepositoryUpdates() {
+        repository.messages.bind { [unowned self] messages in
+            self.messages
+                .value = self.mapMessagesByDate(messages)
+            self.onDataUpdate?()
+        }
+    }
+    
+    // Группируем модель по полю активности, структуру используем для отрисовки таблицы
+    private func mapMessagesByDate(
+        _ messages: [Message]
+    ) -> [GroupedMessages] {
+        return Dictionary(grouping: messages) { $0.created.noTime() }
+        .map { (element) -> GroupedMessages in
+            let sortedMessages = element.value.sorted {
+                $0.created < $1.created
+            }
+            return GroupedMessages(date: element.key,
+                                   messages: sortedMessages)
+        }
+        .sorted { $0.date < $1.date }
+    }
+}
+
+// MARK: - DMViewController Lifecycle Updates
+extension DMViewModel {
+    func viewDidLoad() {
+        bindToRepositoryUpdates()
+        repository.subscribeToUpdates()
     }
 }
 
 // MARK: - TableView Methods
 extension DMViewModel {
     func numberOfSections() -> Int {
-        return groupedMessages?.count ?? 0
+        return messages.value?.count ?? 0
     }
 
     func numberOfRowsInSection(_ section: Int) -> Int {
-        let section = groupedMessages?[section]
-        return section?.messages.count ?? 0
+        return messages.value?[section].numberOfItems ?? 0
     }
 
     func titleForHeaderInSection(_ section: Int) -> String? {
-        let date = groupedMessages?[section].groupName
-        // Тут так же форматируем дату, если надо
-        return date
+        guard let section = messages.value?[section] else {
+            Log.error("Не удалось получить секцию для хедера")
+            return nil
+        }
+        return section.formattedDate
     }
     
     func messageCellViewModel(forIndexPath indexPath: IndexPath) -> MessageCellViewModel? {
-        let message = groupedMessages?[indexPath.section].messages[indexPath.row]
+        let message = getMessage(for: indexPath)
         return MessageCellViewModel(with: message)
     }
-}
-
-// MARK: - Data Mock
-extension DMViewModel {
     
-    func randomText(_ amountOfCharacters: Int) -> String {
-      let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        return String((0...Int.random(in: 0...amountOfCharacters))
-                        .map{ _ in letters.randomElement()! })
-    }
-    
-    func generateRandomMessage() -> Message {
-        let randomText: [String?] = [randomText(180), nil]
-        let randomTime: [String?] = ["11:53", "12:40", "10:00", "5:30", nil]
-        let randomDate: [String?] = ["Fri, Jul 26", "Sat, Jan 12", "Today", nil]
-        return Message(text: randomText.randomElement() as? String,
-                       time: randomTime.randomElement() as? String,
-                       date: randomDate.randomElement() as? String,
-                       sender: MessageSender.allCases.randomElement())
-    }
-    
-    func makeGroupedMessages(_ amount: Int) -> [GroupedMessages] {
-        var messages = [Message]()
-        // Генерируем amount рандомных сообщений
-        for _ in 0...amount {
-            messages.append(generateRandomMessage())
-        }
-        // Берем только те, где есть сообщение, дата и время
-        messages = messages.filter { $0.date != nil && $0.text != nil }
-        // Группируем это все в словарик, где ключи это дата
-        return Dictionary(grouping: messages, by: { $0.date! })
-        // Мапим значения в структуру, чтобы легче было работать с таблицей
-            .map {
-                return GroupedMessages(groupName: $0.key, messages: $0.value)
-            }
+    private func getMessage(for indexPath: IndexPath) -> Message? {
+        let messagesSection = messages.value?[indexPath.section]
+        return messagesSection?[indexPath.row]
     }
 }

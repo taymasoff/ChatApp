@@ -8,6 +8,9 @@
 import Foundation
 import UIKit
 
+// MARK: - ResultHandler With Generic Result
+typealias ResultHandler<T> = (Result<T, Error>) -> Void
+
 // MARK: - Routable
 /// Протокол, которому соответствуют все объекты, имеющие возможность совершать переходы в приложении
 protocol Routable {

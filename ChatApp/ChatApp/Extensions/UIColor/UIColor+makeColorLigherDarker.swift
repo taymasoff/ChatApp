@@ -28,9 +28,9 @@ extension UIColor {
         var alpha: CGFloat = 0.0
         
         if self.getRed(&red, green: &green, blue: &blue, alpha: &alpha) {
-            return UIColor(red: min(red + percentage/100, 1.0),
-                           green: min(green + percentage/100, 1.0),
-                           blue: min(blue + percentage/100, 1.0),
+            return UIColor(red: min(red + percentage / 100, 1.0),
+                           green: min(green + percentage / 100, 1.0),
+                           blue: min(blue + percentage / 100, 1.0),
                            alpha: alpha)
         } else {
             return self

@@ -13,15 +13,15 @@ import Rswift
 final class ConversationCell: UITableViewCell, ReuseIdentifiable, Configurable {
     
     // MARK: - Properties
-    fileprivate var profileImageView: UIImageView!
-    fileprivate var nameLabel: UILabel!
-    fileprivate var lastMessageLabel: UILabel!
-    fileprivate var dateLabel: UILabel!
-    fileprivate var onlineIndicatorView: UIView!
+    private var profileImageView: UIImageView!
+    private var nameLabel: UILabel!
+    private var lastMessageLabel: UILabel!
+    private var dateLabel: UILabel!
+    private var onlineIndicatorView: UIView!
     
-    fileprivate var allTextContainer: UIView!
-    fileprivate var nameDateContainer: UIView!
-    fileprivate var cellContainer: UIView!
+    private var allTextContainer: UIView!
+    private var nameDateContainer: UIView!
+    private var cellContainer: UIView!
     
     var viewModel: ConversationCellViewModel?
     
@@ -39,34 +39,25 @@ final class ConversationCell: UITableViewCell, ReuseIdentifiable, Configurable {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    
-    // MARK: - Internal Methods
-    private func changeLastMessageLabelState(_ hasUnread: Bool) {
-        switch hasUnread {
-        case true:
-            lastMessageLabel.font = UIFont.systemFont(ofSize: 13, weight: .bold)
-        case false:
-            lastMessageLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-        }
-    }
 }
 
 extension ConversationCell: ViewModelBindable {
     func bindWithViewModel() {
-        viewModel?.profileImage.bind { [unowned self] image in
+        viewModel?.conversationImage.bind { [unowned self] image in
             profileImageView.subviews.forEach { $0.removeFromSuperview() }
             if let profileImage = image {
                 profileImageView.image = profileImage
             } else {
-                profileImageView.addProfilePlaceholder(fullName: viewModel?.name.value)
+                profileImageView.addAbbreviatedPlaceholder(
+                    text: viewModel?.name.value
+                )
             }
         }
         viewModel?.name.bind { [unowned self] name in
             nameLabel.text = name
         }
-        viewModel?.date.bind { [unowned self] date in
-            dateLabel.text = date
+        viewModel?.timeSinceLastMessage.bind { [unowned self] time in
+            dateLabel.text = time
         }
         viewModel?.lastMessage.bind { [unowned self] message in
             if let message = message {
@@ -77,11 +68,8 @@ extension ConversationCell: ViewModelBindable {
                 lastMessageLabel.textColor = ThemeManager.currentTheme.settings.tintColor
             }
         }
-        viewModel?.hasUnreadMessages.bind { [unowned self] hasUnread in
-            changeLastMessageLabelState(hasUnread ?? false)
-        }
-        viewModel?.isOnline.bind { [unowned self] isOnline in
-            onlineIndicatorView.isHidden = !(isOnline ?? false)
+        viewModel?.isActive.bind { [unowned self] isActive in
+            onlineIndicatorView.isHidden = !(isActive ?? false)
         }
     }
 }
@@ -186,6 +174,8 @@ private extension ConversationCell {
         label.textColor = ThemeManager.currentTheme.settings.subtitleTextColor
         label.textAlignment = .right
         label.numberOfLines = 1
+        label.setContentCompressionResistancePriority(UILayoutPriority(950),
+                                                      for: .horizontal)
         return label
     }
     
@@ -267,7 +257,7 @@ private extension ConversationCell {
         // MARK: Layout Name Label
         nameLabel.snp.makeConstraints { make in
             make.left.top.bottom.equalToSuperview()
-            make.right.equalTo(dateLabel.snp.left)
+            make.right.equalTo(dateLabel.snp.left).offset(-5)
         }
         
         // MARK: Layout Date Label

@@ -14,7 +14,7 @@ import Foundation
     10:16:46537 📝 [AppDelegate.swift]: application(_:didFinishLaunchingWithOptions:) -> App just Launched
  */
 
-fileprivate enum LoggerOutputType {
+private enum LoggerOutputType {
     case info
     case error
     
@@ -28,7 +28,7 @@ fileprivate enum LoggerOutputType {
     }
 }
 
-internal class Log {
+class Log {
     
     enum LoggerState {
         case enabled
@@ -97,8 +97,8 @@ internal class Log {
     ///   - filename: Название файла, из которого ведется логирование
     ///   - funcName: Название функции, откуда вызван метод логирования
     class func info(_ object: Any,
-                 fileName: String = #file,
-                 funcName: String = #function) {
+                    fileName: String = #file,
+                    funcName: String = #function) {
         
         guard isLoggingEnabled else { return }
         let prefix = createPrefix(fileName: fileName,
@@ -152,33 +152,8 @@ internal class Log {
     }
 }
 
-fileprivate extension Date {
+private extension Date {
     func toString() -> String {
         return Log.dateFormatter.string(from: self as Date)
     }
 }
-
-/// Persistence Manager Logger
-internal class PMLog: Log {
-    
-    override class func setup(loggerState: Log.LoggerState,
-                              includeDate: Bool,
-                              includeFileNames: Bool = false,
-                              includeFuncNames: Bool = false) {
-        Self.isLoggingEnabled = loggerState.isEnabled
-        Self.includesDate = includeDate
-    }
-    
-    override fileprivate class func createPrefix(
-        fileName: String,
-        funcName: String,
-        loggerOutput: LoggerOutputType) -> String {
-            let emojiComponent = "📂"
-            let dateComponent = includesDate ? Date().toString() : nil
-            return [dateComponent, emojiComponent, "[FileManager]:"]
-                .compactMap { $0 }
-                .joined(separator: " ")
-        }
-    
-}
-

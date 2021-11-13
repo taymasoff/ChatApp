@@ -14,7 +14,7 @@ final class InAppNotificationView: UIView {
     private let mainStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.spacing = 5
+        stackView.spacing = 10
         return stackView
     }()
     
@@ -68,7 +68,7 @@ final class InAppNotificationView: UIView {
         guard let window = UIApplication.shared.windows.last else { return }
         var frame = window.frame
         frame.size.height = frame.height * 0.15
-        frame.origin.y = frame.origin.y - frame.size.height
+        frame.origin.y -= frame.size.height
         self.frame = frame
         
         addSubview(mainStackView)

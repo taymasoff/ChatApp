@@ -38,11 +38,11 @@ extension UIColor {
         
         color.getRed(&r, green: &g, blue: &b, alpha: &a)
         
-        brightness = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+        brightness = ((r * 299) + (g * 587) + (b * 114)) / 1000
         if brightness < 0.5 {
-            return isTitle ? UIColor.white : UIColor.init(white: 1.0, alpha: 0.6)
+            return isTitle ? UIColor.white : UIColor(white: 1.0, alpha: 0.6)
         } else {
-            return isTitle ? UIColor.black : UIColor.init(white: 0.0, alpha: 0.6)
+            return isTitle ? UIColor.black : UIColor(white: 0.0, alpha: 0.6)
         }
     }
     
@@ -64,11 +64,11 @@ extension UIColor {
         
         color.getRed(&r, green: &g, blue: &b, alpha: &a)
         
-        brightness = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+        brightness = ((r * 299) + (g * 587) + (b * 114)) / 1000
         if brightness < 0.5 {
-            return isTitle ? UIColor.white : UIColor.init(white: 1.0, alpha: 0.6)
+            return isTitle ? UIColor.white : UIColor(white: 1.0, alpha: 0.6)
         } else {
-            return isTitle ? UIColor.black : UIColor.init(white: 0.0, alpha: 0.6)
+            return isTitle ? UIColor.black : UIColor(white: 0.0, alpha: 0.6)
         }
     }
 }

@@ -12,7 +12,7 @@ class FileReadOperation: AsyncResultOperation<Data, Error> {
     private let fileName: String
     private let directory: FMDirectory
     
-    init(fileManager: AsyncFileManagerProtocol = AsyncFileManager(),
+    init(fileManager: AsyncFileManagerProtocol = GCDFileManager(),
          fileName: String,
          directory: FMDirectory) {
         self.fileManager = fileManager
@@ -27,6 +27,4 @@ class FileReadOperation: AsyncResultOperation<Data, Error> {
             try fileManager.read(fromFileNamed: fileName, at: directory)
         })
     }
-    
-    
 }

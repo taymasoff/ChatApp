@@ -15,10 +15,10 @@ protocol RouterProtocol {
 protocol MainRouterProtocol: RouterProtocol {
     func initiateFirstViewController()
     func showDMViewController(animated: Bool,
-                              withViewModel viewModel: DMViewModel?)
+                              withViewModel viewModel: DMViewModel)
     func presentThemesViewController(onThemeChanged: @escaping (UIColor) -> Void)
     func presentThemesViewControllerObjc(delegate: ThemesViewControllerDelegate)
-    func presentProfileViewController()
+    func presentProfileViewController(delegate: ProfileDelegate?)
     func popToRoot(animated: Bool)
     func presentAlert(_ alert: UIAlertController, animated: Bool)
     func resetToUpdateTheme()
@@ -43,15 +43,9 @@ class MainRouter: MainRouterProtocol {
     /// Инициализировать и закинуть в navigation стэк экран переписки
     /// - Parameter animated: включена ли анимация перехода (да по умолчанию)
     func showDMViewController(animated: Bool = true,
-                              withViewModel viewModel: DMViewModel? = nil) {
+                              withViewModel viewModel: DMViewModel) {
         if let navigationController = navigationController {
-            let dmViewController: DMViewController
-            if let viewModel = viewModel {
-                dmViewController = DMViewController(with: viewModel)
-            } else {
-                let viewModel = DMViewModel(router: self)
-                dmViewController = DMViewController(with: viewModel)
-            }
+            let dmViewController = DMViewController(with: viewModel)
             navigationController.pushViewController(dmViewController,
                                                     animated: animated)
         }
@@ -60,23 +54,8 @@ class MainRouter: MainRouterProtocol {
     /// Инициализировать и представить модально экран выбора тем (Swift)
     func presentThemesViewController(onThemeChanged: @escaping (UIColor) -> Void) {
         if let navigationController = navigationController {
-            let fileManager = AsyncFileManager(
-                fileManager: FileManager.default,
-                asyncHandler: .gcd,
-                qos: .userInitiated
-            )
-    
-            let fileManagerPreferences = FileManagerPreferences(
-                preferredTextExtension: .txt,
-                preferredImageExtension: .jpeg,
-                preferredDirectory: .themes
-            )
-            let persistenceManager = PersistenceManager(
-                storageType: .fileManger(fileManager, fileManagerPreferences)
-            )
             let themesViewModel = ThemesViewModel(router: self,
-                                                  onThemeChanged: onThemeChanged,
-                                                  persistenceManager: persistenceManager)
+                                                  onThemeChanged: onThemeChanged)
             let themesViewController = ThemesViewController(with: themesViewModel)
             // Представляем модально с прозрачным эффектом
             themesViewController.modalPresentationStyle = .overCurrentContext
@@ -102,19 +81,10 @@ class MainRouter: MainRouterProtocol {
     }
     
     /// Инициализировать и представить модально экран профиля в своем собственном NC
-    func presentProfileViewController() {
+    func presentProfileViewController(delegate: ProfileDelegate? = nil) {
         if let navigationController = navigationController {
-            let fileManager = AsyncFileManager(fileManager: FileManager.default, asyncHandler: .gcd, qos: .userInitiated)
-            let fileManagerPreferences = FileManagerPreferences(
-                preferredTextExtension: .txt,
-                preferredImageExtension: .jpeg,
-                preferredDirectory: .userProfile
-            )
-            let persistenceManager = PersistenceManager(
-                storageType: .fileManger(fileManager, fileManagerPreferences)
-            )
             let profileViewModel = ProfileViewModel(router: self,
-                                                    persistenceManager: persistenceManager)
+                                                    delegate: delegate)
             let profileViewController = ProfileViewController(with: profileViewModel)
             // Представляем модально с прозрачным эффектом
             profileViewController.modalPresentationStyle = .overCurrentContext

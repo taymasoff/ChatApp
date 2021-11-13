@@ -11,26 +11,110 @@ import UIKit
 /// Вью-модель экрана диалогов
 final class ConversationsViewModel: NSObject, Routable {
     
+    enum NotificationState { case showSucces(InAppNotificationViewModel),
+                                  showError(InAppNotificationViewModel) }
+    
     // MARK: - Properties
     let router: MainRouterProtocol
-    var title = "Tinkoff Chat"
-    var conversations: [String : [Conversation]]?
+    let title = "Conversations"
+    let conversations: Dynamic<[GroupedConversations]?> = Dynamic(nil)
+    var onDataUpdate: (() -> Void)?
+    var notificationCallback: Dynamic<NotificationState?> = Dynamic(nil)
+    var profileAvatarUpdateInfo: Dynamic<ProfileAvatarUpdateInfo?> = Dynamic(nil)
+    
+    let repository: ConversationsRepositoryProtocol
     
     // MARK: - Initializer
-    init(router: MainRouterProtocol) {
+    init(router: MainRouterProtocol,
+         repository: ConversationsRepositoryProtocol? = nil) {
         self.router = router
+        self.repository = repository ?? ConversationsRepository()
         super.init()
-        
-        conversations = makeConversationsDictionary(40) // 👈 если нужно изменить количество моковых данных
     }
     
     // MARK: - Private Methods
     func profileBarButtonPressed() {
-        router.presentProfileViewController()
+        router.presentProfileViewController(delegate: self)
     }
     
     func gearBarButtonPressed() {
         askToPickController()
+    }
+    
+    func didRequestRefresh(completion: @escaping (Bool) -> Void) {
+        repository.updateConversationsOnce { isSuccessful in
+            completion(isSuccessful)
+        }
+    }
+    
+    func newConversationButtonPressed(with name: String?) {
+        repository.addConversation(with: name) { [weak self] result in
+            self?.notifyViewWithUpdates(result)
+        }
+    }
+    
+    func isTextSendable(text: String?) -> Bool {
+        if let text = text,
+           text.isntEmptyOrWhitespaced {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    private func bindToRepositoryUpdates() {
+        repository.conversations.bind(listener: { [weak self] conversations in
+            self?.conversations
+                .value = self?.mapConversationsByActivity(conversations)
+            self?.onDataUpdate?()
+        })
+    }
+    
+    // Группируем модель по полю активности, структуру используем для отрисовки таблицы
+    private func mapConversationsByActivity(
+        _ conversations: [Conversation]
+    ) -> [GroupedConversations] {
+        return Dictionary(grouping: conversations) { $0.isActive }
+        .map { (element) -> GroupedConversations in
+            let sortedConversations = element.value.sorted {
+                $0.lastActivity ?? .distantPast > $1.lastActivity ?? .distantPast
+            }
+            if element.key {
+                return GroupedConversations(title: "Currently Active",
+                                            conversations: sortedConversations,
+                                            indexInTable: 0)
+            } else {
+                return GroupedConversations(title: "Inactive",
+                                            conversations: sortedConversations,
+                                            indexInTable: 1)
+            }
+        }
+        .sorted { (lhs, rhs) -> Bool in
+            switch (lhs.indexInTable, rhs.indexInTable) {
+            case let(l?, r?): return l < r
+            case (nil, _): return false
+            case (_?, nil): return true
+            }
+        }
+    }
+    
+    private func notifyViewWithUpdates(_ result: Result<String, Error>) {
+        switch result {
+        case .success(let message):
+            let notificationModel = InAppNotificationViewModel(
+                notificationType: .success,
+                text: message)
+            DispatchQueue.main.async {
+                self.notificationCallback.value = .showSucces(notificationModel)
+            }
+        case .failure(let error):
+            let notificationModel = InAppNotificationViewModel(
+                notificationType: .error,
+                text: error.localizedDescription)
+            DispatchQueue.main.async {
+                self.notificationCallback.value = .showError(notificationModel)
+            }
+        }
     }
     
     private func askToPickController() {
@@ -63,6 +147,14 @@ final class ConversationsViewModel: NSObject, Routable {
     }
 }
 
+// MARK: - ProfileDelegate
+extension ConversationsViewModel: ProfileDelegate {
+    func didUpdateProfileAvatar(with info: ProfileAvatarUpdateInfo?) {
+        profileAvatarUpdateInfo.value = info
+    }
+}
+
+// MARK: - ThemesViewControllerDelegate
 extension ConversationsViewModel: ThemesViewControllerDelegate {
     func themesViewController(_ controller: ThemesViewControllerObjc,
                               didSelectTheme selectedTheme: UIColor) {
@@ -71,34 +163,65 @@ extension ConversationsViewModel: ThemesViewControllerDelegate {
     }
 }
 
+// MARK: - ConversationsViewController Lifecycle Updates
+extension ConversationsViewModel {
+    func viewDidLoad() {
+        bindToRepositoryUpdates()
+        repository.subscribeToUpdates()
+        repository.fetchAvatarOrName { [weak self] result in
+            switch result {
+            case .success(let info):
+                self?.profileAvatarUpdateInfo.value = info
+            case .failure(let error):
+                Log.error("Не удалось загрузить аватар или имя \(error.localizedDescription)")
+            }
+        }
+    }
+}
+
 // MARK: - TableView Methods
 extension ConversationsViewModel {
     func numberOfSections() -> Int {
-        return conversations?.keys.count ?? 0
+        return conversations.value?.count ?? 0
     }
     
     func numberOfRowsInSection(_ section: Int) -> Int {
-        let key = ConversationsSections.allCases[section].rawValue
-        return conversations?[key]?.count ?? 0
+        return conversations.value?[section].numberOfItems ?? 0
     }
     
     func titleForHeaderInSection(_ section: Int) -> String? {
-        return ConversationsSections.allCases[section].rawValue.capitalized
+        return conversations.value?[section].title.capitalized
     }
     
     func conversationCellViewModel(forIndexPath indexPath: IndexPath) -> ConversationCellViewModel? {
-        let key = ConversationsSections.allCases[indexPath.section].rawValue
-        let conversation = conversations?[key]?[indexPath.row]
+        let conversation = getConversation(for: indexPath)
         return ConversationCellViewModel(with: conversation)
     }
     
     func didSelectRowAt(_ indexPath: IndexPath) {
-        let key = ConversationsSections.allCases[indexPath.section].rawValue
-        let conversation = conversations?[key]?[indexPath.row]
+        let conversation = getConversation(for: indexPath)
+        guard let conversationID = conversation?.identifier else {
+            Log.error("Conversation ID = nil, невозможно совершить переход")
+            return
+        }
         let dmViewModel = DMViewModel(router: router,
-                                      chatBuddyName: conversation?.userName,
-                                      chatBuddyImageURL: conversation?.profileImageURL)
+                                      dialogueID: conversationID,
+                                      chatName: conversation?.name)
         router.showDMViewController(animated: true, withViewModel: dmViewModel)
+    }
+    
+    func didSwipeToDelete(at indexPath: IndexPath) {
+        let conversation = getConversation(for: indexPath)
+        repository.deleteConversation(
+            withID: conversation?.identifier
+        ) { [weak self] result in
+            self?.notifyViewWithUpdates(result)
+        }
+    }
+    
+    private func getConversation(for indexPath: IndexPath) -> Conversation? {
+        let conversationSection = conversations.value?[indexPath.section]
+        return conversationSection?[indexPath.row]
     }
 }
 
@@ -106,44 +229,5 @@ extension ConversationsViewModel {
 extension ConversationsViewModel: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         //
-    }
-}
-
-// MARK: - Data Mock
-extension ConversationsViewModel {
-    func randomText() -> String {
-      let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        return String((0...Int.random(in: 0...100)).map{ _ in letters.randomElement()! })
-    }
-    
-    func generateRandomConversation() -> Conversation {
-        let userNames = ["Talisha Hakobyan", "Vitomir Mark", "Maryna Madigan", "Margherita Simmon", "Sudarshan Eckstein", "Berenice Ferreiro", "Padma Traylor", "Isla Kumar", "Dareios Sternberg"]
-        let randomText: [String?] = [randomText(), nil]
-        return Conversation(
-            profileImageURL: nil,
-            isOnline: Bool.random(),
-            userName: userNames.randomElement(),
-            lastMessage: randomText.randomElement() as? String,
-            messageDate: nil,
-            messageTime: nil,
-            hasUnreadMessages: ([true, false].randomElement() != nil))
-    }
-    
-    func makeConversationsDictionary(_ amount: Int) -> [String : [Conversation]] {
-        var conversations: [Conversation] {
-            var conversations = [Conversation]()
-            for _ in 0...amount {
-                conversations.append(generateRandomConversation())
-            }
-            return conversations
-        }
-        
-        return Dictionary(grouping: conversations, by: {
-            if $0.isOnline {
-                return ConversationsSections.online.rawValue
-            } else {
-                return ConversationsSections.history.rawValue
-            }
-        })
     }
 }

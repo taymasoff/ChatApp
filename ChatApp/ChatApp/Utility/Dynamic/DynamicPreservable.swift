@@ -39,13 +39,14 @@ class DynamicPreservable<T: Equatable>: Dynamic<T> {
         self.updatesListener = updatesListener
     }
     
-    func preserve(_ value: T? = nil) {
-        if let value = value {
-            preservedValue = value
-        } else {
-            preservedValue = self.value
-        }
+    func preserve() {
+        preservedValue = value
         updatesListener?(hasChanged())
+    }
+    
+    func setAndPreserve(_ value: T) {
+        self.preservedValue = value
+        self.value = value
     }
     
     func restore() {

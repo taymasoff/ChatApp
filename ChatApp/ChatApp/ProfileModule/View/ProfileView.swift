@@ -33,6 +33,12 @@ class ProfileView: UIView {
     private(set) var profileImageUndoButton: UIButton!
     private(set) var setImageButton: UIButton!
     private(set) var saveButton: UIButton!
+    private(set) var circleView: UIView = {
+        let view = UIView()
+        view.backgroundColor = ThemeManager.currentTheme.settings.secondaryColor
+        view.isUserInteractionEnabled = false
+        return view
+    }()
     private var nameContainerView = UIView()
     private var descriptionContainerView = UIView()
     
@@ -175,7 +181,8 @@ private extension ProfileView {
     }
     
     func setSubviewsHierarchy() {
-        addSubview(profileImageView)
+        addSubview(circleView)
+        circleView.addSubview(profileImageView)
         addSubview(setImageButton)
         addSubview(nameContainerView)
         nameContainerView.addSubview(userNameTextField)
@@ -190,16 +197,23 @@ private extension ProfileView {
     
     func setSubviewsLayout() {
         // MARK: ProfileImageView Layout
-        profileImageView.snp.makeConstraints { make in
+        circleView.snp.makeConstraints { make in
             make.size.equalTo(self.frame.size.width / 2)
             make.centerY.equalTo(self.snp.top)
             make.centerX.equalTo(self.snp.centerX)
         }
+        
+        profileImageView.snp.makeConstraints { make in
+            make.size.equalTo(circleView)
+            make.center.equalTo(circleView)
+        }
+        
         // Перерисовываем фреймы, чтобы получить ширину фрейма imageView
         self.layoutIfNeeded()
         profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
+        circleView.layer.cornerRadius = circleView.frame.size.width / 2
         profileImageView.layer.masksToBounds = true
-       
+        circleView.layer.masksToBounds = true
         
         // MARK: UserNameTextField Layout
         userNameTextField.snp.makeConstraints { make in
@@ -256,13 +270,13 @@ private extension ProfileView {
         
         // MARK: SetImageButton Layout
         // Формула для нахождения точки на окружности
-        let radius = profileImageView.frame.size.width / 2
+        let radius = circleView.frame.size.width / 2
         let xCoord = radius * sin(45 * (Double.pi / 180))
         let yCoord = radius * cos(45 * (Double.pi / 180))
         setImageButton.snp.makeConstraints { make in
-            make.size.equalTo(profileImageView.snp.size).dividedBy(5)
-            make.centerX.equalTo(profileImageView.snp.centerX).offset(xCoord)
-            make.centerY.equalTo(profileImageView.snp.centerY).offset(yCoord)
+            make.size.equalTo(circleView.snp.size).dividedBy(5)
+            make.centerX.equalTo(circleView.snp.centerX).offset(xCoord)
+            make.centerY.equalTo(circleView.snp.centerY).offset(yCoord)
         }
         setImageButton.imageView?.snp.makeConstraints { make in
             make.edges.equalTo(setImageButton.snp.edges).inset(8)

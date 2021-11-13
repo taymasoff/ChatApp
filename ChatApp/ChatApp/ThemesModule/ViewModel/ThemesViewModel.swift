@@ -11,7 +11,6 @@ import UIKit
 final class ThemesViewModel: NSObject, Routable {
 
     var router: MainRouterProtocol
-    var persistenceManager: PersistenceManagerProtocol?
     
     struct ViewData {
         var previewBackgroundColor: UIColor
@@ -40,19 +39,13 @@ final class ThemesViewModel: NSObject, Routable {
     private var onThemeChanged: (UIColor) -> Void
     
     init(router: MainRouterProtocol,
-         onThemeChanged: @escaping (UIColor) -> Void,
-         persistenceManager: PersistenceManagerProtocol? = nil) {
+         onThemeChanged: @escaping (UIColor) -> Void) {
         self.router = router
         self.onThemeChanged = onThemeChanged
-        self.persistenceManager = persistenceManager
         super.init()
-        
-        // Просто для вывода в консоль
-        loadThemeUsingPersistenceManager()
     }
     
     func didConfirmTheme() {
-        saveThemeUsingPersistenceManager()
         ThemeManager.storedTheme = selectedTheme
         onThemeChanged(selectedTheme.settings.backGroundColor)
         
@@ -62,7 +55,16 @@ final class ThemesViewModel: NSObject, Routable {
     func didDismissThemesView() { }
     
     private func askToReset() {
-        let alert = UIAlertController(title: "Обновить тему?", message: "Чтобы обновить тему, необходимо перезагрузить экраны. \nНесохраненные состояния могут быть потеряны. \nВ ином случае, тема сменится после следующего рестарта приложения.", preferredStyle: .alert)
+        let alert = UIAlertController(
+            title: "Обновить тему?",
+            message:
+"""
+Чтобы обновить тему, необходимо перезагрузить экраны.
+Несохраненные состояния могут быть потеряны.
+В ином случае, тема сменится после следующего рестарта приложения.
+""",
+            preferredStyle: .alert
+        )
         
         let acceptAction = UIAlertAction(title: "Обновить тему сейчас",
                                          style: .default) { [weak self] _ in
@@ -77,32 +79,6 @@ final class ThemesViewModel: NSObject, Routable {
         alert.addAction(declineAction)
         
         router.presentAlert(alert, animated: true)
-    }
-    
-    private func saveThemeUsingPersistenceManager() {
-        persistenceManager?.save(
-            selectedTheme,
-            key: ThemeManager.themeKey
-        ) { [weak self] result in
-            switch result {
-            case .success(_):
-                PMLog.info("Успешно сохранена тема: \(self?.selectedTheme.rawValue ?? "")")
-            case .failure(let error):
-                PMLog.error("Не удалось сохранить тему. Ошибка: \(error)")
-            }
-        }
-    }
-    
-    private func loadThemeUsingPersistenceManager() {
-        persistenceManager?.fetchModel(key: ThemeManager.themeKey)
-        { (result: Result<Theme, Error>) in
-            switch result {
-            case .success(let model):
-                PMLog.info("Загружена тема - \(model.rawValue)")
-            case .failure(let error):
-                PMLog.error("Ошибка загрузки темы - \(error)")
-            }
-        }
     }
 }
 

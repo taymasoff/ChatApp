@@ -13,11 +13,11 @@ final class InAppNotificationViewModel {
         case error = "Ошибка"
     }
     
-    var notificationType: Dynamic<NotificationType> = Dynamic(.success)
-    var headerText: Dynamic<String?> = Dynamic(nil)
-    var bodyText: Dynamic<String?> = Dynamic(nil)
-    var buttonOneText: Dynamic<String?> = Dynamic(nil)
-    var buttonTwoText: Dynamic<String?> = Dynamic(nil)
+    let notificationType: Dynamic<NotificationType> = Dynamic(.success)
+    let headerText: Dynamic<String?> = Dynamic(nil)
+    let bodyText: Dynamic<String?> = Dynamic(nil)
+    let buttonOneText: Dynamic<String?> = Dynamic(nil)
+    let buttonTwoText: Dynamic<String?> = Dynamic(nil)
     
     init(notificationType: NotificationType,
          headerText: String? = nil,
@@ -29,5 +29,14 @@ final class InAppNotificationViewModel {
         self.bodyText.value = bodyText
         self.buttonOneText.value = buttonOneText
         self.buttonTwoText.value = buttonTwoText
+    }
+    
+    // Быстрая версия инита, только с телом и автоматическим добавлением кнопки Ok
+    init(notificationType: NotificationType,
+         text: String) {
+        self.notificationType.value = notificationType
+        self.headerText.value = notificationType.rawValue
+        self.bodyText.value = text
+        self.buttonOneText.value = "Ok"
     }
 }

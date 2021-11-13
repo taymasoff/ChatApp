@@ -167,7 +167,7 @@ protocol FMListable {
     func list(filesIn directory: FMDirectory) -> Bool
 }
 
-extension FMListable where Self: FMPathRecievable{
+extension FMListable where Self: FMPathRecievable {
     @discardableResult
     func list(filesIn directory: FMDirectory) -> Bool {
         let path = getDirectoryPath(for: directory)

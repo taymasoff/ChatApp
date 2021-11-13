@@ -7,6 +7,7 @@
 
 import UIKit
 import Rswift
+import Firebase
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,7 +17,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: - UIApplicationDelegate Lifecycle Methods
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        setupLoggers()
+        FirebaseApp.configure()
+        
+        setupLogger()
         
         ThemeManager.updateCurrentTheme()
         if #available(iOS 13, *) {} else {
@@ -25,13 +28,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
     
-    private func setupLoggers() {
+    private func setupLogger() {
         Log.setup(loggerState: .onlyInDebug,
                   includeDate: true,
                   includeFileNames: true,
                   includeFuncNames: true)
-        PMLog.setup(loggerState: .onlyInDebug,
-                    includeDate: true)
     }
     
     // MARK: - Create and Show First Scene
@@ -61,6 +62,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
 
-
 }
-

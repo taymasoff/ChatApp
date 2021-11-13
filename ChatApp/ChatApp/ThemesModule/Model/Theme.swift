@@ -42,5 +42,3 @@ enum Theme: String, CaseIterable, Codable {
         }
     }
 }
-
-

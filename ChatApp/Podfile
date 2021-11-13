@@ -4,8 +4,14 @@
 target 'ChatApp' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
+  
+  # Ignore warning from pods
+  inhibit_all_warnings!
 
   # Pods for ChatApp
-  pod 'SnapKit', :inhibit_warnings => true
-  pod 'R.swift', :inhibit_warnings => true
+  pod 'SnapKit'
+  pod 'R.swift'
+  pod 'Firebase/Firestore'
+  pod 'FirebaseFirestoreSwift', '8.8.0-beta'
+  pod 'SwiftLint'
 end

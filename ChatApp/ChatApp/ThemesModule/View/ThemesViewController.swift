@@ -21,18 +21,16 @@ final class ThemesViewController: UIViewController, ViewModelBased {
         self.viewModel = viewModel
     }
     
-    override func loadView() {
-        super.loadView()
-        themesView = makeThemesView()
-    }
     override func viewDidLoad() {
         super.viewDidLoad()
+        themesView = makeThemesView()
         setupGesturesAndActions()
         themesView.themesPickerView.delegate = self
         themesView.themesPickerView.dataSource = self
         bindWithViewModel()
     }
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         view.insertSubview(blurredView, at: 0)
         showThemesView()
     }

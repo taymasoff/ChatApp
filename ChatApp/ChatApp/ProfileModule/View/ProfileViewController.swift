@@ -13,7 +13,7 @@ final class ProfileViewController: UIViewController, ViewModelBased {
     
     // MARK: - Properties
     lazy var blurredView = BlurredView()
-    lazy var inAppNotificationView = InAppNotificationBanner()
+    lazy var inAppNotification = InAppNotificationBanner()
     private var profileView: ProfileView!
     
     var viewModel: ProfileViewModel?
@@ -26,21 +26,17 @@ final class ProfileViewController: UIViewController, ViewModelBased {
     }
     
     // MARK: - Lifecycle Methods
-    override func loadView() {
-        super.loadView()
-        profileView = makeProfileView()
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        profileView = makeProfileView()
         
         profileView.userNameTextField.delegate = self
         profileView.userDescriptionTextView.delegate = self
         setupGestureRecognizers()
         
         bindWithViewModel()
-        viewModel?.loadLastUIStateFromPersistentStorage()
         setSaveButtonState(.off)
+        viewModel?.viewDidLoad()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -49,6 +45,7 @@ final class ProfileViewController: UIViewController, ViewModelBased {
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         view.insertSubview(blurredView, at: 0)
         showProfileView(animated: true)
     }
@@ -163,6 +160,7 @@ extension ProfileViewController: ViewModelBindable {
             // если userAvatar все еще nil
             if self.viewModel?.userAvatar.value == nil {
                 self.profileView.profileImageView.addProfilePlaceholder(fullName: name)
+                self.animateImageViewChange()
             }
         })
         // MARK: Bind userDescription to userDescriptionTextField
@@ -183,6 +181,7 @@ extension ProfileViewController: ViewModelBindable {
                     initialsLabel.removeFromSuperview()
                 }
                 self.profileView.profileImageView.image = image
+                self.animateImageViewChange()
             } else {
                 self.profileView.profileImageView.addProfilePlaceholder(
                     fullName: viewModel?.userName.value,
@@ -197,7 +196,11 @@ extension ProfileViewController: ViewModelBindable {
                 self.setSaveButtonState(.on)
             } else {
                 self.profileView.hideNameUndoButton()
-                self.setSaveButtonState(.off)
+                if let viewModel = self.viewModel,
+                   !viewModel.userDescription.hasChanged(),
+                   !viewModel.userAvatar.hasChanged() {
+                    self.setSaveButtonState(.off)
+                }
             }
         })
         // MARK: Bind userDescription Updates
@@ -207,7 +210,11 @@ extension ProfileViewController: ViewModelBindable {
                 self.setSaveButtonState(.on)
             } else {
                 self.profileView.hideDescriptionUndoButton()
-                self.setSaveButtonState(.off)
+                if let viewModel = self.viewModel,
+                   !viewModel.userAvatar.hasChanged(),
+                   !viewModel.userName.hasChanged() {
+                    self.setSaveButtonState(.off)
+                }
             }
         })
         // MARK: Bind userAvatar Updates
@@ -217,7 +224,11 @@ extension ProfileViewController: ViewModelBindable {
                 self.setSaveButtonState(.on)
             } else {
                 self.profileView.hideProfileUndoButton()
-                self.setSaveButtonState(.off)
+                if let viewModel = self.viewModel,
+                   !viewModel.userName.hasChanged(),
+                   !viewModel.userDescription.hasChanged() {
+                    self.setSaveButtonState(.off)
+                }
             }
         })
         
@@ -260,23 +271,23 @@ private extension ProfileViewController {
     
     // MARK: Loaded with Error -> Show Error Notification
     func showErrorNotification(_ vm: InAppNotificationViewModel) {
-        inAppNotificationView.configure(with: vm)
-        inAppNotificationView.show()
-        inAppNotificationView.onButtonOnePress = { [weak self] in
-            self?.inAppNotificationView.dismiss()
+        inAppNotification.configure(with: vm)
+        inAppNotification.show()
+        inAppNotification.onButtonOnePress = { [weak self] in
+            self?.inAppNotification.dismiss()
         }
-        inAppNotificationView.onButtonTwoPress = { [weak self, weak viewModel] in
-            viewModel?.saveCurrentUIState()
-            self?.inAppNotificationView.dismiss()
+        inAppNotification.onButtonTwoPress = { [weak self, weak viewModel] in
+            viewModel?.requestDataSaveIfChanged()
+            self?.inAppNotification.dismiss()
         }
     }
     
     // MARK: Loaded with Success -> Show Success Notification
     func showSuccessNotification(_ vm: InAppNotificationViewModel) {
-        inAppNotificationView.configure(with: vm)
-        inAppNotificationView.show()
-        inAppNotificationView.onButtonOnePress = { [weak self] in
-            self?.inAppNotificationView.dismiss()
+        inAppNotification.configure(with: vm)
+        inAppNotification.show()
+        inAppNotification.onButtonOnePress = { [weak self] in
+            self?.inAppNotification.dismiss()
         }
     }
     
@@ -341,12 +352,11 @@ private extension ProfileViewController {
         }
     }
     
-    
     func dismissProfileView(animated: Bool) {
         view.endEditing(true) // Убираем клавиатуру если она есть
         profileView.snp.updateConstraints { make in
             make.bottom.equalToSuperview()
-                .offset(profileView.profileImageView.frame.height/2)
+                .offset(profileView.circleView.frame.height / 2)
                 .offset(profileView.frame.height)
         }
         if animated {
@@ -376,7 +386,7 @@ private extension ProfileViewController {
             make.right.left.equalToSuperview()
             make.height.equalToSuperview().multipliedBy(0.7)
             make.bottom.equalToSuperview()
-                .offset(profileView.profileImageView.frame.height/2)
+                .offset(profileView.circleView.frame.height / 2)
                 .offset(profileView.frame.height)
         }
         view.layoutIfNeeded()
@@ -432,5 +442,21 @@ private extension ProfileViewController {
                 self.view.layoutIfNeeded()
             }
         }
+    }
+}
+
+// MARK: - Animations
+private extension ProfileViewController {
+    
+    func animateImageViewChange() {
+        UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseIn, animations: { [weak self] in
+            self?.profileView.profileImageView.transform = CGAffineTransform(
+                scaleX: 1.4, y: 1.4
+            )
+        }, completion: { [weak self] _ in
+            UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut) {
+                self?.profileView.profileImageView.transform = .identity
+            }
+        })
     }
 }
