@@ -13,24 +13,32 @@ import Rswift
 final class DMViewController: UIViewController, ViewModelBased {
 
     // MARK: - Properties
-    private var tableView: UITableView!
-    private var footerView: UIView!
-    private var newMessageTextField: UITextField!
-    private var addButton: UIButton!
-    private var sendButton: UIButton!
+    private let dmTableView: UITableView = {
+        let tableView = UITableView()
+        tableView.keyboardDismissMode = .onDrag
+        tableView.separatorStyle = .none
+        tableView.backgroundColor = .clear
+        return tableView
+    }()
+    private let newMessageController: NewMessageController
     private lazy var titleView: TitleViewWithImage = TitleViewWithImage()
-    private var newMessageCanBeSent: Bool = false {
-        didSet {
-            sendButton.isEnabled = newMessageCanBeSent
-        }
-    }
     
     var viewModel: DMViewModel?
     
     // MARK: - Initializers
-    convenience init(with viewModel: DMViewModel) {
-        self.init()
+    init(newMessageController: NewMessageController) {
+        self.newMessageController = newMessageController
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    convenience init(with viewModel: DMViewModel,
+                     newMessageController: NewMessageController) {
+        self.init(newMessageController: newMessageController)
         self.viewModel = viewModel
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     // MARK: - Lifecycle Methods
@@ -53,20 +61,19 @@ final class DMViewController: UIViewController, ViewModelBased {
     private func setupSubviewsAndAppearence() {
         view.backgroundColor = ThemeManager.currentTheme.settings.mainColor
         navigationItem.largeTitleDisplayMode = .never
-        setupSubviews()
-        setupSubviewsHierarchy()
-        setupSubviewsLayout()
+        setupDMTableView()
+        setupNewMessageController()
         clearBackButtonText()
         configureTableView()
     }
     
     private func configureTableView() {
-        tableView.register(MessageCell.self,
+        dmTableView.register(MessageCell.self,
                            forCellReuseIdentifier: MessageCell.reuseID)
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = calculateEstimatedRowHeight()
-        tableView.dataSource = viewModel?.dmTableViewDataSource
-        tableView.delegate = viewModel
+        dmTableView.rowHeight = UITableView.automaticDimension
+        dmTableView.estimatedRowHeight = calculateEstimatedRowHeight()
+        dmTableView.dataSource = viewModel?.dmTableViewDataSource
+        dmTableView.delegate = viewModel
     }
     
     // MARK: - Private Methods
@@ -81,29 +88,9 @@ final class DMViewController: UIViewController, ViewModelBased {
         return CGFloat(MessageCell.estimatedContentHeight)
     }
     
-    private func updateSendableState(text: String?) {
-        if let isSendable = viewModel?.isTextSendable(text: text) {
-            newMessageCanBeSent = isSendable
-        }
-    }
-    
-    @objc
-    func sendMessagePressed() {
-        viewModel?.sendMessagePressed(
-            with: newMessageTextField.text
-        )
-        newMessageTextField.text = ""
-        updateSendableState(text: "")
-    }
-    
-    @objc
-    func addButtonPressed() {
-        Log.info("Add Button Pressed")
-    }
-    
     private func scrollTableViewToBottom() {
         view.layoutIfNeeded()
-        tableView.scrollToBottom(animated: false)
+        dmTableView.scrollToBottom(animated: false)
     }
 }
 
@@ -134,33 +121,33 @@ extension DMViewController {
     }
     
     private func updateTableView(withChanges changes: [DataSourceChange]) {
-        tableView.performBatchUpdates {
+        dmTableView.performBatchUpdates {
             for change in changes {
                 switch change {
                 case let .section(sectionUpdate):
                     switch sectionUpdate {
                     case let .inserted(ind):
-                        tableView.insertSections([ind],
+                        dmTableView.insertSections([ind],
                                                  with: .none)
                     case let .deleted(ind):
-                        tableView.deleteSections([ind],
+                        dmTableView.deleteSections([ind],
                                                  with: .none)
                     }
                 case let .object(objectUpdate):
                     switch objectUpdate {
                     case let .inserted(at: indexPath):
-                        tableView.insertRows(at: [indexPath],
+                        dmTableView.insertRows(at: [indexPath],
                                              with: .none)
                     case let .deleted(from: indexPath):
-                        tableView.deleteRows(at: [indexPath],
+                        dmTableView.deleteRows(at: [indexPath],
                                              with: .fade)
                     case let .updated(at: indexPath):
-                        tableView.reloadRows(at: [indexPath],
+                        dmTableView.reloadRows(at: [indexPath],
                                              with: .none)
                     case let .moved(from: fromIndexPath, to: toIndexPath):
-                        tableView.deleteRows(at: [fromIndexPath],
+                        dmTableView.deleteRows(at: [fromIndexPath],
                                              with: .none)
-                        tableView.insertRows(at: [toIndexPath],
+                        dmTableView.insertRows(at: [toIndexPath],
                                              with: .none)
                     }
                 }
@@ -171,31 +158,21 @@ extension DMViewController {
     }
 }
 
-// MARK: - UITextField Delegate
-extension DMViewController: UITextFieldDelegate {
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if newMessageCanBeSent {
-            sendMessagePressed()
-        }
-        return true
-    }
-    
-    @objc
-    func nameTextFieldDidChange(_ textField: UITextField) {
-        updateSendableState(text: textField.text)
-    }
-}
-
 // MARK: - KeyboardObserving
 extension DMViewController: KeyboardObserving {
     
     func keyboardWillShow(keyboardSize: CGRect, duration: Double) {
-        newMessageTextField.snp.updateConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(10).offset(-keyboardSize.height)
+        
+        newMessageController.newMessageView.stackView.snp.updateConstraints { make in
+            make.bottom.equalTo(
+                newMessageController.newMessageView.safeAreaLayoutGuide.snp.bottom
+            )
+                .inset(20)
+                .offset(-keyboardSize.height)
         }
         
-        let tableOffsetY = tableView.contentSize.height - keyboardSize.height
-        tableView.contentOffset = CGPoint(x: 0, y: tableOffsetY + 15)
+        let tableOffsetY = dmTableView.contentSize.height - keyboardSize.height + 5
+        dmTableView.contentOffset = CGPoint(x: 0, y: tableOffsetY)
         
         UIView.animate(withDuration: duration) {
             self.view.layoutIfNeeded()
@@ -203,8 +180,11 @@ extension DMViewController: KeyboardObserving {
     }
     
     func keyboardWillHide(duration: Double) {
-        newMessageTextField.snp.updateConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(10)
+        newMessageController.newMessageView.stackView.snp.updateConstraints { make in
+            make.bottom.equalTo(
+                newMessageController.newMessageView.safeAreaLayoutGuide.snp.bottom
+            )
+                .inset(20)
         }
         
         UIView.animate(withDuration: duration) {
@@ -216,119 +196,28 @@ extension DMViewController: KeyboardObserving {
 // MARK: - Setup Subviews
 private extension DMViewController {
     
-    // MARK: - Create Subviews
-    func makeTableView() -> UITableView {
-        let tableView = UITableView()
-        tableView.keyboardDismissMode = .onDrag
-        tableView.separatorStyle = .none
-        tableView.backgroundColor = .clear
-        return tableView
-    }
-    
-    func makeFooterContainer() -> UIView {
-        let footerView = UIView()
-        footerView.backgroundColor = ThemeManager.currentTheme.settings.backGroundColor
-        // Скругляем верхние углы
-        footerView.layer.cornerRadius = 10
-        footerView.layer.maskedCorners = [.layerMaxXMinYCorner,
-                                          .layerMinXMinYCorner]
-        return footerView
-    }
-    
-    func makeAddButton() -> UIButton {
-        let button = UIButton(type: .system)
-        let tintedImage = R.image.add()?.withRenderingMode(.alwaysTemplate)
-        button.setImage(tintedImage, for: .normal)
-        button.tintColor = ThemeManager.currentTheme.settings.tintColor
-        button.addTarget(self,
-                         action: #selector(addButtonPressed),
-                         for: .touchUpInside)
-        return button
-    }
-    
-    func makeNewMessageTextField() -> UITextField {
-        let textField = UITextField()
-        textField.placeholder = "Type your message..."
-        textField.font = UIFont.systemFont(ofSize: 17, weight: .regular)
-        textField.textAlignment = .left
-        textField.borderStyle = .roundedRect
-        textField.autocorrectionType = .no
-        textField.keyboardType = .default
-        textField.returnKeyType = .send
-        textField.clearButtonMode = .whileEditing
-        textField.contentVerticalAlignment = .center
-        textField.delegate = self
-        textField.addTarget(self,
-                            action: #selector(nameTextFieldDidChange),
-                            for: .editingChanged)
-        
-        return textField
-    }
-    
-    func makeSendButton() -> UIButton {
-        let button = UIButton(type: .system)
-        let tintedImage = R.image.send()?.withRenderingMode(.alwaysTemplate)
-        button.setImage(tintedImage, for: .normal)
-        button.tintColor = ThemeManager.currentTheme.settings.tintColor
-        button.addTarget(self,
-                         action: #selector(sendMessagePressed),
-                         for: .touchUpInside)
-        button.isEnabled = false
-        return button
-    }
-    
     // MARK: - Subviews Setup Methods
-    func setupSubviews() {
-        footerView = makeFooterContainer()
-        tableView = makeTableView()
-        addButton = makeAddButton()
-        newMessageTextField = makeNewMessageTextField()
-        sendButton = makeSendButton()
-    }
-    
-    func setupSubviewsHierarchy() {
-        view.addSubview(tableView)
-        view.addSubview(footerView)
-        footerView.addSubview(newMessageTextField)
-        footerView.addSubview(addButton)
-        footerView.addSubview(sendButton)
-    }
-    
-    func setupSubviewsLayout() {
-        // MARK: Layout Table View
-        tableView.snp.makeConstraints { make in
-            make.top.left.right.equalToSuperview()
-            make.bottom.equalTo(footerView.snp.top).inset(-5)
-        }
-
-        // MARK: Layout Footer View
-        footerView.snp.makeConstraints { make in
+    func setupNewMessageController() {
+        newMessageController.addToView(self.view, constraints: { make in
             make.left.right.equalToSuperview()
+            make.top.equalTo(dmTableView.snp.bottom)
             make.bottom.equalToSuperview()
-            make.top.equalTo(newMessageTextField.snp.top).inset(-20)
-            
+        })
+        
+        newMessageController.onSendMessagePressed = { [weak self] text in
+            self?.viewModel?.sendMessagePressed(with: text)
         }
         
-        // MARK: Layout New Message TextField
-        newMessageTextField.snp.makeConstraints { make in
-            make.left.equalTo(addButton.snp.right).offset(13)
-            make.right.equalTo(sendButton.snp.left).offset(-13)
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(20)
-            make.height.equalTo(newMessageTextField.intrinsicContentSize.height + 6)
+        newMessageController.onAddButtonPressed = { _ in
+            Log.info("Add button pressed")
         }
+    }
+    
+    func setupDMTableView() {
+        view.addSubview(dmTableView)
         
-        // MARK: Layout New Message' Add Button
-        addButton.snp.makeConstraints { make in
-            make.bottom.top.equalTo(newMessageTextField).inset(10)
-            make.width.equalTo(addButton.snp.height)
-            make.left.equalToSuperview().inset(13)
-        }
-
-        // MARK: Layout New Message' Send Button
-        sendButton.snp.makeConstraints { make in
-            make.bottom.top.equalTo(newMessageTextField).inset(10)
-            make.width.equalTo(addButton.snp.height)
-            make.right.equalToSuperview().inset(20)
+        dmTableView.snp.makeConstraints { make in
+            make.top.left.right.equalToSuperview()
         }
     }
 }

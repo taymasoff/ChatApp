@@ -26,6 +26,8 @@ class DMModuleAssembler {
     }
     
     func assembleAll() {
+        assembleNewMessageView()
+        assembleNewMessageController()
         assembleFRCDataProvider()
         assembleMessagesProvider()
         assembleFirestore()
@@ -37,7 +39,8 @@ class DMModuleAssembler {
     func assembleViewController() {
         container.register(type: DMViewController.self) { container in
             return DMViewController(
-                with: container.resolve(type: DMViewModel.self)
+                with: container.resolve(type: DMViewModel.self),
+                newMessageController: container.resolve(type: NewMessageController.self)
             )
         }
     }
@@ -100,6 +103,20 @@ class DMModuleAssembler {
                 sectionKeyPath: #keyPath(DBMessage.sectionName),
                 cacheName: "MessagesCache"
             )
+        }
+    }
+    
+    func assembleNewMessageController() {
+        container.register(type: NewMessageController.self) { container in
+            return NewMessageController(
+                newMessageView: container.resolve(type: NewMessageView.self)
+            )
+        }
+    }
+    
+    func assembleNewMessageView() {
+        container.register(type: NewMessageView.self) { _ in
+            return NewMessageView()
         }
     }
 }

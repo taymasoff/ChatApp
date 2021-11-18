@@ -51,15 +51,6 @@ final class DMViewModel: NSObject, Routable {
     func addButtonPressed() {
         Log.info("Add Message Pressed")
     }
-    
-    func isTextSendable(text: String?) -> Bool {
-        if let text = text,
-           text.isntEmptyOrWhitespaced {
-            return true
-        } else {
-            return false
-        }
-    }
 }
 
 // MARK: - DMViewController Lifecycle Updates
