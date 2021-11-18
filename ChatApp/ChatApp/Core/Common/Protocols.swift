@@ -7,7 +7,6 @@
 
 import Foundation
 import UIKit
-import CoreData
 
 // MARK: - ResultHandler With Generic Result
 typealias ResultHandler<T> = (Result<T, Error>) -> Void
@@ -83,12 +82,4 @@ protocol CDIdentifiable {
 // MARK: - Fire Store Identifiable
 protocol FSIdentifiable {
     var identifier: String? { get set }
-}
-
-// MARK: - TableView Provider
-protocol TableViewProviderProtocol: UITableViewDataSource {
-    associatedtype Model
-    
-    var changes: Dynamic<[DataSourceChange]> { get }
-    func object(at indexPath: IndexPath) -> Model
 }

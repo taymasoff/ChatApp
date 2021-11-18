@@ -44,7 +44,7 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
         configureTableView()
         
         bindWithViewModel()
-        subscribeToConversationProviderUpdates()
+        subscribeToTableViewUpdates()
         subscribeToNotificationUpdates()
         viewModel?.viewDidLoad()
     }
@@ -89,7 +89,7 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
                                         forCellReuseIdentifier: ConversationCell.reuseID)
         conversationsTableView.rowHeight = Self.rowHeight
         conversationsTableView.delegate = viewModel
-        conversationsTableView.dataSource = viewModel?.conversationsProvider
+        conversationsTableView.dataSource = viewModel?.conversationsTableViewDataSource
     }
     
     // MARK: - Action Methods
@@ -141,8 +141,8 @@ extension ConversationsViewController: ViewModelBindable {
 
 // MARK: - TableViewProvider Updates
 extension ConversationsViewController {
-    private func subscribeToConversationProviderUpdates() {
-        viewModel?.conversationsProvider.changes.bind { [weak self] changes in
+    private func subscribeToTableViewUpdates() {
+        viewModel?.tableViewChanges.bind { [weak self] changes in
             guard !changes.isEmpty else { return }
             
             self?.updateTableViewIfVisible(withChanges: changes)

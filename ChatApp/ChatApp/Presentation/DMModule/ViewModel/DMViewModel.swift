@@ -6,21 +6,27 @@
 //
 
 import UIKit
-import CoreData
 
 /// Вью-модель экрана чата с собеседником
 final class DMViewModel: NSObject, Routable {
     
     // MARK: - Properties
     let router: MainRouterProtocol
-    let repository: DMRepositoryProtocol
     
     let chatName: Dynamic<String?> = Dynamic(nil)
     let chatImage: Dynamic<UIImage?> = Dynamic(nil)
-    
     private let dialogueID: String
     
-    let messagesProvider: MessagesProvider
+    private let repository: DMRepositoryProtocol
+    private let messagesProvider: MessagesProvider
+    
+    var dmTableViewDataSource: UITableViewDataSource {
+        return messagesProvider
+    }
+    
+    var dmTableViewChanges: Dynamic<[DataSourceChange]> {
+        return messagesProvider.changes
+    }
     
     // MARK: - Init
     init(router: MainRouterProtocol,

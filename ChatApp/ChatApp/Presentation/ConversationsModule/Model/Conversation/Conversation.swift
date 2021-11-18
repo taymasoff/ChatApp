@@ -7,7 +7,6 @@
 
 import Foundation
 import FirebaseFirestore
-import CoreData
 
 /// Модель диалога
 struct Conversation: FSIdentifiable {

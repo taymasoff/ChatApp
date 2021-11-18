@@ -14,6 +14,9 @@ import SnapKit
     На входе доступны опциональные параметры: Заголовока, тела и до 2 кнопок
  */
 
+enum NotificationState { case showSucces(InAppNotificationViewModel),
+                              showError(InAppNotificationViewModel) }
+
 final class InAppNotificationBanner: ViewModelBased, ViewModelBindable, Configurable {
     
     private let view: InAppNotificationView

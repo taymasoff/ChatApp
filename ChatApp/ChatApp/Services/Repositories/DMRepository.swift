@@ -5,10 +5,7 @@
 //  Created by Тимур Таймасов on 27.10.2021.
 //
 
-import FirebaseFirestore
-import FirebaseFirestoreSwift
 import UIKit
-import CoreData
 
 final class DMRepository: DMRepositoryProtocol {
     

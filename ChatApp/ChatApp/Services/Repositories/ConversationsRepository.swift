@@ -5,10 +5,7 @@
 //  Created by Тимур Таймасов on 25.10.2021.
 //
 
-import FirebaseFirestore
-import FirebaseFirestoreSwift
 import UIKit
-import CoreData
 
 final class ConversationsRepository: ConversationsRepositoryProtocol {
     

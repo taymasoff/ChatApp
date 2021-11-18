@@ -40,7 +40,7 @@ final class DMViewController: UIViewController, ViewModelBased {
         setupSubviewsAndAppearence()
         
         bindWithViewModel()
-        subscribeToMessagesProviderUpdates()
+        subscribeToTableViewUpdates()
         viewModel?.viewDidLoad()
     }
     
@@ -65,7 +65,7 @@ final class DMViewController: UIViewController, ViewModelBased {
                            forCellReuseIdentifier: MessageCell.reuseID)
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = calculateEstimatedRowHeight()
-        tableView.dataSource = viewModel?.messagesProvider
+        tableView.dataSource = viewModel?.dmTableViewDataSource
         tableView.delegate = viewModel
     }
     
@@ -125,8 +125,8 @@ extension DMViewController: ViewModelBindable {
 
 // MARK: - TableViewProvider Updates
 extension DMViewController {
-    private func subscribeToMessagesProviderUpdates() {
-        viewModel?.messagesProvider.changes.bind { [weak self] changes in
+    private func subscribeToTableViewUpdates() {
+        viewModel?.dmTableViewChanges.bind { [weak self] changes in
             guard !changes.isEmpty else { return }
             
             self?.updateTableView(withChanges: changes)

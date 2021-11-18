@@ -9,8 +9,6 @@ import UIKit
 
 /// Вью-модель экрана диалогов
 final class ConversationsViewModel: NSObject, Routable {
-    enum NotificationState { case showSucces(InAppNotificationViewModel),
-                                  showError(InAppNotificationViewModel) }
     
     // MARK: - Properties
     let router: MainRouterProtocol
@@ -19,8 +17,15 @@ final class ConversationsViewModel: NSObject, Routable {
     var profileAvatarUpdateInfo: Dynamic<ProfileAvatarUpdateInfo?> = Dynamic(nil)
     
     private let repository: ConversationsRepositoryProtocol
+    private let conversationsProvider: ConversationsProvider
     
-    let conversationsProvider: ConversationsProvider
+    var conversationsTableViewDataSource: UITableViewDataSource {
+        return conversationsProvider
+    }
+    
+    var tableViewChanges: Dynamic<[DataSourceChange]> {
+        return conversationsProvider.changes
+    }
     
     // MARK: - Initializer
     init(router: MainRouterProtocol,
