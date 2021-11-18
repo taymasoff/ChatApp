@@ -186,54 +186,29 @@ extension DMViewController: UITextFieldDelegate {
     }
 }
 
-// MARK: - KeyboardObservers
-/*
- Когда появляется клавиатура - смещаем вьюшку наверх с той же скоростью, с которой появляется клавиатура. Когда клавиатура убирается, делаем то же самое, только наоборот.
- */
-
-private extension DMViewController {
-    func addKeyboardObserver() {
-        NotificationCenter.default
-            .addObserver(self,
-                         selector: #selector(keyboardWillShow),
-                         name: UIResponder.keyboardWillShowNotification,
-                         object: nil)
-        NotificationCenter.default
-            .addObserver(self,
-                         selector: #selector(keyboardWillHide),
-                         name: UIResponder.keyboardWillHideNotification,
-                         object: nil)
-    }
-
-    @objc
-    func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue,
-           let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double {
-            
-            newMessageTextField.snp.updateConstraints { make in
-                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(10).offset(-keyboardSize.height)
-            }
-            
-            let tableOffsetY = tableView.contentSize.height - keyboardSize.height
-            tableView.contentOffset = CGPoint(x: 0, y: tableOffsetY + 15)
-            
-            UIView.animate(withDuration: duration) {
-                self.view.layoutIfNeeded()
-            }
+// MARK: - KeyboardObserving
+extension DMViewController: KeyboardObserving {
+    
+    func keyboardWillShow(keyboardSize: CGRect, duration: Double) {
+        newMessageTextField.snp.updateConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(10).offset(-keyboardSize.height)
+        }
+        
+        let tableOffsetY = tableView.contentSize.height - keyboardSize.height
+        tableView.contentOffset = CGPoint(x: 0, y: tableOffsetY + 15)
+        
+        UIView.animate(withDuration: duration) {
+            self.view.layoutIfNeeded()
         }
     }
     
-    @objc
-    func keyboardWillHide(notification: NSNotification) {
-        if let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double {
-            
-            newMessageTextField.snp.updateConstraints { make in
-                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(10)
-            }
-            
-            UIView.animate(withDuration: duration) {
-                self.view.layoutIfNeeded()
-            }
+    func keyboardWillHide(duration: Double) {
+        newMessageTextField.snp.updateConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(10)
+        }
+        
+        UIView.animate(withDuration: duration) {
+            self.view.layoutIfNeeded()
         }
     }
 }

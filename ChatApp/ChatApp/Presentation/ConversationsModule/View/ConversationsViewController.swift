@@ -320,51 +320,29 @@ private extension ConversationsViewController {
     }
 }
 
-// MARK: - KeyboardObservers
-private extension ConversationsViewController {
-    func addKeyboardObserver() {
-        NotificationCenter.default
-            .addObserver(self,
-                         selector: #selector(keyboardWillShow),
-                         name: UIResponder.keyboardWillShowNotification,
-                         object: nil)
-        NotificationCenter.default
-            .addObserver(self,
-                         selector: #selector(keyboardWillHide),
-                         name: UIResponder.keyboardWillHideNotification,
-                         object: nil)
-    }
-
-    @objc
-    func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue,
-           let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double {
-            
-            newConversationController.revealButton.snp.updateConstraints { make in
-                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
-                    .inset(20)
-                    .offset(-keyboardSize.height)
-            }
-            
-            UIView.animate(withDuration: duration) {
-                self.view.layoutIfNeeded()
-            }
-            
+// MARK: - KeyboardObserving
+extension ConversationsViewController: KeyboardObserving {
+    
+    func keyboardWillShow(keyboardSize: CGRect, duration: Double) {
+        newConversationController.revealButton.snp.updateConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+                .inset(20)
+                .offset(-keyboardSize.height)
+        }
+        
+        UIView.animate(withDuration: duration) {
+            self.view.layoutIfNeeded()
         }
     }
     
-    @objc
-    func keyboardWillHide(notification: NSNotification) {
-        if let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double {
-            
-            newConversationController.revealButton.snp.updateConstraints { make in
-                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
-                    .inset(20)
-            }
-            
-            UIView.animate(withDuration: duration) {
-                self.view.layoutIfNeeded()
-            }
+    func keyboardWillHide(duration: Double) {
+        newConversationController.revealButton.snp.updateConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+                .inset(20)
+        }
+        
+        UIView.animate(withDuration: duration) {
+            self.view.layoutIfNeeded()
         }
     }
 }

@@ -394,53 +394,28 @@ private extension ProfileViewController {
     }
 }
 
-// MARK: - KeyboardObservers
-/*
- Когда появляется клавиатура - смещаем вьюшку наверх с той же скоростью, с которой появляется клавиатура. Когда клавиатура убирается, делаем то же самое, только наоборот.
- */
-
-private extension ProfileViewController {
-    func addKeyboardObserver() {
-        NotificationCenter.default
-            .addObserver(self,
-                         selector: #selector(keyboardWillShow),
-                         name: UIResponder.keyboardWillShowNotification,
-                         object: nil)
-        NotificationCenter.default
-            .addObserver(self,
-                         selector: #selector(keyboardWillHide),
-                         name: UIResponder.keyboardWillHideNotification,
-                         object: nil)
-    }
-
-    @objc
-    func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue,
-           let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double {
-            
-            if !profileView.userNameTextField.isEditing {
-                profileView.snp.updateConstraints { make in
-                    make.bottom.equalToSuperview().offset(-keyboardSize.height)
-                }
-                
-                UIView.animate(withDuration: duration) {
-                    self.view.layoutIfNeeded()
-                }
-            }
-        }
-    }
+// MARK: - KeyboardObserving
+extension ProfileViewController: KeyboardObserving {
     
-    @objc
-    func keyboardWillHide(notification: NSNotification) {
-        if let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double {
-            
+    func keyboardWillShow(keyboardSize: CGRect, duration: Double) {
+        if !profileView.userNameTextField.isEditing {
             profileView.snp.updateConstraints { make in
-                make.bottom.equalToSuperview()
+                make.bottom.equalToSuperview().offset(-keyboardSize.height)
             }
             
             UIView.animate(withDuration: duration) {
                 self.view.layoutIfNeeded()
             }
+        }
+    }
+    
+    func keyboardWillHide(duration: Double) {
+        profileView.snp.updateConstraints { make in
+            make.bottom.equalToSuperview()
+        }
+        
+        UIView.animate(withDuration: duration) {
+            self.view.layoutIfNeeded()
         }
     }
 }
