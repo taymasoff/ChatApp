@@ -10,13 +10,6 @@ import FirebaseFirestoreSwift
 import UIKit
 import CoreData
 
-// MARK: - ConversationsRepositoryProtocol
-protocol DMRepositoryProtocol {
-    func subscribeToUpdates()
-    func unsubscribeFromUpdates()
-    func newMessage(with content: String?)
-}
-
 final class DMRepository: DMRepositoryProtocol {
     
     // MARK: - Properties

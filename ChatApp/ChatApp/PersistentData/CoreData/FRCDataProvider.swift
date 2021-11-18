@@ -1,23 +1,38 @@
 //
-//  MessagesProvider.swift
+//  FRCDataProvider.swift
 //  ChatApp
 //
-//  Created by Тимур Таймасов on 07.11.2021.
+//  Created by Тимур Таймасов on 16.11.2021.
 //
 
 import CoreData
-import UIKit
 
-final class MessagesProvider: NSObject, TableViewProviderProtocol {
+protocol FRCTableViewDataProviderProtocol {
+    associatedtype Entity
+    
+    func numberOfSections() -> Int
+    func numberOfObjectsInSection(_ section: Int) -> Int
+    func nameOfSection(_ section: Int) -> String?
+    func entity(atIndexPath indexPath: IndexPath) -> Entity
+}
+
+protocol FRCDataProviderProtocol: FRCTableViewDataProviderProtocol {
+    var changes: Dynamic<[DataSourceChange]> { get }
+    func startFetching() throws
+}
+
+final class FRCDataProvider<Entity: NSManagedObject>: NSObject,
+                                                      FRCDataProviderProtocol,
+                                                      NSFetchedResultsControllerDelegate {
     
     // MARK: - Properties
-    private let frc: NSFetchedResultsController<DBMessage>
+    private let frc: NSFetchedResultsController<Entity>
     
-    private var changesCache: [DataSourceChange] = []
     let changes: Dynamic<[DataSourceChange]> = Dynamic([])
+    private var changesCache: [DataSourceChange] = []
     
     // MARK: - Init
-    init(fetchRequest: NSFetchRequest<DBMessage>,
+    init(fetchRequest: NSFetchRequest<Entity>,
          coreDataStack: CoreDataStackProtocol,
          sectionKeyPath: String? = nil, cacheName: String? = nil) {
         
@@ -31,17 +46,18 @@ final class MessagesProvider: NSObject, TableViewProviderProtocol {
         super.init()
         
         frc.delegate = self
-        
+    }
+    
+    // MARK: - StartFetching
+    func startFetching() throws {
         do {
             try frc.performFetch()
         } catch {
-            fatalError("Couldn't perform Messages fetch. Error: \(error)")
+            throw CoreDataError.fetchingFailed
         }
     }
-}
-
-// MARK: - NSFetchedResultsControllerDelegate
-extension MessagesProvider: NSFetchedResultsControllerDelegate {
+    
+    // MARK: - Fetched Results Controller Delegate
     
     // MARK: Will Change Content
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
@@ -91,14 +107,13 @@ extension MessagesProvider: NSFetchedResultsControllerDelegate {
     }
 }
 
-// MARK: - TableViewDataSource Methods
-extension MessagesProvider: UITableViewDataSource {
-
-    func numberOfSections(in tableView: UITableView) -> Int {
+// MARK: - FRCTableViewDataProviderProtocol
+extension FRCDataProvider {
+    func numberOfSections() -> Int {
         return frc.sections?.count ?? 0
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func numberOfObjectsInSection(_ section: Int) -> Int {
         guard let sections = frc.sections, sections.endIndex > section else {
             return 0
         }
@@ -106,31 +121,11 @@ extension MessagesProvider: UITableViewDataSource {
         return sections[section].numberOfObjects
     }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func nameOfSection(_ section: Int) -> String? {
         return frc.sections?[section].name
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView
-            .dequeueReusableCell(withIdentifier: MessageCell.reuseID,
-                                 for: indexPath) as? MessageCell
-        
-        guard let cell = cell else {
-            Log.error("Не удалось найти MessageCell по идентификатору \(MessageCell.reuseID). Возможно введен не верный ID.")
-            return UITableViewCell()
-        }
-        
-        cell.configure(with: messageCellViewModel(forIndexPath: indexPath))
-        
-        return cell
-    }
-    
-    private func messageCellViewModel(forIndexPath indexPath: IndexPath) -> MessageCellViewModel {
-        let message = object(at: indexPath)
-        return MessageCellViewModel(with: message)
-    }
-    
-    func object(at indexPath: IndexPath) -> Message {
-        return frc.object(at: indexPath).toDomainModel()
+    func entity(atIndexPath indexPath: IndexPath) -> Entity {
+        return frc.object(at: indexPath)
     }
 }

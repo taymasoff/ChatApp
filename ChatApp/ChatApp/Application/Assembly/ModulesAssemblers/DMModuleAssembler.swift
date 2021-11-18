@@ -26,6 +26,7 @@ class DMModuleAssembler {
     }
     
     func assembleAll() {
+        assembleFRCDataProvider()
         assembleMessagesProvider()
         assembleFirestore()
         assembleRepository()
@@ -75,6 +76,14 @@ class DMModuleAssembler {
     
     func assembleMessagesProvider() {
         container.register(type: MessagesProvider.self) { container in
+            return MessagesProvider(
+                frcDataProvider: container.resolve(type: FRCDataProvider<DBMessage>.self)
+            )
+        }
+    }
+    
+    func assembleFRCDataProvider() {
+        container.register(type: FRCDataProvider<DBMessage>.self) { container in
             let request = DBMessage.fetchRequest()
             let predicate = NSPredicate(format: "channel.identifier == %@",
                                         self.configuration.dialogueID)
@@ -84,7 +93,7 @@ class DMModuleAssembler {
             request.sortDescriptors = [sortByDateCreatedDescriptor]
             request.fetchBatchSize = 10
             
-            return MessagesProvider(
+            return FRCDataProvider<DBMessage>(
                 fetchRequest: request,
                 coreDataStack: container.resolve(type: CoreDataStack.self,
                                                  asSingleton: true),

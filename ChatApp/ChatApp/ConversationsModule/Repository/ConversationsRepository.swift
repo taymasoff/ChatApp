@@ -10,21 +10,6 @@ import FirebaseFirestoreSwift
 import UIKit
 import CoreData
 
-enum ProfileAvatarUpdateInfo { case avatar(UIImage), name(String) }
-
-// MARK: - ConversationsRepositoryProtocol
-protocol ConversationsRepositoryProtocol {
-    func subscribeToUpdates()
-    func unsubscribeFromUpdates()
-    func updateConversationsOnce(completion: @escaping (Bool) -> Void)
-    func addConversation(with name: String?,
-                         completion: ResultHandler<String>)
-    func deleteConversation(withID id: String?,
-                            completion: @escaping ResultHandler<String>)
-    
-    func fetchAvatarOrName(completion: @escaping ResultHandler<ProfileAvatarUpdateInfo>)
-}
-
 final class ConversationsRepository: ConversationsRepositoryProtocol {
     
     // MARK: - Properties

@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import CoreData
 
 /// Вью-модель экрана диалогов
 final class ConversationsViewModel: NSObject, Routable {
@@ -19,7 +18,7 @@ final class ConversationsViewModel: NSObject, Routable {
     var notificationCallback: Dynamic<NotificationState?> = Dynamic(nil)
     var profileAvatarUpdateInfo: Dynamic<ProfileAvatarUpdateInfo?> = Dynamic(nil)
     
-    let repository: ConversationsRepositoryProtocol
+    private let repository: ConversationsRepositoryProtocol
     
     let conversationsProvider: ConversationsProvider
     
@@ -181,7 +180,7 @@ extension ConversationsViewModel: UITableViewDelegate {
     }
     
     func didSelectRowAt(_ indexPath: IndexPath) {
-        let conversation = conversationsProvider.object(at: indexPath)
+        let conversation = conversationsProvider.object(atIndexPath: indexPath)
         guard let conversationID = conversation.identifier else {
             Log.error("Conversation ID = nil, невозможно совершить переход")
             return
@@ -193,7 +192,7 @@ extension ConversationsViewModel: UITableViewDelegate {
     }
 
     func didSwipeToDelete(at indexPath: IndexPath, completion: @escaping (Bool) -> Void) {
-        let conversation = conversationsProvider.object(at: indexPath)
+        let conversation = conversationsProvider.object(atIndexPath: indexPath)
         repository.deleteConversation(
             withID: conversation.identifier
         ) { [weak self] result in
@@ -206,6 +205,6 @@ extension ConversationsViewModel: UITableViewDelegate {
 // MARK: - UISearchResultsUpdating
 extension ConversationsViewModel: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        //
+        Log.info("Update search results not implemented yet")
     }
 }

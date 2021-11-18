@@ -24,6 +24,7 @@ class ConversationsModuleAssembler {
     }
     
     func assembleAll() {
+        assembleFRCDataProvider()
         assembleConversationsProvider()
         assembleCoreDataStack()
         assembleFirestore()
@@ -71,7 +72,15 @@ class ConversationsModuleAssembler {
     }
     
     func assembleConversationsProvider() {
-        container.register(type: ConversationsProvider.self) { _ in
+        container.register(type: ConversationsProvider.self) { container in
+            return ConversationsProvider(
+                frcDataProvider: container.resolve(type: FRCDataProvider<DBChannel>.self)
+            )
+        }
+    }
+    
+    func assembleFRCDataProvider() {
+        container.register(type: FRCDataProvider<DBChannel>.self) { _ in
             let request = DBChannel.fetchRequest()
             let sortByActivityDescriptor = NSSortDescriptor(
                 keyPath: \DBChannel.lastActivity,
@@ -79,7 +88,7 @@ class ConversationsModuleAssembler {
             )
             request.sortDescriptors = [sortByActivityDescriptor]
             request.fetchBatchSize = 10
-            return ConversationsProvider(
+            return FRCDataProvider(
                 fetchRequest: request,
                 coreDataStack: CoreDataStack.shared,
                 sectionKeyPath: #keyPath(DBChannel.sectionName),

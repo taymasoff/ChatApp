@@ -7,28 +7,7 @@
 
 import UIKit
 
-/*
- Нам понадобится работа с файловым менеджером, а точнее возможность сохранять/удалять
- текстовые файлы и изображения, поэтому достаточно подключить
- FMStringOperatable и FMImageOperatable и FMRemoveSupportable
- - их дефолтная реализация все сделает за нас,
- нам нужно только инициализировать файловый менеджер и настройки для него.
- */
-
 typealias ProfileRepositoryFMSupportable = FMStringOperatable & FMImageOperatable & FMRemoveSupportable
-
-/// Operation Success Status
-enum OperationSuccess {
-    case allGood(String)
-    case hadErrors(String)
-}
-
-protocol ProfileRepositoryProtocol {
-    var user: Dynamic<User?> { get }
-    func saveUserSeparately(_ user: User,
-                            completion: @escaping ResultHandler<OperationSuccess>)
-    func fetchUser(completion: @escaping ResultHandler<OperationSuccess>)
-}
 
 final class ProfileRepository: ProfileRepositoryProtocol, ProfileRepositoryFMSupportable {
     
