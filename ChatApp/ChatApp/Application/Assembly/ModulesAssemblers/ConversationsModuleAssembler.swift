@@ -24,6 +24,8 @@ class ConversationsModuleAssembler {
     }
     
     func assembleAll() {
+        assembleNewConversationView()
+        assembleNewConversationController()
         assembleFRCDataProvider()
         assembleConversationsProvider()
         assembleCoreDataStack()
@@ -36,7 +38,8 @@ class ConversationsModuleAssembler {
     func assembleViewController() {
         container.register(type: ConversationsViewController.self) { container in
             return ConversationsViewController(
-                with: container.resolve(type: ConversationsViewModel.self)
+                with: container.resolve(type: ConversationsViewModel.self),
+                newConversationController: container.resolve(type: NewConversationController.self)
             )
         }
     }
@@ -100,6 +103,20 @@ class ConversationsModuleAssembler {
     func assembleCoreDataStack() {
         container.register(type: CoreDataStack.self) { _ in
             return CoreDataStack.shared
+        }
+    }
+    
+    func assembleNewConversationController() {
+        container.register(type: NewConversationController.self) { container in
+            return NewConversationController(
+                newConversationView: container.resolve(type: NewConversationView.self)
+            )
+        }
+    }
+    
+    func assembleNewConversationView() {
+        container.register(type: NewConversationView.self) { _ in
+            return NewConversationView()
         }
     }
 }

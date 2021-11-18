@@ -10,21 +10,6 @@ import SnapKit
 
 final class NewConversationView: UIView {
     
-    enum ViewState { case collapsed, revealed }
-    
-    var viewState: ViewState = .collapsed {
-        didSet {
-            switch viewState {
-            case .collapsed:
-                self.isHidden = true
-                nameTextField.resignFirstResponder()
-            case .revealed:
-                self.isHidden = false
-                nameTextField.becomeFirstResponder()
-            }
-        }
-    }
-    
     let nameTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "New conversation name..."

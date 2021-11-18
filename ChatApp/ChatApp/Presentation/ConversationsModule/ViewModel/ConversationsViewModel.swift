@@ -57,15 +57,6 @@ final class ConversationsViewModel: NSObject, Routable {
         }
     }
     
-    func isTextSendable(text: String?) -> Bool {
-        if let text = text,
-           text.isntEmptyOrWhitespaced {
-            return true
-        } else {
-            return false
-        }
-    }
-    
     private func notifyViewWithUpdates(_ result: Result<String, Error>) {
         switch result {
         case .success(let message):

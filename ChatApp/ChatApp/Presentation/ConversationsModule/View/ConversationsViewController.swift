@@ -23,16 +23,26 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
     private var conversationsTableView: UITableView!
     private var searchController: UISearchController!
     private var newConversationButton: UIButton!
-    private let newConversationView: NewConversationView = NewConversationView()
+    private let newConversationController: NewConversationController
     private lazy var inAppNotification = InAppNotificationBanner()
-    
-    var viewModel: ConversationsViewModel?
     private lazy var nameFormatter = PersonNameComponentsFormatter()
     
+    var viewModel: ConversationsViewModel?
+    
     // MARK: - Initializers
-    convenience init(with viewModel: ConversationsViewModel) {
-        self.init()
+    init(newConversationController: NewConversationController) {
+        self.newConversationController = newConversationController
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    convenience init(with viewModel: ConversationsViewModel,
+                     newConversationController: NewConversationController) {
+        self.init(newConversationController: newConversationController)
         self.viewModel = viewModel
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     // MARK: - UIViewController Lifecycle Methods
@@ -68,9 +78,8 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
     private func setupSubviews() {
         gearBarButton = makeGearBarButton()
         conversationsTableView = makeConversationsTableView()
-        newConversationButton = makeNewConversationButton()
         searchController = makeSearchController()
-        setupNewConversationView()
+        setupNewConversationController()
         setupRefreshControl()
     }
     
@@ -108,25 +117,6 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
         viewModel?.didRequestRefresh { [unowned self] _ in
             self.conversationsTableView.refreshControl?.endRefreshing()
         }
-    }
-    
-    @objc
-    private func newConversationButtonPressed() {
-        revealNewConversationView()
-    }
-    
-    @objc
-    private func addConversationButtonPressed() {
-        viewModel?.newConversationButtonPressed(
-            with: newConversationView.nameTextField.text
-        )
-        newConversationView.nameTextField.text = ""
-        collapseNewConversationView()
-    }
-    
-    @objc
-    private func cancelAddingConversationButtonPressed() {
-        collapseNewConversationView()
     }
 }
 
@@ -183,63 +173,6 @@ extension ConversationsViewController {
                 }
             }
         }
-    }
-}
-
-// MARK: - UITextFieldDelegate
-extension ConversationsViewController: UITextFieldDelegate {
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if newConversationView.isSendable {
-            addConversationButtonPressed()
-        }
-        return true
-    }
-    
-    @objc
-    func nameTextFieldDidChange(_ textField: UITextField) {
-        if let isSendable = viewModel?.isTextSendable(text: textField.text) {
-            newConversationView.isSendable = isSendable
-        }
-    }
-}
-
-// MARK: - Update NewConversationViewState
-private extension ConversationsViewController {
-    
-    func revealNewConversationView(animated: Bool = true) {
-        newConversationView.snp.remakeConstraints { make in
-            make.left.right.equalToSuperview().inset(20)
-            make.bottom.equalTo(newConversationButton)
-            make.height.equalToSuperview().dividedBy(6)
-        }
-        newConversationView.viewState = .revealed
-        if animated {
-            UIView.animate(withDuration: 0.3,
-                           delay: 0,
-                           options: [.curveEaseOut]) { [weak self] in
-                self?.view.layoutIfNeeded()
-            }
-        }
-    }
-    
-    func collapseNewConversationView(animated: Bool = true) {
-        newConversationView.snp.remakeConstraints { make in
-            make.edges.equalTo(newConversationButton)
-        }
-        if animated {
-            UIView.animate(withDuration: 0.3,
-                           delay: 0,
-                           options: [.curveEaseIn],
-                           animations: { [weak self] in
-                self?.view.layoutIfNeeded()
-                
-            }, completion: { [weak self] _ in
-                self?.newConversationView.viewState = .collapsed
-            })
-        } else {
-            newConversationView.viewState = .collapsed
-        }
-        
     }
 }
 
@@ -319,65 +252,6 @@ private extension ConversationsViewController {
         return tableView
     }
     
-    func makeNewConversationButton() -> UIButton {
-        let button = UIButton(type: .system)
-        let buttonSize = view.frame.width / 6
-        let tintedImage = R.image.add()?.withRenderingMode(.alwaysTemplate)
-        button.setImage(tintedImage, for: .normal)
-        button.imageEdgeInsets = UIEdgeInsets(top: CGFloat(buttonSize / 3),
-                                              left: CGFloat(buttonSize / 3),
-                                              bottom: CGFloat(buttonSize / 3),
-                                              right: CGFloat(buttonSize / 3))
-        button.layer.cornerRadius = CGFloat(buttonSize / 2)
-        button.backgroundColor = ThemeManager.currentTheme.settings.secondaryColor
-        button.tintColor = ThemeManager.currentTheme.settings.tintColor
-        
-        view.addSubview(button)
-        
-        button.snp.makeConstraints { make in
-            make.size.equalTo(buttonSize)
-            make.right.equalToSuperview().inset(40)
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(20)
-        }
-        
-        button.addTarget(
-            self,
-            action: #selector(newConversationButtonPressed),
-            for: .touchUpInside
-        )
-        
-        return button
-    }
-    
-    func setupNewConversationView() {
-        view.addSubview(newConversationView)
-        
-        newConversationView.nameTextField.delegate = self
-    
-        newConversationView.okButton.addTarget(
-            self,
-            action: #selector(addConversationButtonPressed),
-            for: .touchUpInside
-        )
-        newConversationView.cancelButton.addTarget(
-            self,
-            action: #selector(cancelAddingConversationButtonPressed),
-            for: .touchUpInside
-        )
-        
-        newConversationView.snp.makeConstraints { make in
-            make.edges.equalTo(newConversationButton)
-        }
-        
-        newConversationView.viewState = .collapsed
-        
-        newConversationView.nameTextField.addTarget(
-            self,
-            action: #selector(nameTextFieldDidChange),
-            for: .editingChanged
-        )
-    }
-    
     func makeSearchController() -> UISearchController {
         let searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self.viewModel
@@ -389,6 +263,18 @@ private extension ConversationsViewController {
         searchController.searchBar.backgroundColor = ThemeManager.currentTheme.settings.backGroundColor
         self.definesPresentationContext = true
         return searchController
+    }
+    
+    func setupNewConversationController() {
+        newConversationController.addToView(self.view, constraints: { make in
+            make.size.equalTo(view.frame.width / 6)
+            make.right.equalToSuperview().inset(40)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(20)
+        })
+        
+        newConversationController.onAddConversationPressed = { [weak self] text in
+            self?.viewModel?.newConversationButtonPressed(with: text)
+        }
     }
     
     func setupRefreshControl() {
@@ -454,7 +340,7 @@ private extension ConversationsViewController {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue,
            let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double {
             
-            newConversationButton.snp.updateConstraints { make in
+            newConversationController.revealButton.snp.updateConstraints { make in
                 make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
                     .inset(20)
                     .offset(-keyboardSize.height)
@@ -471,7 +357,7 @@ private extension ConversationsViewController {
     func keyboardWillHide(notification: NSNotification) {
         if let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double {
             
-            newConversationButton.snp.updateConstraints { make in
+            newConversationController.revealButton.snp.updateConstraints { make in
                 make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
                     .inset(20)
             }
