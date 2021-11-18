@@ -7,7 +7,7 @@
 
 import FirebaseFirestore
 
-typealias CloudStoreProtocol = CloudStoreSubscribable & CloudStoreAddable & CloudStoreRemovable & CloudStoreUpdatable
+typealias CloudStoreOperatable = CloudStoreSubscribable & CloudStoreAddable & CloudStoreRemovable & CloudStoreUpdatable
 
 final class FirestoreManager<ModelType: Codable> {
     
