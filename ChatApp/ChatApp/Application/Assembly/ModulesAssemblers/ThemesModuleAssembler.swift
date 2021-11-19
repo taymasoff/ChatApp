@@ -5,7 +5,7 @@
 //  Created by Тимур Таймасов on 13.11.2021.
 //
 
-import Foundation
+import UIKit
 
 /// Сборщик компонентов модуля выбора тем
 class ThemesModuleAssembler {
@@ -25,14 +25,22 @@ class ThemesModuleAssembler {
     
     func assembleAll() {
         assembleViewModel()
+        assembleThemesView()
         assembleViewController()
     }
     
     func assembleViewController() {
         container.register(type: ThemesViewController.self) { container in
             return ThemesViewController(
-                with: container.resolve(type: ThemesViewModel.self)
+                with: container.resolve(type: ThemesViewModel.self),
+                themesView: container.resolve(type: ThemesView.self)
             )
+        }
+    }
+    
+    func assembleThemesView() {
+        container.register(type: ThemesView.self) { _ in
+            return ThemesView()
         }
     }
     

@@ -52,8 +52,6 @@ final class ThemesViewModel: NSObject, Routable {
         askToReset()
     }
     
-    func didDismissThemesView() { }
-    
     private func askToReset() {
         let alert = UIAlertController(
             title: "Обновить тему?",

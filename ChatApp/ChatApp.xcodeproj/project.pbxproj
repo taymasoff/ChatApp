@@ -76,6 +76,7 @@
 		228DC5D02746801400AB855B /* KeyboardObserving.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228DC5CF2746801400AB855B /* KeyboardObserving.swift */; };
 		228DC5D22746C45100AB855B /* NewMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228DC5D12746C45100AB855B /* NewMessageView.swift */; };
 		228DC5D52746C87900AB855B /* NewMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228DC5D42746C87900AB855B /* NewMessageController.swift */; };
+		228DC5DA2747A60200AB855B /* PopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228DC5D92747A60200AB855B /* PopupViewController.swift */; };
 		22B50F7726FB01810099436A /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B50F7626FB01810099436A /* Log.swift */; };
 		22C44A312726BE2E003D106C /* InAppNotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C44A302726BE2E003D106C /* InAppNotificationView.swift */; };
 		22C44A3E2726FF4D003D106C /* ConversationsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C44A3D2726FF4D003D106C /* ConversationsRepository.swift */; };
@@ -201,6 +202,7 @@
 		228DC5CF2746801400AB855B /* KeyboardObserving.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardObserving.swift; sourceTree = "<group>"; };
 		228DC5D12746C45100AB855B /* NewMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageView.swift; sourceTree = "<group>"; };
 		228DC5D42746C87900AB855B /* NewMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageController.swift; sourceTree = "<group>"; };
+		228DC5D92747A60200AB855B /* PopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupViewController.swift; sourceTree = "<group>"; };
 		22B50F7626FB01810099436A /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		22C44A302726BE2E003D106C /* InAppNotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppNotificationView.swift; sourceTree = "<group>"; };
 		22C44A3D2726FF4D003D106C /* ConversationsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsRepository.swift; sourceTree = "<group>"; };
@@ -598,6 +600,14 @@
 			path = NewMessage;
 			sourceTree = "<group>";
 		};
+		228DC5D82747A57B00AB855B /* Popup */ = {
+			isa = PBXGroup;
+			children = (
+				228DC5D92747A60200AB855B /* PopupViewController.swift */,
+			);
+			path = Popup;
+			sourceTree = "<group>";
+		};
 		22B50F7926FB0E760099436A /* Application */ = {
 			isa = PBXGroup;
 			children = (
@@ -697,6 +707,7 @@
 		22D104B52704D4F0006CF686 /* UIComponents */ = {
 			isa = PBXGroup;
 			children = (
+				228DC5D82747A57B00AB855B /* Popup */,
 				22C71C2527219BE9005C4466 /* InAppNotification */,
 				22FEEA302729CBF0003C8B62 /* TitleViewWithImage.swift */,
 				22D104B62704D55E006CF686 /* BlurredView.swift */,
@@ -1141,6 +1152,7 @@
 				22FFB21B27149AA6001884BA /* ThemesViewModel.swift in Sources */,
 				22765EB5272C6F4200AD0F15 /* ToDataConvertable.swift in Sources */,
 				228DC5D52746C87900AB855B /* NewMessageController.swift in Sources */,
+				228DC5DA2747A60200AB855B /* PopupViewController.swift in Sources */,
 				22FFB22827162245001884BA /* StoredProperty.swift in Sources */,
 				22765EB3272C6EC800AD0F15 /* FromDataConvertable.swift in Sources */,
 				22765EA9272C695100AD0F15 /* FileExtensions.swift in Sources */,

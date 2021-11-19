@@ -8,28 +8,34 @@
 import UIKit
 import SnapKit
 
-/// Контроллер экрана профиля
-final class ProfileViewController: UIViewController, ViewModelBased {
+final class ProfileViewController: PopupViewController, ViewModelBased {
     
     // MARK: - Properties
-    lazy var blurredView = BlurredView()
     lazy var inAppNotification = InAppNotificationBanner()
-    private var profileView: ProfileView!
+    private var profileView: ProfileView
     
     var viewModel: ProfileViewModel?
     lazy var nameFormatter = PersonNameComponentsFormatter()
     
-    // MARK: - Initializers
-    convenience init(with viewModel: ProfileViewModel) {
-        self.init()
+    // MARK: - Inits
+    required init(popupView: UIView, popupSize: PopupSize) {
+        self.profileView = popupView as? ProfileView ?? ProfileView()
+        super.init(popupView: profileView, popupSize: popupSize)
+    }
+    
+    convenience init(with viewModel: ProfileViewModel,
+                     profileView: ProfileView) {
+        self.init(popupView: profileView, popupSize: .custom(0.85))
         self.viewModel = viewModel
     }
     
-    // MARK: - Lifecycle Methods
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        profileView = makeProfileView()
-        
         profileView.userNameTextField.delegate = self
         profileView.userDescriptionTextView.delegate = self
         setupGestureRecognizers()
@@ -38,20 +44,8 @@ final class ProfileViewController: UIViewController, ViewModelBased {
         setSaveButtonState(.off)
         viewModel?.viewDidLoad()
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        addKeyboardObserver()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        view.insertSubview(blurredView, at: 0)
-        showProfileView(animated: true)
-    }
 
-    // MARK: - Private Methods
-    // MARK: Gesture Recognizer Setup
+    // MARK: Setup Methods
     private func setupGestureRecognizers() {
         profileView.setImageButton.addTarget(
             self,
@@ -62,18 +56,6 @@ final class ProfileViewController: UIViewController, ViewModelBased {
         profileView.addGestureRecognizer(UITapGestureRecognizer(
             target: profileView,
             action: #selector(UIView.endEditing(_:)))
-        )
-        
-        let swipeDown = UISwipeGestureRecognizer(
-            target: self,
-            action: #selector(didSwipeProfileViewDown)
-        )
-        swipeDown.direction = .down
-        
-        profileView.addGestureRecognizer(swipeDown)
-        view.addGestureRecognizer(UITapGestureRecognizer(
-            target: self,
-            action: #selector(didTapOutsideProfileView))
         )
         
         profileView.profileImageUndoButton.addTarget(
@@ -107,41 +89,30 @@ final class ProfileViewController: UIViewController, ViewModelBased {
     
     // MARK: Action Methods
     @objc
-    fileprivate func editProfileImagePressed() {
+    private func editProfileImagePressed() {
         viewModel?.editProfileImagePressed(sender: self)
     }
     
     @objc
-    fileprivate func didTapOutsideProfileView() {
-        dismissProfileView(animated: true)
-        viewModel?.didDismissProfileView()
-    }
-    @objc
-    fileprivate func didSwipeProfileViewDown() {
-        dismissProfileView(animated: true)
-        viewModel?.didDismissProfileView()
-    }
-    
-    @objc
-    fileprivate func didTapProfileImageUndoButton() {
+    private func didTapProfileImageUndoButton() {
         viewModel?.userAvatar.restore()
         profileView.hideProfileUndoButton()
     }
     
     @objc
-    fileprivate func didTapUserNameUndoButton() {
+    private func didTapUserNameUndoButton() {
         viewModel?.userName.restore()
         profileView.hideNameUndoButton()
     }
     
     @objc
-    fileprivate func didTapUserDescriptionUndoButton() {
+    private func didTapUserDescriptionUndoButton() {
         viewModel?.userDescription.restore()
         profileView.hideDescriptionUndoButton()
     }
     
     @objc
-    fileprivate func didTapSaveButton() {
+    private func didTapSaveButton() {
         viewModel?.saveButtonPressed()
         profileView.hideNameUndoButton()
         profileView.hideDescriptionUndoButton()
@@ -337,92 +308,8 @@ extension ProfileViewController: UITextViewDelegate {
     }
 }
 
-// MARK: - Show/Hide Profile View Animations
-private extension ProfileViewController {
-    func showProfileView(animated: Bool) {
-        profileView.snp.updateConstraints { make in
-            make.bottom.equalToSuperview()
-        }
-        if animated {
-            UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseOut) {
-                self.view.layoutIfNeeded()
-            }
-        } else {
-            view.layoutIfNeeded()
-        }
-    }
-    
-    func dismissProfileView(animated: Bool) {
-        view.endEditing(true) // Убираем клавиатуру если она есть
-        profileView.snp.updateConstraints { make in
-            make.bottom.equalToSuperview()
-                .offset(profileView.circleView.frame.height / 2)
-                .offset(profileView.frame.height)
-        }
-        if animated {
-            UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseIn) {
-                self.view.layoutIfNeeded()
-            } completion: { [weak self] _ in
-                self?.dismiss(animated: false, completion: nil)
-            }
-        } else {
-            dismiss(animated: false, completion: nil)
-        }
-    }
-}
-
-// MARK: - ProfileViewController Subviews Setup
-private extension ProfileViewController {
-    func makeProfileView() -> ProfileView {
-        let profileView = ProfileView(frame: view.frame)
-        view.addSubview(profileView)
-        
-        // Скругляем углы, только верхние
-        profileView.layer.cornerRadius = profileView.frame.size.width / 10
-        profileView.layer.maskedCorners = [.layerMaxXMinYCorner,
-                                            .layerMinXMinYCorner]
-        // Создаем констрейнты за пределами экрана для анимации
-        profileView.snp.makeConstraints { make in
-            make.right.left.equalToSuperview()
-            make.height.equalToSuperview().multipliedBy(0.7)
-            make.bottom.equalToSuperview()
-                .offset(profileView.circleView.frame.height / 2)
-                .offset(profileView.frame.height)
-        }
-        view.layoutIfNeeded()
-        return profileView
-    }
-}
-
-// MARK: - KeyboardObserving
-extension ProfileViewController: KeyboardObserving {
-    
-    func keyboardWillShow(keyboardSize: CGRect, duration: Double) {
-        if !profileView.userNameTextField.isEditing {
-            profileView.snp.updateConstraints { make in
-                make.bottom.equalToSuperview().offset(-keyboardSize.height)
-            }
-            
-            UIView.animate(withDuration: duration) {
-                self.view.layoutIfNeeded()
-            }
-        }
-    }
-    
-    func keyboardWillHide(duration: Double) {
-        profileView.snp.updateConstraints { make in
-            make.bottom.equalToSuperview()
-        }
-        
-        UIView.animate(withDuration: duration) {
-            self.view.layoutIfNeeded()
-        }
-    }
-}
-
 // MARK: - Animations
-private extension ProfileViewController {
-    
+extension ProfileViewController {
     func animateImageViewChange() {
         UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseIn, animations: { [weak self] in
             self?.profileView.profileImageView.transform = CGAffineTransform(

@@ -55,8 +55,8 @@ class ThemesView: UIView {
         return button
     }()
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init() {
+        super.init(frame: CGRect.zero)
         backgroundColor = Theme.defaultLight.settings.mainColor
         
         setupSubviews()

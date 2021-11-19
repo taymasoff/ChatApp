@@ -11,6 +11,7 @@ import Rswift
 
 /// Popup вью профиля
 class ProfileView: UIView {
+    
     // MARK: - Properties
     private(set) lazy var activityIndicator: UIActivityIndicatorView = {
         let activity = UIActivityIndicatorView()
@@ -24,29 +25,99 @@ class ProfileView: UIView {
         }
         return activity
     }()
-    private(set) var profileImageView: UIImageView!
-    private(set) var userNameTextField: UITextField!
-    private(set) var userDescriptionTextView: UITextView!
-    private(set) var userDescriptionTextViewPlaceholder: UITextView!
-    private(set) var userNameUndoButton: UIButton!
-    private(set) var userDescriptionUndoButton: UIButton!
-    private(set) var profileImageUndoButton: UIButton!
-    private(set) var setImageButton: UIButton!
-    private(set) var saveButton: UIButton!
+    
+    private(set) var profileImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.isUserInteractionEnabled = true
+        imageView.layer.masksToBounds = true
+        return imageView
+    }()
+    
+    private(set) var userNameTextField: UITextField = {
+        let textField = UITextField()
+        textField.attributedPlaceholder = NSAttributedString(
+            string: "Your name",
+            attributes: [NSAttributedString.Key
+                            .foregroundColor: ThemeManager.currentTheme.settings.subtitleTextColor]
+        )
+        textField.backgroundColor = .clear
+        textField.font = UIFont.systemFont(ofSize: 26, weight: .semibold)
+        textField.minimumFontSize = 18
+        textField.adjustsFontSizeToFitWidth = true
+        textField.textColor = ThemeManager.currentTheme.settings.titleTextColor
+        textField.textAlignment = .center
+        textField.autocorrectionType = .no
+        return textField
+    }()
+    
+    private(set) var userDescriptionTextView: UITextView = makeUserDescriptionTextView()
+    
+    private(set) var userDescriptionTextViewPlaceholder: UITextView = {
+        let textView = makeUserDescriptionTextView()
+        textView.backgroundColor = .clear
+        textView.textColor = ThemeManager.currentTheme.settings.subtitleTextColor
+        textView.isUserInteractionEnabled = false
+        textView.text = "Tell something about yourself..."
+        return textView
+    }()
+    
+    private(set) var userNameUndoButton: UIButton = makeUndoButton()
+    
+    private(set) var userDescriptionUndoButton: UIButton = makeUndoButton()
+    
+    private(set) var profileImageUndoButton: UIButton = {
+        let button = makeUndoButton()
+        button.setTitle("Reset Photo", for: .normal)
+        return button
+    }()
+    
+    private(set) var setImageButton: UIButton = {
+        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
+        let tintedImage = R.image.camera()?.withRenderingMode(.alwaysTemplate)
+        button.setImage(tintedImage, for: .normal)
+        button.tintColor = .white
+        button.backgroundColor = .systemBlue
+        return button
+    }()
+    
+    private(set) var saveButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Save", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .regular)
+        button.layer.cornerRadius = 10
+        let buttonColor = ThemeManager.currentTheme.settings.tintColor
+        button.backgroundColor = buttonColor
+        let titleColor = UIColor.contrastingColor(to: buttonColor, for: .title)
+        button.setTitleColor(titleColor, for: .normal)
+        return button
+    }()
+    
     private(set) var circleView: UIView = {
         let view = UIView()
         view.backgroundColor = ThemeManager.currentTheme.settings.secondaryColor
         view.isUserInteractionEnabled = false
+        view.layer.masksToBounds = true
         return view
     }()
+    
     private var nameContainerView = UIView()
+    
     private var descriptionContainerView = UIView()
     
+    private var backgroundView: UIView = {
+        let view = UIView()
+        view.backgroundColor = ThemeManager.currentTheme.settings.mainColor
+        view.layer.cornerRadius = 35
+        view.layer.maskedCorners = [.layerMaxXMinYCorner,
+                                    .layerMinXMinYCorner]
+        return view
+    }()
+    
     // MARK: - Init
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init() {
+        super.init(frame: CGRect.zero)
         
-        backgroundColor = ThemeManager.currentTheme.settings.mainColor
+        backgroundColor = .clear
         setupSubviews()
         
         hideNameUndoButton(animated: false)
@@ -60,9 +131,17 @@ class ProfileView: UIView {
     
     // MARK: - Setup
     private func setupSubviews() {
-        createSubviews()
         setSubviewsHierarchy()
         setSubviewsLayout()
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        let circleCornerRadius = circleView.frame.size.width / 2
+        circleView.layer.cornerRadius = circleCornerRadius
+        profileImageView.layer.cornerRadius = circleCornerRadius
+        updateSetImageButtonFrame()
     }
 }
 
@@ -167,20 +246,8 @@ extension ProfileView {
 
 // MARK: - ProfileView Subviews Setup
 private extension ProfileView {
-    func createSubviews() {
-        profileImageView = makeProfileImageView()
-        userNameTextField = makeUserNameTextView()
-        userNameUndoButton = makeUndoButton()
-        userDescriptionTextView = makeUserDescriptionTextView()
-        userDescriptionTextViewPlaceholder = makeUserDescriptionTextViewPlaceholder()
-        userDescriptionUndoButton = makeUndoButton()
-        profileImageUndoButton = makeUndoButton()
-        profileImageUndoButton.setTitle("Reset Photo", for: .normal)
-        setImageButton = makeSetImageButton()
-        saveButton = makeSaveButton()
-    }
-    
     func setSubviewsHierarchy() {
+        addSubview(backgroundView)
         addSubview(circleView)
         circleView.addSubview(profileImageView)
         addSubview(setImageButton)
@@ -198,9 +265,9 @@ private extension ProfileView {
     func setSubviewsLayout() {
         // MARK: ProfileImageView Layout
         circleView.snp.makeConstraints { make in
-            make.size.equalTo(self.frame.size.width / 2)
-            make.centerY.equalTo(self.snp.top)
-            make.centerX.equalTo(self.snp.centerX)
+            make.size.equalTo(self.snp.width).multipliedBy(0.5)
+            make.top.equalTo(self.safeAreaLayoutGuide.snp.top)
+            make.centerX.equalToSuperview()
         }
         
         profileImageView.snp.makeConstraints { make in
@@ -208,12 +275,11 @@ private extension ProfileView {
             make.center.equalTo(circleView)
         }
         
-        // Перерисовываем фреймы, чтобы получить ширину фрейма imageView
-        self.layoutIfNeeded()
-        profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
-        circleView.layer.cornerRadius = circleView.frame.size.width / 2
-        profileImageView.layer.masksToBounds = true
-        circleView.layer.masksToBounds = true
+        // MARK: BackgroundView Layout
+        backgroundView.snp.makeConstraints { make in
+            make.left.right.bottom.equalToSuperview()
+            make.top.equalTo(circleView.snp.centerY)
+        }
         
         // MARK: UserNameTextField Layout
         userNameTextField.snp.makeConstraints { make in
@@ -260,6 +326,11 @@ private extension ProfileView {
             make.bottom.equalTo(userDescriptionUndoButton)
         }
         
+        // MARK: SetImageButton Layout
+        setImageButton.imageView?.snp.makeConstraints { make in
+            make.edges.equalTo(setImageButton.snp.edges).inset(8)
+        }
+        
         // MARK: SaveButton Layout
         saveButton.snp.makeConstraints { make in
             make.top.equalTo(descriptionContainerView.snp.bottom).offset(20)
@@ -268,51 +339,27 @@ private extension ProfileView {
             make.height.greaterThanOrEqualTo(50)
         }
         
-        // MARK: SetImageButton Layout
-        // Формула для нахождения точки на окружности
-        let radius = circleView.frame.size.width / 2
-        let xCoord = radius * sin(45 * (Double.pi / 180))
-        let yCoord = radius * cos(45 * (Double.pi / 180))
-        setImageButton.snp.makeConstraints { make in
-            make.size.equalTo(circleView.snp.size).dividedBy(5)
-            make.centerX.equalTo(circleView.snp.centerX).offset(xCoord)
-            make.centerY.equalTo(circleView.snp.centerY).offset(yCoord)
-        }
-        setImageButton.imageView?.snp.makeConstraints { make in
-            make.edges.equalTo(setImageButton.snp.edges).inset(8)
-        }
-        setImageButton.layer.cornerRadius = setImageButton.frame.size.width / 2
-        
         // MARK: UserDescriptionTextViewPlaceholder Layout
         userDescriptionTextViewPlaceholder.snp.makeConstraints { make in
             make.edges.equalTo(userDescriptionTextView)
         }
     }
-
-    func makeProfileImageView() -> UIImageView {
-        let imageView = UIImageView()
-        imageView.isUserInteractionEnabled = true
-        return imageView
+    
+    private func updateSetImageButtonFrame() {
+        // Формула для нахождения точки на окружности
+        let radius = circleView.frame.size.width / 2
+        let xCoord = radius * sin(45 * (Double.pi / 180))
+        let yCoord = radius * cos(45 * (Double.pi / 180))
+        
+        setImageButton.frame.size = CGSize(width: circleView.frame.size.width / 5,
+                                           height: circleView.frame.size.width / 5)
+        setImageButton.center = CGPoint(x: circleView.center.x + xCoord,
+                                        y: circleView.center.y + yCoord)
+        
+        setImageButton.layer.cornerRadius = setImageButton.frame.size.width / 2
     }
     
-    func makeUserNameTextView() -> UITextField {
-        let textField = UITextField()
-        textField.attributedPlaceholder = NSAttributedString(
-            string: "Your name",
-            attributes: [NSAttributedString.Key
-                            .foregroundColor: ThemeManager.currentTheme.settings.subtitleTextColor]
-        )
-        textField.backgroundColor = .clear
-        textField.font = UIFont.systemFont(ofSize: 26, weight: .semibold)
-        textField.minimumFontSize = 18
-        textField.adjustsFontSizeToFitWidth = true
-        textField.textColor = ThemeManager.currentTheme.settings.titleTextColor
-        textField.textAlignment = .center
-        textField.autocorrectionType = .no
-        return textField
-    }
-    
-    func makeUserDescriptionTextView() -> UITextView {
+    private static func makeUserDescriptionTextView() -> UITextView {
         let textView = UITextView()
         textView.backgroundColor = .clear
         textView.font = UIFont.systemFont(ofSize: 20, weight: .regular)
@@ -321,43 +368,13 @@ private extension ProfileView {
         return textView
     }
     
-    func makeUserDescriptionTextViewPlaceholder() -> UITextView {
-        let textView = makeUserDescriptionTextView()
-        textView.backgroundColor = .clear
-        textView.textColor = ThemeManager.currentTheme.settings.subtitleTextColor
-        textView.isUserInteractionEnabled = false
-        textView.text = "Tell something about yourself..."
-        return textView
-    }
-    
-    func makeSetImageButton() -> UIButton {
-        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
-        let tintedImage = R.image.camera()?.withRenderingMode(.alwaysTemplate)
-        button.setImage(tintedImage, for: .normal)
-        button.tintColor = .white
-        button.backgroundColor = .systemBlue
-        return button
-    }
-    
-    private func makeUndoButton() -> UIButton {
+    private static func makeUndoButton() -> UIButton {
         let button = UIButton(type: .system)
         button.setTitle("Undo Changes", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         button.backgroundColor = .clear
         button.setTitleColor(ThemeManager.currentTheme.settings.tintColor,
                              for: .normal)
-        return button
-    }
-    
-    private func makeSaveButton() -> UIButton {
-        let button = UIButton(type: .system)
-        button.setTitle("Save", for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .regular)
-        button.layer.cornerRadius = 10
-        let buttonColor = ThemeManager.currentTheme.settings.tintColor
-        button.backgroundColor = buttonColor
-        let titleColor = UIColor.contrastingColor(to: buttonColor, for: .title)
-        button.setTitleColor(titleColor, for: .normal)
         return button
     }
 }

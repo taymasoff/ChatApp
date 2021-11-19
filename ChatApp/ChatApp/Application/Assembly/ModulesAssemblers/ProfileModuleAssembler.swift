@@ -27,14 +27,22 @@ class ProfileModuleAssembler {
     func assembleAll() {
         assembleRepository()
         assembleViewModel()
+        assembleProfileView()
         assembleViewController()
     }
     
     func assembleViewController() {
         container.register(type: ProfileViewController.self) { container in
             return ProfileViewController(
-                with: container.resolve(type: ProfileViewModel.self)
+                with: container.resolve(type: ProfileViewModel.self),
+                profileView: container.resolve(type: ProfileView.self)
             )
+        }
+    }
+    
+    func assembleProfileView() {
+        container.register(type: ProfileView.self) { _ in
+            return ProfileView()
         }
     }
     
