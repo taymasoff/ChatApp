@@ -46,7 +46,7 @@ final class DMRepository: DMRepositoryProtocol {
     }()
     
     // MARK: - Init
-    init(with dialogueID: String,
+    init(dialogueID: String,
          cloudStore: FirestoreManager<Message> = FirestoreManager(
             collectionName: FBCollections.channels.rawValue
          ),

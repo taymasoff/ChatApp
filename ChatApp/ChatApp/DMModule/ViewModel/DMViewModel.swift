@@ -28,27 +28,13 @@ final class DMViewModel: NSObject, Routable {
          chatName: String? = nil,
          chatImage: UIImage? = nil,
          repository: DMRepositoryProtocol? = nil,
-         messagesProvider: MessagesProvider? = nil) {
+         messagesProvider: MessagesProvider) {
         self.router = router
         self.dialogueID = dialogueID
-        self.repository = repository ?? DMRepository(with: dialogueID)
+        self.repository = repository ?? DMRepository(dialogueID: dialogueID)
         self.chatName.value = chatName
         self.chatImage.value = chatImage
-        self.messagesProvider = messagesProvider ?? createProvider()
-        
-        func createProvider() -> MessagesProvider {
-            let request = DBMessage.fetchRequest()
-            let predicate = NSPredicate(format: "channel.identifier == %@", dialogueID)
-            let sortByDateCreatedDescriptor = NSSortDescriptor(keyPath: \DBMessage.created,
-                                                               ascending: true)
-            request.predicate = predicate
-            request.sortDescriptors = [sortByDateCreatedDescriptor]
-            request.fetchBatchSize = 10
-            return MessagesProvider(fetchRequest: request,
-                                    coreDataStack: CoreDataStack.shared,
-                                    sectionKeyPath: #keyPath(DBMessage.sectionName),
-                                    cacheName: "MessagesCache")
-        }
+        self.messagesProvider = messagesProvider
     }
     
     // MARK: - Action Methods

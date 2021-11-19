@@ -26,26 +26,10 @@ final class ConversationsViewModel: NSObject, Routable {
     // MARK: - Initializer
     init(router: MainRouterProtocol,
          repository: ConversationsRepositoryProtocol? = nil,
-         tableViewProvider: ConversationsProvider? = nil) {
+         conversationsProvider: ConversationsProvider) {
         self.router = router
         self.repository = repository ?? ConversationsRepository()
-        
-        // Знаю, что тут собирать нельзя. Потом вынесу
-        self.conversationsProvider = tableViewProvider ?? createProvider()
-        
-        func createProvider() -> ConversationsProvider {
-            let request = DBChannel.fetchRequest()
-            let sortByActivityDescriptor = NSSortDescriptor(
-                keyPath: \DBChannel.lastActivity,
-                ascending: false
-            )
-            request.sortDescriptors = [sortByActivityDescriptor]
-            request.fetchBatchSize = 10
-            return ConversationsProvider(fetchRequest: request,
-                                         coreDataStack: CoreDataStack.shared,
-                                         sectionKeyPath: #keyPath(DBChannel.sectionName),
-                                         cacheName: "ConversationsCache")
-        }
+        self.conversationsProvider = conversationsProvider
     }
     
     // MARK: - Private Methods
@@ -202,10 +186,10 @@ extension ConversationsViewModel: UITableViewDelegate {
             Log.error("Conversation ID = nil, невозможно совершить переход")
             return
         }
-        let dmViewModel = DMViewModel(router: router,
-                                      dialogueID: conversationID,
-                                      chatName: conversation.name)
-        router.showDMViewController(animated: true, withViewModel: dmViewModel)
+        router.showDMViewController(animated: true,
+                                    dialogueID: conversationID,
+                                    chatName: conversation.name,
+                                    chatImage: nil)
     }
 
     func didSwipeToDelete(at indexPath: IndexPath, completion: @escaping (Bool) -> Void) {
