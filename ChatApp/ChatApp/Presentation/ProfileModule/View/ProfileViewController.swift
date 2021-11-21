@@ -18,14 +18,14 @@ final class ProfileViewController: PopupViewController, ViewModelBased {
     lazy var nameFormatter = PersonNameComponentsFormatter()
     
     // MARK: - Inits
-    required init(popupView: UIView, popupSize: PopupSize) {
-        self.profileView = popupView as? ProfileView ?? ProfileView()
+    init(profileView: ProfileView, popupSize: PopupSize) {
+        self.profileView = profileView
         super.init(popupView: profileView, popupSize: popupSize)
     }
     
     convenience init(with viewModel: ProfileViewModel,
                      profileView: ProfileView) {
-        self.init(popupView: profileView, popupSize: .custom(0.85))
+        self.init(profileView: profileView, popupSize: .custom(0.85))
         self.viewModel = viewModel
     }
     

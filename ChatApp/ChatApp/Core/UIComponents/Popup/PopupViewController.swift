@@ -38,6 +38,7 @@ class PopupViewController: UIViewController {
     private var blurredView: BlurredView
     private var popupView: UIView
     private var isPresented: Bool = false
+    private var shapeCorners: Bool = true
     private var popupHeight: CGFloat {
         if let multiplier = popupSize.screenMultiplier {
             return view.frame.size.height * multiplier
@@ -48,10 +49,10 @@ class PopupViewController: UIViewController {
     private(set) var popupSize: PopupSize
     
     // MARK: - Inits
-    required init(popupView: UIView,
-                  popupSize: PopupSize) {
+    init(popupView: UIView, popupSize: PopupSize, shapeCorners: Bool = true) {
         self.popupView = popupView
         self.popupSize = popupSize
+        self.shapeCorners = shapeCorners
         self.blurredView = BlurredView()
         super.init(nibName: nil, bundle: nil)
     }
@@ -105,19 +106,20 @@ class PopupViewController: UIViewController {
     }
     
     private func setupPopupView() {
-        popupView.layer.masksToBounds = true
-        popupView.layer.cornerRadius = view.frame.size.width / 10
-        popupView.layer.maskedCorners = [.layerMaxXMinYCorner,
-                                         .layerMinXMinYCorner]
+        if shapeCorners { setCorners() }
         
-        popupView.snp.makeConstraints { make in
+        popupView.snp.remakeConstraints { make in
             make.right.left.equalToSuperview()
+                .priority(UILayoutPriority(999))
             make.top.greaterThanOrEqualToSuperview()
+                .priority(UILayoutPriority(999))
             if let screenMultiplier = popupSize.screenMultiplier {
                 make.height.equalToSuperview().multipliedBy(screenMultiplier)
+                    .priority(UILayoutPriority(999))
             }
             make.bottom.equalTo(view.snp.bottom)
                 .offset(popupHeight)
+                .priority(UILayoutPriority(999))
         }
         
         // Если высота не известна то сначала отрисовываем фрейм
@@ -126,10 +128,18 @@ class PopupViewController: UIViewController {
             popupView.snp.updateConstraints { make in
                 make.bottom.equalTo(view.snp.bottom)
                     .offset(popupHeight)
+                    .priority(UILayoutPriority(999))
             }
         }
         
         view.layoutIfNeeded()
+    }
+    
+    private func setCorners() {
+        popupView.layer.masksToBounds = true
+        popupView.layer.cornerRadius = view.frame.size.width / 10
+        popupView.layer.maskedCorners = [.layerMaxXMinYCorner,
+                                         .layerMinXMinYCorner]
     }
     
     // MARK: - Action Methods
@@ -153,6 +163,7 @@ class PopupViewController: UIViewController {
         if isPresented { completion(); return }
         popupView.snp.updateConstraints { make in
             make.bottom.equalTo(view.snp.bottom)
+                .priority(UILayoutPriority(999))
         }
         if animated {
             UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseOut) {
@@ -174,6 +185,7 @@ class PopupViewController: UIViewController {
         popupView.snp.updateConstraints { make in
             make.bottom.equalTo(view.snp.bottom)
                 .offset(popupView.frame.height)
+                .priority(UILayoutPriority(999))
         }
         if animated {
             UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseIn) { [weak self] in
@@ -197,6 +209,7 @@ extension PopupViewController: KeyboardObserving {
         popupView.snp.updateConstraints { make in
             make.bottom.equalTo(view.snp.bottom)
                 .offset(-keyboardSize.height)
+                .priority(UILayoutPriority(999))
         }
         
         UIView.animate(withDuration: duration) {
@@ -207,6 +220,7 @@ extension PopupViewController: KeyboardObserving {
     func keyboardWillHide(duration: Double) {
         popupView.snp.updateConstraints { make in
             make.bottom.equalTo(view.snp.bottom)
+                .priority(UILayoutPriority(999))
         }
 
         UIView.animate(withDuration: duration) {

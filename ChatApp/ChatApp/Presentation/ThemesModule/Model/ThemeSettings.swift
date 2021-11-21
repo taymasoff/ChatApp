@@ -58,8 +58,7 @@ struct ThemeSettings {
                                             tintColor: R.color.darkTint()!)
     static let charcoal = ThemeSettings(backGroundColor: R.color.charcoalMain()!,
                                         mainColor: R.color.charcoalBg()!,
-                                        secondaryColor: R.color.charcoalSecondary()!,
-                                        tintColor: R.color.charcoalTint()!,
+                                        tintColor: R.color.appYellow()!,
                                         titleTextColor: .white,
                                         subtitleTextColor: UIColor(white: 1.0, alpha: 0.6))
     static let imperialRed = ThemeSettings(backGroundColor: R.color.imperialBg()!,

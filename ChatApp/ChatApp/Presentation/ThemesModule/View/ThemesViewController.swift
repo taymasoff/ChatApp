@@ -16,14 +16,14 @@ final class ThemesViewController: PopupViewController, ViewModelBased {
     var viewModel: ThemesViewModel?
     
     // MARK: - Inits
-    required init(popupView: UIView, popupSize: PopupSize) {
-        self.themesView = popupView as? ThemesView ?? ThemesView()
-        super.init(popupView: popupView, popupSize: popupSize)
+    init(themesView: ThemesView, popupSize: PopupSize) {
+        self.themesView = themesView
+        super.init(popupView: themesView, popupSize: popupSize)
     }
     
     convenience init(with viewModel: ThemesViewModel,
                      themesView: ThemesView) {
-        self.init(popupView: themesView, popupSize: .selfCalculated)
+        self.init(themesView: themesView, popupSize: .selfCalculated)
         self.viewModel = viewModel
     }
     

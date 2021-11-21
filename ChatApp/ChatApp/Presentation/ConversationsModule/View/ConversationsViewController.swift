@@ -261,6 +261,12 @@ private extension ConversationsViewController {
         searchController.searchBar.barTintColor = ThemeManager.currentTheme.settings.mainColor
         searchController.searchBar.barStyle = ThemeManager.currentTheme.settings.barStyle
         searchController.searchBar.backgroundColor = ThemeManager.currentTheme.settings.backGroundColor
+        
+        searchController.searchBar.forceTextFieldAppearance(
+            textColor: ThemeManager.currentTheme.settings.titleTextColor,
+            placeholderColor: ThemeManager.currentTheme.settings.subtitleTextColor
+        )
+        
         self.definesPresentationContext = true
         return searchController
     }
