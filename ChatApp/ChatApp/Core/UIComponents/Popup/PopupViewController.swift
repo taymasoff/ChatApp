@@ -111,7 +111,7 @@ class PopupViewController: UIViewController {
         popupView.snp.remakeConstraints { make in
             make.right.left.equalToSuperview()
                 .priority(UILayoutPriority(999))
-            make.top.greaterThanOrEqualToSuperview()
+            make.top.greaterThanOrEqualTo(view.safeAreaLayoutGuide.snp.top)
                 .priority(UILayoutPriority(999))
             if let screenMultiplier = popupSize.screenMultiplier {
                 make.height.equalToSuperview().multipliedBy(screenMultiplier)
@@ -145,16 +145,12 @@ class PopupViewController: UIViewController {
     // MARK: - Action Methods
     @objc
     func didTapOutsidePopup() {
-        dismissPopup(animated: true) { [weak self] in
-            self?.dismiss(animated: false, completion: nil)
-        }
+        dismissPopup(animated: true) { }
     }
     
     @objc
     func didSwipePopupDown() {
-        dismissPopup(animated: true) { [weak self] in
-            self?.dismiss(animated: false, completion: nil)
-        }
+        dismissPopup(animated: true) { }
     }
     
     // MARK: - Show/Dismiss Methods
@@ -192,13 +188,16 @@ class PopupViewController: UIViewController {
                 self?.view.layoutIfNeeded()
             } completion: { [weak self] _ in
                 self?.isPresented = false
+                self?.dismiss(animated: false, completion: completion)
                 completion()
             }
         } else {
             view.layoutIfNeeded()
             isPresented = false
+            self.dismiss(animated: false, completion: completion)
             completion()
         }
+        
     }
 }
 
