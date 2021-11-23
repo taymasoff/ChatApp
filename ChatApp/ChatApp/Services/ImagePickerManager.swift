@@ -10,11 +10,12 @@ import UIKit
 class ImagePickerManager: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     var picker = UIImagePickerController()
-    var alert = UIAlertController(title: "Choose Image",
+    var alert = UIAlertController(title: "Choose Image Source",
                                   message: nil,
                                   preferredStyle: .actionSheet)
     var viewController: UIViewController?
     var pickImageCallback: ((UIImage) -> Void)?
+    var gridImagesController: GridImagesCollectionViewController?
     
     override init() {
         super.init()
@@ -25,8 +26,7 @@ class ImagePickerManager: NSObject, UIImagePickerControllerDelegate, UINavigatio
         let galleryAction = UIAlertAction(title: "Gallery", style: .default) { _ in
             self.openGallery()
         }
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
-        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in }
 
         picker.delegate = self
         alert.addAction(cameraAction)
@@ -41,8 +41,8 @@ class ImagePickerManager: NSObject, UIImagePickerControllerDelegate, UINavigatio
         self.viewController = viewController
         
         alert.popoverPresentationController?.sourceView = self.viewController?.view
-
-        viewController.present(alert, animated: true, completion: nil)
+        
+        viewController.present(alert, animated: true)
     }
     
     func openCamera() {
@@ -82,9 +82,40 @@ class ImagePickerManager: NSObject, UIImagePickerControllerDelegate, UINavigatio
             let action = UIAlertAction(title: "OK", style: .default)
             alertController.addAction(action)
             viewController?.present(alertController, animated: true)
-            viewController?.present(alertController, animated: true)
             return
         }
+        pickImageCallback?(image)
+    }
+}
+
+// MARK: - Extending to support GridImagesViewController
+extension ImagePickerManager {
+    
+    convenience init(gridImagesController: GridImagesCollectionViewController) {
+        self.init()
+        self.gridImagesController = gridImagesController
+        gridImagesController.viewModel?.delegate = self
+        self.addGridImagesAction()
+    }
+    
+    private func addGridImagesAction() {
+        let gridImagesAction = UIAlertAction(title: "Find online", style: .default) { _ in
+            self.openGridImagesPicker()
+        }
+        alert.addAction(gridImagesAction)
+    }
+    
+    func openGridImagesPicker() {
+        alert.dismiss(animated: true, completion: nil)
+        guard let gridImagesController = gridImagesController else { return }
+        gridImagesController.modalPresentationStyle = .overCurrentContext
+        viewController?.present(gridImagesController, animated: false)
+    }
+}
+
+// MARK: - GridImagesCollectionDelegate
+extension ImagePickerManager: GridImagesCollectionDelegate {
+    func didPickImage(image: UIImage) {
         pickImageCallback?(image)
     }
 }

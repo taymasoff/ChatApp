@@ -1,5 +1,5 @@
 //
-//  CoreAssembler.swift
+//  ServicesAssembler.swift
 //  ChatApp
 //
 //  Created by Тимур Таймасов on 12.11.2021.
@@ -7,8 +7,8 @@
 
 import Foundation
 
-/// Сборщик базовых компонентов приложения
-class CoreAssembler {
+/// Сборщик серисов приложения
+class ServicesAssembler {
     
     var container: DIContainer
     
@@ -18,7 +18,7 @@ class CoreAssembler {
 }
 
 // MARK: - File Manager Assembly
-extension CoreAssembler {
+extension ServicesAssembler {
     enum FileManagerType { case gcd, operation, both }
     
     func assembleFileManager(ofType type: FileManagerType) {
@@ -45,5 +45,30 @@ extension CoreAssembler {
             return OperationFileManager(fileManager: FileManager.default,
                                         qos: .default)
         }
+    }
+}
+
+// MARK: - ImagePicker Assembly
+extension ServicesAssembler {
+    func assembleImagePicker() {
+        container.register(type: ImagePickerManager.self, asSingleton: true) { container in
+            return ImagePickerManager(
+                gridImagesController: container.resolve(
+                    type: GridImagesCollectionViewController.self,
+                    asSingleton: true
+                )
+            )
+        }
+    }
+}
+
+// MARK: - GridImagesModule Assembly
+extension ServicesAssembler {
+    func assembleGridImagesModule() {
+        let gridImagesAssembler = GridImagesAssembler(
+            container: container,
+            configuration: .init()
+        )
+        gridImagesAssembler.assembleAll()
     }
 }
