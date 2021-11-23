@@ -116,7 +116,15 @@ extension ProfileRepository {
      */
     func fetchUser(completion: @escaping ResultHandler<OperationSuccess>) {
         
+        /*
+         Тут был Data Race, пофиксил пока так.
+         Знаю, метод выглядит очень жирно и грязно, надо будет отрефакторить)
+         */
+        
+        let lockQueue = DispatchQueue(label: "stopThatNastyRace.lock.queue")
+        
         let loadingGroup = DispatchGroup()
+        
         var successOperations = [String]()
         var failedOperations = [String]()
         var userResult = User()
@@ -125,11 +133,15 @@ extension ProfileRepository {
         fetchString(key: AppFileNames.userName.rawValue) { result in
             switch result {
             case .success(let name):
-                successOperations.append("Успешно загружено имя пользователя: \(name)")
-                userResult.name = name
+                lockQueue.async {
+                    successOperations.append("Успешно загружено имя пользователя: \(name)")
+                    userResult.name = name
+                }
             case .failure(let error):
-                failedOperations.append("Не удалось загрузить имя пользователя: \(error.localizedDescription)")
-                userResult.name = ""
+                lockQueue.async {
+                    failedOperations.append("Не удалось загрузить имя пользователя: \(error.localizedDescription)")
+                    userResult.name = ""
+                }
             }
             loadingGroup.leave()
         }
@@ -138,11 +150,15 @@ extension ProfileRepository {
         fetchString(key: AppFileNames.userDescription.rawValue) { result in
             switch result {
             case .success(let description):
-                successOperations.append("Успешно загружено описание пользователя: \(description)")
+                lockQueue.async {
+                    successOperations.append("Успешно загружено описание пользователя: \(description)")
+                }
                 userResult.description = description
             case .failure(let error):
-                failedOperations.append("Не удалось загрузить описание пользователя: \(error.localizedDescription)")
-                userResult.description = ""
+                lockQueue.async {
+                    failedOperations.append("Не удалось загрузить описание пользователя: \(error.localizedDescription)")
+                    userResult.description = ""
+                }
             }
             loadingGroup.leave()
         }
@@ -151,10 +167,14 @@ extension ProfileRepository {
         fetchImage(key: AppFileNames.userAvatar.rawValue) { result in
             switch result {
             case .success(let avatar):
-                successOperations.append("Успешно загружена аватарка пользователя")
-                userResult.avatar = avatar
+                lockQueue.async {
+                    successOperations.append("Успешно загружена аватарка пользователя")
+                    userResult.avatar = avatar
+                }
             case .failure(let error):
-                failedOperations.append("Не удалось загрузить аватарку пользователя: \(error.localizedDescription)")
+                lockQueue.async {
+                    failedOperations.append("Не удалось загрузить аватарку пользователя: \(error.localizedDescription)")
+                }
             }
             loadingGroup.leave()
         }
@@ -173,7 +193,6 @@ extension ProfileRepository {
             } else {
                 completion(.failure(PRError.failedToComposeSummary))
             }
-            
             self?.user.value = userResult
         }
     }
