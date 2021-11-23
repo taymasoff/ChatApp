@@ -38,7 +38,6 @@ class MainRouter: MainRouterProtocol {
     /// Инициализировать первый экран приложения
     func initiateFirstViewController() {
         if let navigationController = navigationController {
-            appAssembler.assembleConversationsModule()
             let conversationsViewController = appAssembler.container.resolve(
                 type: ConversationsViewController.self
             ) as ConversationsViewController
