@@ -25,7 +25,6 @@ protocol ImageCacheProtocol: AnyObject {
     subscript(_ url: String) -> UIImage? { get set }
 }
 
-
 class ImageCache: ImageCacheProtocol {
     
     /// Кэш изображений

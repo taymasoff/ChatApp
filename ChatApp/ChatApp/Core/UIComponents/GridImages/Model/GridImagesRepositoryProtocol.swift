@@ -1,5 +1,5 @@
 //
-//  GridImagesFetcherProtocol.swift
+//  GridImagesRepositoryProtocol.swift
 //  ChatApp
 //
 //  Created by Тимур Таймасов on 21.11.2021.
@@ -8,7 +8,7 @@
 import UIKit
 
 /// Протокол определяющий необходимые свойства и методы для подгрузки изображений в GridImageCollection
-protocol GridImagesFetcherProtocol {
+protocol GridImagesRepositoryProtocol {
         
     /// Обновить список моделей с первой страницы
     /// - Parameter query: поисковый запрос в виде строки

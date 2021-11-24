@@ -24,7 +24,7 @@ final class GridImagesCollectionViewModel {
     // MARK: - Properties
     weak var delegate: GridImagesCollectionDelegate?
     
-    private let imageFetcher: GridImagesFetcherProtocol
+    private let repository: GridImagesRepositoryProtocol
     private let imageIfFailed: UIImage
     private lazy var debouncer: Debouncer = Debouncer(
         timeInterval: Self.searchDebounceInterval
@@ -34,10 +34,10 @@ final class GridImagesCollectionViewModel {
     private var fetchedList: [GridPresentableImage] = []
     
     // MARK: Init
-    init(imageFetcher: GridImagesFetcherProtocol,
+    init(repository: GridImagesRepositoryProtocol,
          imageIfFailed: UIImage? = nil,
          delegate: GridImagesCollectionDelegate? = nil) {
-        self.imageFetcher = imageFetcher
+        self.repository = repository
         self.imageIfFailed = imageIfFailed ?? R.image.failedToLoad()!
         self.delegate = delegate
     }
@@ -86,7 +86,7 @@ extension GridImagesCollectionViewModel {
     func viewDidLoad(initial: PresentationStateCallback?,
                      completion: PresentationStateCallback?) {
         initial?(.loading)
-        imageFetcher.fetchImagesList(query: nil) { [weak self] result in
+        repository.fetchImagesList(query: nil) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let images):
@@ -107,7 +107,7 @@ extension GridImagesCollectionViewModel {
                            completion: PresentationStateCallback?) {
         // TODO: Хотел пагинацию, но пока не работает
         guard isPaginationEnabled else { return }
-        imageFetcher.fetchMoreImages { [weak self] result in
+        repository.fetchMoreImages { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let images):
@@ -134,24 +134,39 @@ extension GridImagesCollectionViewModel {
         initial?(.loading)
         debouncer.renewInterval()
         debouncer.handler = { [weak self] in
-            self?.imageFetcher.fetchImagesList(query: text,
-                                               completion: { result in
-                guard let self = self else { return }
-                switch result {
-                case .success(let images):
-                    self.fetchedList = images
-                    completion?(.presenting(.rewrite))
-                case .failure(let error):
-                    completion?(
-                        .showingError(
-                            self.generateErrorNotification(
-                                for: .failedToFetchQuery(text, error)
-                            )
+            self?.initiateSearch(query: text, completion: completion)
+        }
+    }
+    
+    // MARK: Did Manually Press Search Button
+    func didPressSearchButton(text: String,
+                              initial: PresentationStateCallback?,
+                              completion: PresentationStateCallback?) {
+        initial?(.loading)
+        debouncer.handler = nil
+        initiateSearch(query: text, completion: completion)
+    }
+    
+    // MARK: Perform Search
+    private func initiateSearch(query: String,
+                                completion: PresentationStateCallback?) {
+        repository.fetchImagesList(query: query,
+                                   completion: { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let images):
+                self.fetchedList = images
+                completion?(.presenting(.rewrite))
+            case .failure(let error):
+                completion?(
+                    .showingError(
+                        self.generateErrorNotification(
+                            for: .failedToFetchQuery(query, error)
                         )
                     )
-                }
-            })
-        }
+                )
+            }
+        })
     }
     
     // MARK: Did select cell
@@ -160,7 +175,7 @@ extension GridImagesCollectionViewModel {
                        completion: PresentationStateCallback?) {
         lastSelectedIndex = indexPath
         initial?(.loading)
-        imageFetcher.fetchFullImage(
+        repository.fetchFullImage(
             byURL: fetchedList[indexPath.item].fullImageURL
         ) { [weak self] result in
             guard let self = self else { return }
@@ -187,7 +202,7 @@ extension GridImagesCollectionViewModel {
         guard let lastSelectedIndex = lastSelectedIndex else {
             fatalError("Perform last request called but no requests was performed")
         }
-        imageFetcher.fetchFullImage(
+        repository.fetchFullImage(
             byURL: fetchedList[lastSelectedIndex.item].fullImageURL
         ) { [weak self] result in
             guard let self = self else { return }
@@ -220,7 +235,7 @@ extension GridImagesCollectionViewModel {
                        initial: CellPresentationStateCallback,
                        completion: @escaping CellPresentationStateCallback) {
         initial(.loading)
-        imageFetcher.fetchPreviewImage(byURL: fetchedList[indexPath.item].previewImageURL) { [imageIfFailed] result in
+        repository.fetchPreviewImage(byURL: fetchedList[indexPath.item].previewImageURL) { [imageIfFailed] result in
             switch result {
             case .success(let image):
                 completion(.presenting(image: image))

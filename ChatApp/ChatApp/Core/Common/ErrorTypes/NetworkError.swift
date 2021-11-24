@@ -19,7 +19,7 @@ enum NetworkError: Error {
     /// Ошибка при парсинге данных
     case parsingError(String?)
     /// Неизвестная ошибка
-    case unknown
+    case unknown(String?)
 }
 
 // MARK: - Localized Descriptions
@@ -55,9 +55,10 @@ extension NetworkError: LocalizedError {
                     .appending(message ?? ""),
                 comment: "Parsing Error"
             )
-        case .unknown:
+        case .unknown(let message):
             return NSLocalizedString(
-                "🤷‍♂️ Произошла неизвестная ошибка. ",
+                "🤷‍♂️ Произошла неизвестная ошибка. "
+                    .appending(message ?? ""),
                 comment: "Unknown Error"
             )
         }

@@ -147,9 +147,8 @@ private extension GridImagesCollectionViewController {
             collectionView.isUserInteractionEnabled = true
         case .finishing:
             activityIndicator.stopAnimating()
-            self.dismissPopup {
-                self.dismiss(animated: true)
-            }
+            collectionView.isUserInteractionEnabled = true
+            self.dismissPopup { }
         }
     }
     
@@ -274,6 +273,18 @@ extension GridImagesCollectionViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         viewModel?.didChangeSearchQuery(
             withText: searchText,
+            initial: { [weak self] initialState in
+                self?.viewState = initialState
+            },
+            completion: { [weak self] state in
+                self?.viewState = state
+            }
+        )
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        viewModel?.didPressSearchButton(
+            text: searchBar.text ?? "",
             initial: { [weak self] initialState in
                 self?.viewState = initialState
             },

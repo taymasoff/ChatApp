@@ -67,8 +67,7 @@ final class ProfileViewModel: Routable {
         userName.setAndPreserve(user.name)
         notifyDelegateOnNameSave()
         userDescription.setAndPreserve(user.description)
-        if let image = user.avatar,
-           image != userAvatar.value {
+        if let image = user.avatar {
             userAvatar.setAndPreserve(image)
             notifyDelegateOnAvatarSave()
         }
