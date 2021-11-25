@@ -8,7 +8,7 @@
 import Foundation
 
 /// Протокол диспетчера запросов
-protocol RequestDispatcherProtocol {
+protocol RequestDispatcherProtocol: ResponseHandling {
     
     /// Инициализатор, требующий URL сессию
     init(urlSession: URLSession)
@@ -31,7 +31,7 @@ class RequestDispatcher: RequestDispatcherProtocol {
     private var session: URLSession
     
     /// Инициализатор, требующий URL сессию
-    required init(urlSession: URLSession) {
+    required init(urlSession: URLSession = URLSession.shared) {
         self.session = urlSession
     }
     
@@ -54,7 +54,7 @@ class RequestDispatcher: RequestDispatcherProtocol {
                 with: request
             ) { [weak self] data, urlResponse, error in
                 // Хендлим полученные результаты на ошибки, проверяем статус коды и т.д.
-                if let result = self?.handleResponse(data, urlResponse, error) {
+                if let result = self?.handleURLResponse(data, urlResponse, error) {
                     // Чекаем результат
                     switch result {
                     case .success(let data):
@@ -80,40 +80,6 @@ class RequestDispatcher: RequestDispatcherProtocol {
                 .failure(error as? NetworkError ?? NetworkError.badInput(nil))
             )
             return nil
-        }
-    }
-    
-    /// Обрабатывает результат запроса
-    /// - Parameters:
-    ///   - data: опциональная Data
-    ///   - urlResponse: опциональный URLResponse
-    ///   - error: опциональный Error
-    /// - Returns: результат в виде Data или NetworkError
-    private func handleResponse(
-        _ data: Data?,
-        _ urlResponse: URLResponse?,
-        _ error: Error?
-    ) -> Result<Data, NetworkError> {
-        
-        // Проверяем есть ли респонс, если нет - возвращаем ошибку
-        guard let urlResponse = urlResponse as? HTTPURLResponse else {
-            return .failure(.requestFailed(nil))
-        }
-        
-        // Хэндлим статус коды, если успешные то возвращаем Data, остальные сортируем по ошибкам
-        switch urlResponse.statusCode {
-        case 200..<300:
-            if let data = data {
-                return .success(data)
-            } else {
-                return .failure(.noData)
-            }
-        case 400..<500:
-            return .failure(.requestFailed(error?.localizedDescription))
-        case 500..<600:
-            return .failure(.serverError(error?.localizedDescription))
-        default:
-            return .failure(.unknown)
         }
     }
 }

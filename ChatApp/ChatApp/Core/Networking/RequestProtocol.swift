@@ -22,6 +22,9 @@ protocol RequestProtocol {
     /// Параметры запроса
     var parameters: RequestParameters? { get }
     
+    /// Таймаут интервал запроса
+    var timeoutInteval: TimeInterval? { get }
+    
     /// Метод сборки параметров в URLRequest
     /// - Returns: URLRequest или ошибка (NetworkError)
     func buildURLRequest() throws -> URLRequest
@@ -73,6 +76,10 @@ extension RequestProtocol {
         request.url = urlComponents.url
         // Добавляем метод запроса
         request.httpMethod = self.method.rawValue
+        // Если есть timeoutInterval задаем его
+        if let timeoutInterval = self.timeoutInteval {
+            request.timeoutInterval = timeoutInterval
+        }
         
         return request
     }
