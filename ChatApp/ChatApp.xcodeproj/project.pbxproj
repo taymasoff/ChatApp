@@ -22,6 +22,8 @@
 		2218B8B62746422E00731C56 /* DMRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2218B8B52746422E00731C56 /* DMRepositoryProtocol.swift */; };
 		2218B8B82746426900731C56 /* ConversationsRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2218B8B72746426900731C56 /* ConversationsRepositoryProtocol.swift */; };
 		2218B8BA274643A400731C56 /* ProfileRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2218B8B9274643A400731C56 /* ProfileRepositoryProtocol.swift */; };
+		22198DA6274F2B4E00238A9A /* ImageRetrieverProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22198DA5274F2B4E00238A9A /* ImageRetrieverProtocol.swift */; };
+		22198DA9274F2EEB00238A9A /* ImageLinksDetecting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22198DA8274F2EEB00238A9A /* ImageLinksDetecting.swift */; };
 		22210D8327245C77005ED4B6 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22210D8227245C77005ED4B6 /* Constants.swift */; };
 		22210D85272485AA005ED4B6 /* UIButton+setBackgroundForState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22210D84272485AA005ED4B6 /* UIButton+setBackgroundForState.swift */; };
 		22252663274EB98200351950 /* URLImageFetchable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22252662274EB98200351950 /* URLImageFetchable.swift */; };
@@ -171,6 +173,8 @@
 		2218B8B52746422E00731C56 /* DMRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMRepositoryProtocol.swift; sourceTree = "<group>"; };
 		2218B8B72746426900731C56 /* ConversationsRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsRepositoryProtocol.swift; sourceTree = "<group>"; };
 		2218B8B9274643A400731C56 /* ProfileRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRepositoryProtocol.swift; sourceTree = "<group>"; };
+		22198DA5274F2B4E00238A9A /* ImageRetrieverProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRetrieverProtocol.swift; sourceTree = "<group>"; };
+		22198DA8274F2EEB00238A9A /* ImageLinksDetecting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLinksDetecting.swift; sourceTree = "<group>"; };
 		22210D8227245C77005ED4B6 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		22210D84272485AA005ED4B6 /* UIButton+setBackgroundForState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+setBackgroundForState.swift"; sourceTree = "<group>"; };
 		22252662274EB98200351950 /* URLImageFetchable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLImageFetchable.swift; sourceTree = "<group>"; };
@@ -379,6 +383,7 @@
 		2218B8BC2746443400731C56 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				22198DA7274F2ED000238A9A /* ImageRetriever */,
 				22D104C3270529D1006CF686 /* ImagePickerManager.swift */,
 				225D6182271A8D6300A5D678 /* PersistentData */,
 				22765EBE272DF3DC00AD0F15 /* Networking */,
@@ -407,6 +412,15 @@
 				22E69D282701E0D3009CAAC0 /* ProfileModule */,
 			);
 			path = Presentation;
+			sourceTree = "<group>";
+		};
+		22198DA7274F2ED000238A9A /* ImageRetriever */ = {
+			isa = PBXGroup;
+			children = (
+				22198DA5274F2B4E00238A9A /* ImageRetrieverProtocol.swift */,
+				22198DA8274F2EEB00238A9A /* ImageLinksDetecting.swift */,
+			);
+			path = ImageRetriever;
 			sourceTree = "<group>";
 		};
 		22252666274EC06700351950 /* ImageFetchers */ = {
@@ -1231,6 +1245,7 @@
 				22CC53BD26FAC8220036F6F9 /* ConversationsViewController.swift in Sources */,
 				22765EB1272C6D6100AD0F15 /* DataRemovable.swift in Sources */,
 				22FFB22F2716845D001884BA /* ThemeManager.swift in Sources */,
+				22198DA6274F2B4E00238A9A /* ImageRetrieverProtocol.swift in Sources */,
 				22C71C1A271F047E005C4466 /* DataSaveable.swift in Sources */,
 				225D6186271D66B500A5D678 /* AsyncOperation.swift in Sources */,
 				225D010D27324B2000C12BB4 /* CDRemovable.swift in Sources */,
@@ -1344,6 +1359,7 @@
 				22B77A40274DE5E00040A9FA /* ImageCache.swift in Sources */,
 				22B77A32274DD58C0040A9FA /* NetworkOperation.swift in Sources */,
 				22FFB22D27165C47001884BA /* ThemeSettings.swift in Sources */,
+				22198DA9274F2EEB00238A9A /* ImageLinksDetecting.swift in Sources */,
 				22FFB23B2716AE4B001884BA /* ThemeObjcModel.m in Sources */,
 				22C71C2727219C02005C4466 /* InAppNotificationViewModel.swift in Sources */,
 				22D104B72704D55E006CF686 /* BlurredView.swift in Sources */,
