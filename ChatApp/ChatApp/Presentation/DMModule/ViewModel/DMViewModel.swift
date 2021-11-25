@@ -19,6 +19,7 @@ final class DMViewModel: NSObject, Routable {
     
     private let repository: DMRepositoryProtocol
     private let messagesProvider: MessagesProvider
+    private let imagePicker: ImagePickerManager
     
     var dmTableViewDataSource: UITableViewDataSource {
         return messagesProvider
@@ -34,13 +35,15 @@ final class DMViewModel: NSObject, Routable {
          chatName: String? = nil,
          chatImage: UIImage? = nil,
          repository: DMRepositoryProtocol? = nil,
-         messagesProvider: MessagesProvider) {
+         messagesProvider: MessagesProvider,
+         imagePicker: ImagePickerManager = ImagePickerManager()) {
         self.router = router
         self.dialogueID = dialogueID
         self.repository = repository ?? DMRepository(dialogueID: dialogueID)
         self.chatName.value = chatName
         self.chatImage.value = chatImage
         self.messagesProvider = messagesProvider
+        self.imagePicker = imagePicker
     }
     
     // MARK: - Action Methods
@@ -48,8 +51,13 @@ final class DMViewModel: NSObject, Routable {
         repository.newMessage(with: text)
     }
     
-    func addButtonPressed() {
-        Log.info("Add Message Pressed")
+    func addButtonPressed(presentingVC: UIViewController,
+                          completion: ((String) -> Void)?) {
+        imagePicker.pickImage(presentingVC) { _, url in
+            if let url = url {
+                completion?(url)
+            }
+        }
     }
 }
 

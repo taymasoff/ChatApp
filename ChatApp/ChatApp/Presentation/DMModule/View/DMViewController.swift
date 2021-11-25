@@ -76,6 +76,17 @@ final class DMViewController: UIViewController, ViewModelBased {
         dmTableView.delegate = viewModel
     }
     
+    // MARK: - Actions
+    private func sendMessagePressed(text: String) {
+        viewModel?.sendMessagePressed(with: text)
+    }
+    
+    private func addButtonPressed(sender: UIButton) {
+        viewModel?.addButtonPressed(presentingVC: self) { [weak self] urlString in
+            self?.handleAppendingURLToTextField(urlString: urlString)
+        }
+    }
+    
     // MARK: - Private Methods
     private func clearBackButtonText() {
         let backButton = UIBarButtonItem()
@@ -91,6 +102,15 @@ final class DMViewController: UIViewController, ViewModelBased {
     private func scrollTableViewToBottom() {
         view.layoutIfNeeded()
         dmTableView.scrollToBottom(animated: false)
+    }
+    
+    private func handleAppendingURLToTextField(urlString: String) {
+        // Добавляем urlString к текущему тексту
+        let lastTextFieldValue: String = newMessageController.newMessageView.textField.text ?? ""
+        newMessageController.newMessageView.textField.text = [lastTextFieldValue, urlString]
+            .joined(separator: " ")
+        // В ручную вызываем textFieldDidChange т.к. он не тригерится на изменения кодом
+        newMessageController.textFieldDidChange(newMessageController.newMessageView.textField)
     }
 }
 
@@ -171,11 +191,11 @@ extension DMViewController: KeyboardObserving {
                 .offset(-keyboardSize.height)
         }
         
-        let tableOffsetY = dmTableView.contentSize.height - keyboardSize.height + 5
+        let tableOffsetY = dmTableView.contentSize.height - keyboardSize.height + 15
         dmTableView.contentOffset = CGPoint(x: 0, y: tableOffsetY)
         
-        UIView.animate(withDuration: duration) {
-            self.view.layoutIfNeeded()
+        UIView.animate(withDuration: duration) { [weak self] in
+            self?.view.layoutIfNeeded()
         }
     }
     
@@ -187,8 +207,8 @@ extension DMViewController: KeyboardObserving {
                 .inset(20)
         }
         
-        UIView.animate(withDuration: duration) {
-            self.view.layoutIfNeeded()
+        UIView.animate(withDuration: duration) { [weak self] in
+            self?.view.layoutIfNeeded()
         }
     }
 }
@@ -204,17 +224,13 @@ private extension DMViewController {
             make.bottom.equalToSuperview()
         })
         
-        newMessageController.onSendMessagePressed = { [weak self] text in
-            self?.viewModel?.sendMessagePressed(with: text)
-        }
-        
-        newMessageController.onAddButtonPressed = { _ in
-            Log.info("Add button pressed")
-        }
+        newMessageController.onSendMessagePressed = sendMessagePressed
+        newMessageController.onAddButtonPressed = addButtonPressed(sender:)
     }
     
     func setupDMTableView() {
         view.addSubview(dmTableView)
+        dmTableView.contentInsetAdjustmentBehavior = .never
         
         dmTableView.snp.makeConstraints { make in
             make.top.left.right.equalToSuperview()

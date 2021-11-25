@@ -53,7 +53,8 @@ class DMModuleAssembler {
                 chatName: self.configuration.chatName,
                 chatImage: self.configuration.chatImage,
                 repository: container.resolve(type: DMRepository.self),
-                messagesProvider: container.resolve(type: MessagesProvider.self)
+                messagesProvider: container.resolve(type: MessagesProvider.self),
+                imagePicker: container.resolve(type: ImagePickerManager.self)
             )
         }
     }

@@ -8,13 +8,14 @@
 import UIKit
 
 class ImagePickerManager: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-
+    typealias PickImageCallback = (_ image: UIImage, _ url: String?) -> Void
+    
     var picker = UIImagePickerController()
     var alert = UIAlertController(title: "Choose Image Source",
                                   message: nil,
                                   preferredStyle: .actionSheet)
     var viewController: UIViewController?
-    var pickImageCallback: ((UIImage) -> Void)?
+    var pickImageCallback: PickImageCallback?
     var gridImagesController: GridImagesCollectionViewController?
     
     override init() {
@@ -35,7 +36,7 @@ class ImagePickerManager: NSObject, UIImagePickerControllerDelegate, UINavigatio
     }
 
     func pickImage(_ viewController: UIViewController,
-                   _ callback: @escaping ((UIImage) -> Void)) {
+                   _ callback: @escaping PickImageCallback) {
         
         pickImageCallback = callback
         self.viewController = viewController
@@ -84,7 +85,7 @@ class ImagePickerManager: NSObject, UIImagePickerControllerDelegate, UINavigatio
             viewController?.present(alertController, animated: true)
             return
         }
-        pickImageCallback?(image)
+        pickImageCallback?(image, nil)
     }
 }
 
@@ -115,7 +116,7 @@ extension ImagePickerManager {
 
 // MARK: - GridImagesCollectionDelegate
 extension ImagePickerManager: GridImagesCollectionDelegate {
-    func didPickImage(image: UIImage) {
-        pickImageCallback?(image)
+    func didPickImage(image: UIImage, url: String) {
+        pickImageCallback?(image, url)
     }
 }

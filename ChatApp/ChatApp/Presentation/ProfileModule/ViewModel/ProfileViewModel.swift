@@ -75,7 +75,7 @@ final class ProfileViewModel: Routable {
     
     // MARK: - Action Methods
     func editProfileImagePressed(sender: UIViewController) {
-        imagePicker.pickImage(sender) { [weak self] image in
+        imagePicker.pickImage(sender) { [weak self] image, _ in
             self?.userAvatar.value = image
         }
     }

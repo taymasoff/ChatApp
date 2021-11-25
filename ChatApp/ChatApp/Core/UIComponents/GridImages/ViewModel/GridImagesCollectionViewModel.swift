@@ -9,7 +9,7 @@ import UIKit
 import Rswift
 
 protocol GridImagesCollectionDelegate: AnyObject {
-    func didPickImage(image: UIImage)
+    func didPickImage(image: UIImage, url: String)
 }
 
 final class GridImagesCollectionViewModel {
@@ -74,6 +74,48 @@ final class GridImagesCollectionViewModel {
                 buttonOneText: "Ok",
                 buttonTwoText: "Try again"
             )
+        }
+    }
+    
+    // MARK: Perform Search
+    private func initiateSearch(query: String,
+                                completion: PresentationStateCallback?) {
+        repository.fetchImagesList(query: query,
+                                   completion: { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let images):
+                self.fetchedList = images
+                completion?(.presenting(.rewrite))
+            case .failure(let error):
+                completion?(
+                    .showingError(
+                        self.generateErrorNotification(
+                            for: .failedToFetchQuery(query, error)
+                        )
+                    )
+                )
+            }
+        })
+    }
+    
+    private func initiateFullImageFetch(url: String,
+                                        completion: PresentationStateCallback?) {
+        repository.fetchFullImage(byURL: url) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let image):
+                self.delegate?.didPickImage(image: image, url: url)
+                completion?(.finishing)
+            case .failure(let error):
+                completion?(
+                    .showingError(
+                        self.generateErrorNotification(
+                            for: .failedToFetchFullImage(error)
+                        )
+                    )
+                )
+            }
         }
     }
 }
@@ -147,52 +189,14 @@ extension GridImagesCollectionViewModel {
         initiateSearch(query: text, completion: completion)
     }
     
-    // MARK: Perform Search
-    private func initiateSearch(query: String,
-                                completion: PresentationStateCallback?) {
-        repository.fetchImagesList(query: query,
-                                   completion: { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success(let images):
-                self.fetchedList = images
-                completion?(.presenting(.rewrite))
-            case .failure(let error):
-                completion?(
-                    .showingError(
-                        self.generateErrorNotification(
-                            for: .failedToFetchQuery(query, error)
-                        )
-                    )
-                )
-            }
-        })
-    }
-    
     // MARK: Did select cell
     func didSelectCell(atIndexPath indexPath: IndexPath,
                        initial: PresentationStateCallback?,
                        completion: PresentationStateCallback?) {
         lastSelectedIndex = indexPath
         initial?(.loading)
-        repository.fetchFullImage(
-            byURL: fetchedList[indexPath.item].fullImageURL
-        ) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success(let image):
-                self.delegate?.didPickImage(image: image)
-                completion?(.finishing)
-            case .failure(let error):
-                completion?(
-                    .showingError(
-                        self.generateErrorNotification(
-                            for: .failedToFetchFullImage(error)
-                        )
-                    )
-                )
-            }
-        }
+        let url = fetchedList[indexPath.item].fullImageURL
+        initiateFullImageFetch(url: url, completion: completion)
     }
     
     // MARK: PerformLastRequest
@@ -202,24 +206,8 @@ extension GridImagesCollectionViewModel {
         guard let lastSelectedIndex = lastSelectedIndex else {
             fatalError("Perform last request called but no requests was performed")
         }
-        repository.fetchFullImage(
-            byURL: fetchedList[lastSelectedIndex.item].fullImageURL
-        ) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success(let image):
-                self.delegate?.didPickImage(image: image)
-                completion?(.finishing)
-            case .failure(let error):
-                completion?(
-                    .showingError(
-                        self.generateErrorNotification(
-                            for: .failedToFetchFullImage(error)
-                        )
-                    )
-                )
-            }
-        }
+        let url = fetchedList[lastSelectedIndex.item].fullImageURL
+        initiateFullImageFetch(url: url, completion: completion)
     }
 }
 
