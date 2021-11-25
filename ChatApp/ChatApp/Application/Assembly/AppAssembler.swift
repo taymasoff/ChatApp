@@ -28,9 +28,12 @@ class AppAssembler {
     // MARK: - Startup Assemble
     func startupAssemble() {
         assembleMainRouter()
-        assembleConversationsModule()
+        servicesAssembler.assembleFileManager(ofType: .gcd)
+        servicesAssembler.assembleRequestDisptacher()
+        servicesAssembler.assembleImageFetcher()
         servicesAssembler.assembleGridImagesModule()
         servicesAssembler.assembleImagePicker()
+        assembleConversationsModule()
     }
     
     // MARK: - Assemble Methods
@@ -44,7 +47,6 @@ class AppAssembler {
     }
     
     func assembleConversationsModule() {
-        servicesAssembler.assembleFileManager(ofType: .gcd)
         let conversationsModuleAssembler = ConversationsModuleAssembler(
             container: container,
             configuration: .init(fmPreferences: userProfileFMPreferences)

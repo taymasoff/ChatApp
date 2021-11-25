@@ -54,8 +54,7 @@ extension ServicesAssembler {
         container.register(type: ImagePickerManager.self, asSingleton: true) { container in
             return ImagePickerManager(
                 gridImagesController: container.resolve(
-                    type: GridImagesCollectionViewController.self,
-                    asSingleton: true
+                    type: GridImagesCollectionViewController.self
                 )
             )
         }
@@ -70,5 +69,21 @@ extension ServicesAssembler {
             configuration: .init()
         )
         gridImagesAssembler.assembleAll()
+    }
+}
+
+extension ServicesAssembler {
+    func assembleRequestDisptacher() {
+        container.register(type: RequestDispatcher.self) { _ in
+            return RequestDispatcher(urlSession: URLSession.shared)
+        }
+    }
+}
+
+extension ServicesAssembler {
+    func assembleImageFetcher() {
+        container.register(type: CachedImageFetcher.self) { _ in
+            return CachedImageFetcher()
+        }
     }
 }

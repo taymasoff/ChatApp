@@ -26,6 +26,7 @@ class GridImagesAssembler {
     }
     
     func assembleAll() {
+        assembleRepository()
         assembleLayout()
         assembleViewModel()
         assembleViewController()
@@ -42,9 +43,9 @@ class GridImagesAssembler {
     }
     
     func assembleViewModel() {
-        container.register(type: GridImagesCollectionViewModel.self) { _ in
+        container.register(type: GridImagesCollectionViewModel.self) { container in
             return GridImagesCollectionViewModel(
-                imageFetcher: MockFetcher(),
+                repository: container.resolve(type: GridImagesRepository.self),
                 imageIfFailed: nil,
                 delegate: self.configuration.delegate
             )
@@ -56,6 +57,15 @@ class GridImagesAssembler {
             return PinterestLayout(
                 numberOfColumns: self.configuration.numberOfColumns,
                 spacing: self.configuration.layoutSpacing
+            )
+        }
+    }
+    
+    func assembleRepository() {
+        container.register(type: GridImagesRepository.self) { container in
+            return GridImagesRepository(
+                requestDispatcher: container.resolve(type: RequestDispatcher.self),
+                imageFetcher: container.resolve(type: CachedImageFetcher.self)
             )
         }
     }
