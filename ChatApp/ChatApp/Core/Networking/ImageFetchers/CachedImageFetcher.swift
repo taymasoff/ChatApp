@@ -10,6 +10,10 @@ import Foundation
 /// Тот же самый URLImageFetchable, только с кешированием изображений
 protocol CachedImageFetcherProtocol: URLImageFetchable {
     func clearImageCache()
+    func fetchCachedImage(from url: URL,
+                          completion: @escaping ResultHandler<UIImage>)
+    func fetchCachedImage(from url: String,
+                          completion: @escaping ResultHandler<UIImage>)
 }
 
 final class CachedImageFetcher: CachedImageFetcherProtocol {
@@ -24,27 +28,26 @@ final class CachedImageFetcher: CachedImageFetcherProtocol {
         imageCache.clearCache()
     }
     
-    func fetchImage(from url: URL,
-                    in urlSession: URLSession? = nil,
-                    completion: @escaping ResultHandler<UIImage>) {
+    func fetchCachedImage(from url: URL,
+                          completion: @escaping ResultHandler<UIImage>) {
         guard let image = imageCache[url.absoluteString] else {
-            (self as URLImageFetchable).fetchImage(from: url,
-                                                   in: urlSession,
-                                                   completion: completion)
+            (self as URLImageFetchable).fetchImage(from: url) { [weak self] result in
+                if case .success(let image) = result {
+                    self?.imageCache[url.absoluteString] = image
+                }
+                completion(result)
+            }
             return
         }
         completion(.success(image))
     }
     
-    func fetchImage(from url: String,
-                    in urlSession: URLSession? = nil,
-                    completion: @escaping ResultHandler<UIImage>) {
-        guard let image = imageCache[url] else {
-            (self as URLImageFetchable).fetchImage(from: url,
-                                                   in: urlSession,
-                                                   completion: completion)
+    func fetchCachedImage(from url: String,
+                          completion: @escaping ResultHandler<UIImage>) {
+        guard let url = URL(string: url) else {
+            completion(.failure(NetworkError.badInput("\(url) не является валидным URL")))
             return
         }
-        completion(.success(image))
+        fetchCachedImage(from: url, completion: completion)
     }
 }

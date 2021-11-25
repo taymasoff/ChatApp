@@ -24,7 +24,7 @@ enum NetworkError: Error {
 
 // MARK: - Localized Descriptions
 extension NetworkError: LocalizedError {
-    var localizedDescription: String? {
+    var localizedDescription: String {
         switch self {
         case .badInput(let message):
             return NSLocalizedString(

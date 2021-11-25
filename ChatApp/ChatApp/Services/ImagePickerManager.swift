@@ -10,13 +10,17 @@ import UIKit
 class ImagePickerManager: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     typealias PickImageCallback = (_ image: UIImage, _ url: String?) -> Void
     
-    var picker = UIImagePickerController()
-    var alert = UIAlertController(title: "Choose Image Source",
-                                  message: nil,
-                                  preferredStyle: .actionSheet)
-    var viewController: UIViewController?
+    private var picker = UIImagePickerController()
+    private let alert: UIAlertController = {
+        let alert = UIAlertController(title: "Choose Image Source",
+                                          message: nil,
+                                          preferredStyle: .actionSheet)
+        alert.view.tintColor = .systemBlue
+        return alert
+    }()
+    private var viewController: UIViewController?
+    private var gridImagesController: GridImagesCollectionViewController?
     var pickImageCallback: PickImageCallback?
-    var gridImagesController: GridImagesCollectionViewController?
     
     override init() {
         super.init()

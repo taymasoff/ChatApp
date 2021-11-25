@@ -33,6 +33,7 @@ class AppAssembler {
         servicesAssembler.assembleImageFetcher()
         servicesAssembler.assembleGridImagesModule()
         servicesAssembler.assembleImagePicker()
+        servicesAssembler.assembleImageRetriever()
         assembleConversationsModule()
     }
     

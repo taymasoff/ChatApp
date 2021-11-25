@@ -72,6 +72,7 @@ extension ServicesAssembler {
     }
 }
 
+// MARK: - RequestDispatcher Assembly
 extension ServicesAssembler {
     func assembleRequestDisptacher() {
         container.register(type: RequestDispatcher.self) { _ in
@@ -80,10 +81,21 @@ extension ServicesAssembler {
     }
 }
 
+// MARK: - ImageFetcher Assembly
 extension ServicesAssembler {
     func assembleImageFetcher() {
         container.register(type: CachedImageFetcher.self) { _ in
             return CachedImageFetcher()
+        }
+    }
+}
+
+extension ServicesAssembler {
+    func assembleImageRetriever() {
+        container.register(type: ImageRetriever.self) { container in
+            return ImageRetriever(
+                imageFetcher: container.resolve(type: CachedImageFetcher.self)
+            )
         }
     }
 }

@@ -57,7 +57,7 @@ final class GridImagesRepository: GridImagesRepositoryProtocol {
     
     func fetchPreviewImage(byURL url: String,
                            completion: @escaping ResultHandler<UIImage>) {
-        imageFetcher.fetchImage(from: url) { result in
+        imageFetcher.fetchCachedImage(from: url) { result in
             DispatchQueue.main.async {
                 completion(result)
             }
@@ -66,7 +66,7 @@ final class GridImagesRepository: GridImagesRepositoryProtocol {
     
     func fetchFullImage(byURL url: String,
                         completion: @escaping ResultHandler<UIImage>) {
-        imageFetcher.fetchImage(from: url) { result in
+        imageFetcher.fetchCachedImage(from: url) { result in
             DispatchQueue.main.async {
                 completion(result)
             }
