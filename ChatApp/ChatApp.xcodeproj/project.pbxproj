@@ -79,7 +79,7 @@
 		227E180C2730D306004D5529 /* CoreDataError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227E180B2730D306004D5529 /* CoreDataError.swift */; };
 		2286F4DC270EF27700ED809E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2286F4DB270EF27700ED809E /* Message.swift */; };
 		2286F4E3270F064600ED809E /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2286F4E2270F064600ED809E /* Protocols.swift */; };
-		2286F4E7270F7FFA00ED809E /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2286F4E6270F7FFA00ED809E /* UIImage+Resize.swift */; };
+		2286F4E7270F7FFA00ED809E /* UIImage+Resize+CropRatio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2286F4E6270F7FFA00ED809E /* UIImage+Resize+CropRatio.swift */; };
 		2286F4E9270F842800ED809E /* UITableView+ScrollToBottom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2286F4E8270F842800ED809E /* UITableView+ScrollToBottom.swift */; };
 		228DC5C327464C5F00AB855B /* FRCDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228DC5C227464C5F00AB855B /* FRCDataProvider.swift */; };
 		228DC5CC2746575400AB855B /* NewConversationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228DC5CB2746575400AB855B /* NewConversationController.swift */; };
@@ -230,7 +230,7 @@
 		227E180B2730D306004D5529 /* CoreDataError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataError.swift; sourceTree = "<group>"; };
 		2286F4DB270EF27700ED809E /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		2286F4E2270F064600ED809E /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
-		2286F4E6270F7FFA00ED809E /* UIImage+Resize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
+		2286F4E6270F7FFA00ED809E /* UIImage+Resize+CropRatio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize+CropRatio.swift"; sourceTree = "<group>"; };
 		2286F4E8270F842800ED809E /* UITableView+ScrollToBottom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+ScrollToBottom.swift"; sourceTree = "<group>"; };
 		228DC5C227464C5F00AB855B /* FRCDataProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FRCDataProvider.swift; sourceTree = "<group>"; };
 		228DC5CB2746575400AB855B /* NewConversationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationController.swift; sourceTree = "<group>"; };
@@ -883,7 +883,7 @@
 				222A55B5270C0FA90047CA24 /* Date+Formatting.swift */,
 				22D104BC2704DCDA006CF686 /* UIImageView+Placeholders.swift */,
 				227E17E72730AFAD004D5529 /* DateFormatter+shared.swift */,
-				2286F4E6270F7FFA00ED809E /* UIImage+Resize.swift */,
+				2286F4E6270F7FFA00ED809E /* UIImage+Resize+CropRatio.swift */,
 				2286F4E8270F842800ED809E /* UITableView+ScrollToBottom.swift */,
 				22210D84272485AA005ED4B6 /* UIButton+setBackgroundForState.swift */,
 				22FEEA2427284AFF003C8B62 /* String+containsLetters.swift */,
@@ -1324,7 +1324,7 @@
 				22765ED9273082FE00AD0F15 /* DynamicModelBasedCloudStore.swift in Sources */,
 				2247F96F2712A4F800BFFC69 /* R.generated.swift in Sources */,
 				227E180A2730D0BF004D5529 /* DBChannel+CoreDataProperties.swift in Sources */,
-				2286F4E7270F7FFA00ED809E /* UIImage+Resize.swift in Sources */,
+				2286F4E7270F7FFA00ED809E /* UIImage+Resize+CropRatio.swift in Sources */,
 				225D011E2737F8B600C12BB4 /* ConversationsProvider.swift in Sources */,
 				220294322739C1FE0032B9D1 /* MessagesProvider.swift in Sources */,
 				22FFB21B27149AA6001884BA /* ThemesViewModel.swift in Sources */,

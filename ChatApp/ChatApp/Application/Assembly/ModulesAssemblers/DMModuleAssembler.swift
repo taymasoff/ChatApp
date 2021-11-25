@@ -81,7 +81,8 @@ class DMModuleAssembler {
     func assembleMessagesProvider() {
         container.register(type: MessagesProvider.self) { container in
             return MessagesProvider(
-                frcDataProvider: container.resolve(type: FRCDataProvider<DBMessage>.self)
+                frcDataProvider: container.resolve(type: FRCDataProvider<DBMessage>.self),
+                imageRetriever: container.resolve(type: ImageRetriever.self)
             )
         }
     }
