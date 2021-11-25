@@ -32,4 +32,6 @@ struct AppData {
     static var deviceID: String = UIDevice.current.identifierForVendor!.uuidString
     
     static let coreDataModel: String = "ChatAppDataModel"
+    
+    static let pixabayAPIKey: String = "24447993-d83826e9b7088e14b4ae65ef0"
 }
