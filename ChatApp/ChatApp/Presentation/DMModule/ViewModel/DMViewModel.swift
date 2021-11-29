@@ -53,8 +53,8 @@ final class DMViewModel: NSObject, Routable {
     
     func addButtonPressed(presentingVC: UIViewController,
                           completion: ((String) -> Void)?) {
-        imagePicker.pickImage(presentingVC) { _, url in
-            if let url = url {
+        imagePicker.pickImage(presentingVC) { result in
+            if case .pickedImageOnline(_, let url) = result {
                 completion?(url)
             }
         }

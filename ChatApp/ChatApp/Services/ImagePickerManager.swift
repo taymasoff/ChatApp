@@ -8,7 +8,15 @@
 import UIKit
 
 class ImagePickerManager: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    typealias PickImageCallback = (_ image: UIImage, _ url: String?) -> Void
+    
+    enum ImagePickerResult {
+        case pickedLocalImage(UIImage)
+        case pickedImageOnline(UIImage, url: String)
+        case resourceIsUnavailable
+        case cancelled
+    }
+    
+    typealias PickImageCallback = (ImagePickerResult) -> Void
     
     private var picker = UIImagePickerController()
     private let alert: UIAlertController = {
@@ -31,7 +39,9 @@ class ImagePickerManager: NSObject, UIImagePickerControllerDelegate, UINavigatio
         let galleryAction = UIAlertAction(title: "Gallery", style: .default) { _ in
             self.openGallery()
         }
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { [weak self] _ in
+            self?.pickImageCallback?(.cancelled)
+        }
 
         picker.delegate = self
         alert.addAction(cameraAction)
@@ -63,6 +73,7 @@ class ImagePickerManager: NSObject, UIImagePickerControllerDelegate, UINavigatio
             let action = UIAlertAction(title: "OK", style: .default)
             alertController.addAction(action)
             viewController?.present(alertController, animated: true)
+            pickImageCallback?(.resourceIsUnavailable)
         }
     }
     
@@ -74,6 +85,7 @@ class ImagePickerManager: NSObject, UIImagePickerControllerDelegate, UINavigatio
     }
 
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        pickImageCallback?(.cancelled)
         picker.dismiss(animated: true, completion: nil)
     }
 
@@ -89,7 +101,7 @@ class ImagePickerManager: NSObject, UIImagePickerControllerDelegate, UINavigatio
             viewController?.present(alertController, animated: true)
             return
         }
-        pickImageCallback?(image, nil)
+        pickImageCallback?(.pickedLocalImage(image))
     }
 }
 
@@ -121,6 +133,6 @@ extension ImagePickerManager {
 // MARK: - GridImagesCollectionDelegate
 extension ImagePickerManager: GridImagesCollectionDelegate {
     func didPickImage(image: UIImage, url: String) {
-        pickImageCallback?(image, url)
+        pickImageCallback?(.pickedImageOnline(image, url: url))
     }
 }
