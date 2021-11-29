@@ -72,8 +72,8 @@ class ProfileView: UIView {
         return button
     }()
     
-    private(set) var setImageButton: UIButton = {
-        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
+    private(set) var setImageButton: ShakyButton = {
+        let button = ShakyButton(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
         let tintedImage = R.image.camera()?.withRenderingMode(.alwaysTemplate)
         button.setImage(tintedImage, for: .normal)
         button.tintColor = .white

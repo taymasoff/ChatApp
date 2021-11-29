@@ -90,7 +90,10 @@ final class ProfileViewController: PopupViewController, ViewModelBased {
     // MARK: Action Methods
     @objc
     private func editProfileImagePressed() {
-        viewModel?.editProfileImagePressed(sender: self)
+        profileView.setImageButton.startShaking()
+        viewModel?.editProfileImagePressed(sender: self) { [weak self] in
+            self?.profileView.setImageButton.stopShaking()
+        }
     }
     
     @objc
