@@ -28,6 +28,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             router: diContainer.resolve(type: MainRouter.self,
                                         asSingleton: true)
         )
+        
+        appDelegate?.setupLogoEmitter(at: window)
+        appDelegate?.longPressLogoEmitter?.enable()
     }
     
     private func createAndShowFirstScene(scene: UIScene, router: MainRouterProtocol) {

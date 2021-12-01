@@ -14,6 +14,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     
+    var longPressLogoEmitter: LongPressLogoEmitter?
+    
     let diContainer = DIContainer()
     lazy var appAssembler = AppAssembler(contaier: diContainer)
 
@@ -33,13 +35,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         setupLogger()
         
         ThemeManager.updateCurrentTheme()
+        
         if #available(iOS 13, *) {} else {
             createAndShowFirstScene(
                 router: diContainer.resolve(type: MainRouter.self,
                                             asSingleton: true)
             )
+            setupLogoEmitter(at: window)
+            longPressLogoEmitter?.enable()
         }
         return true
+    }
+    
+    func setupLogoEmitter(at window: UIWindow?) {
+        guard let window = window else {
+            Log.error("Logo emitter setup method called with window value = nil")
+            return
+        }
+        longPressLogoEmitter = LongPressLogoEmitter(drawingView: window)
     }
     
     private func setupLogger() {
@@ -57,7 +70,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window.rootViewController = router.navigationController
         window.makeKeyAndVisible()
         self.window = window
-        
     }
     
     // MARK: UISceneSession Lifecycle
@@ -73,5 +85,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
-
 }

@@ -131,6 +131,7 @@
 		22E69D332701E2C1009CAAC0 /* ConversationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E69D322701E2C1009CAAC0 /* ConversationCell.swift */; };
 		22E69D352701E2D8009CAAC0 /* ConversationCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E69D342701E2D8009CAAC0 /* ConversationCellViewModel.swift */; };
 		22FB82422755927B001AEB72 /* ShakyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FB82412755927B001AEB72 /* ShakyButton.swift */; };
+		22FB82462756FE30001AEB72 /* LongPressLogoEmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FB82452756FE30001AEB72 /* LongPressLogoEmitter.swift */; };
 		22FEEA2327275BF4003C8B62 /* NewConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEA2227275BF4003C8B62 /* NewConversationView.swift */; };
 		22FEEA2527284AFF003C8B62 /* String+containsLetters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEA2427284AFF003C8B62 /* String+containsLetters.swift */; };
 		22FEEA2A272995DC003C8B62 /* FirestoreError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEA29272995DC003C8B62 /* FirestoreError.swift */; };
@@ -285,6 +286,7 @@
 		22E69D322701E2C1009CAAC0 /* ConversationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCell.swift; sourceTree = "<group>"; };
 		22E69D342701E2D8009CAAC0 /* ConversationCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCellViewModel.swift; sourceTree = "<group>"; };
 		22FB82412755927B001AEB72 /* ShakyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakyButton.swift; sourceTree = "<group>"; };
+		22FB82452756FE30001AEB72 /* LongPressLogoEmitter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LongPressLogoEmitter.swift; sourceTree = "<group>"; };
 		22FEEA2227275BF4003C8B62 /* NewConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationView.swift; sourceTree = "<group>"; };
 		22FEEA2427284AFF003C8B62 /* String+containsLetters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+containsLetters.swift"; sourceTree = "<group>"; };
 		22FEEA29272995DC003C8B62 /* FirestoreError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreError.swift; sourceTree = "<group>"; };
@@ -905,6 +907,7 @@
 				22029433273B461C0032B9D1 /* DataSourceChange.swift */,
 				22FFB22727162245001884BA /* StoredProperty.swift */,
 				2286F4E2270F064600ED809E /* Protocols.swift */,
+				22FB82452756FE30001AEB72 /* LongPressLogoEmitter.swift */,
 				22B50F7626FB01810099436A /* Log.swift */,
 				228DC5CF2746801400AB855B /* KeyboardObserving.swift */,
 				22D1BBA1274AAE440009D460 /* Debouncer.swift */,
@@ -1344,6 +1347,7 @@
 				225D011A27324E2500C12BB4 /* ChatAppDataModel.xcdatamodeld in Sources */,
 				225D00FB27323C7E00C12BB4 /* CSModelUpdateLog.swift in Sources */,
 				2218B8AB273F0B3900731C56 /* DMModuleAssembler.swift in Sources */,
+				22FB82462756FE30001AEB72 /* LongPressLogoEmitter.swift in Sources */,
 				22029439273B5DC00032B9D1 /* Conversation+Codable.swift in Sources */,
 				22E69D2C2701E0EF009CAAC0 /* ProfileViewModel.swift in Sources */,
 				22FFB21F2714BE9E001884BA /* ThemesView.swift in Sources */,
