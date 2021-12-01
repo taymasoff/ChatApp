@@ -130,6 +130,7 @@
 		22E69D2C2701E0EF009CAAC0 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E69D2B2701E0EF009CAAC0 /* ProfileViewModel.swift */; };
 		22E69D332701E2C1009CAAC0 /* ConversationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E69D322701E2C1009CAAC0 /* ConversationCell.swift */; };
 		22E69D352701E2D8009CAAC0 /* ConversationCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E69D342701E2D8009CAAC0 /* ConversationCellViewModel.swift */; };
+		22FB8248275735AB001AEB72 /* ScaledImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FB8247275735AB001AEB72 /* ScaledImageView.swift */; };
 		22FEEA2327275BF4003C8B62 /* NewConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEA2227275BF4003C8B62 /* NewConversationView.swift */; };
 		22FEEA2527284AFF003C8B62 /* String+containsLetters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEA2427284AFF003C8B62 /* String+containsLetters.swift */; };
 		22FEEA2A272995DC003C8B62 /* FirestoreError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEA29272995DC003C8B62 /* FirestoreError.swift */; };
@@ -283,6 +284,7 @@
 		22E69D2B2701E0EF009CAAC0 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		22E69D322701E2C1009CAAC0 /* ConversationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCell.swift; sourceTree = "<group>"; };
 		22E69D342701E2D8009CAAC0 /* ConversationCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCellViewModel.swift; sourceTree = "<group>"; };
+		22FB8247275735AB001AEB72 /* ScaledImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScaledImageView.swift; sourceTree = "<group>"; };
 		22FEEA2227275BF4003C8B62 /* NewConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationView.swift; sourceTree = "<group>"; };
 		22FEEA2427284AFF003C8B62 /* String+containsLetters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+containsLetters.swift"; sourceTree = "<group>"; };
 		22FEEA29272995DC003C8B62 /* FirestoreError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreError.swift; sourceTree = "<group>"; };
@@ -871,6 +873,7 @@
 				228DC5D82747A57B00AB855B /* Popup */,
 				22C71C2527219BE9005C4466 /* InAppNotification */,
 				22FEEA302729CBF0003C8B62 /* TitleViewWithImage.swift */,
+				22FB8247275735AB001AEB72 /* ScaledImageView.swift */,
 				22D104B62704D55E006CF686 /* BlurredView.swift */,
 			);
 			path = UIComponents;
@@ -1377,6 +1380,7 @@
 				22B77A37274DDBED0040A9FA /* GridImagesRepository.swift in Sources */,
 				22765ED12730809500AD0F15 /* CloudStoreSubscribable.swift in Sources */,
 				2286F4DC270EF27700ED809E /* Message.swift in Sources */,
+				22FB8248275735AB001AEB72 /* ScaledImageView.swift in Sources */,
 				22765ED3273080C900AD0F15 /* CloudStoreAddable.swift in Sources */,
 				22E69D252701E0B7009CAAC0 /* DMViewModel.swift in Sources */,
 				22765ECE27306B8500AD0F15 /* FirestoreManager.swift in Sources */,
