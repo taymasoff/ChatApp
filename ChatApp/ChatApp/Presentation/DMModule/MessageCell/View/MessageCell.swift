@@ -54,8 +54,8 @@ final class MessageCell: UITableViewCell, ReuseIdentifiable, ViewModelBased {
         return textView
     }()
     
-    private var pictureImageView: UIImageView = {
-        let imageView = UIImageView()
+    private var pictureImageView: ScaledHeightImageView = {
+        let imageView = ScaledHeightImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
         return imageView
@@ -106,9 +106,6 @@ final class MessageCell: UITableViewCell, ReuseIdentifiable, ViewModelBased {
         }
         
         if let image = image {
-            updateImageViewHeightConstraint(
-                value: textView.frame.width / image.cropRatio
-            )
             pictureImageView.image = image
         }
         
@@ -164,7 +161,7 @@ extension MessageCell: Configurable, ViewModelBindable {
 }
 
 // MARK: - Setup Subviews Methods
-extension MessageCell {
+private extension MessageCell {
     
     func setupSubviewsHierarchy() {
         contentView.addSubview(bgBubbleView)
@@ -176,17 +173,8 @@ extension MessageCell {
     }
     
     func setConstantConstraints() {
-        pictureImageView.snp.makeConstraints { make in
-            make.height.lessThanOrEqualTo(0)
-        }
         bgBubbleView.snp.makeConstraints { make in
             make.edges.equalTo(containerStackView).inset(-Self.contentPadding)
-        }
-    }
-    
-    func updateImageViewHeightConstraint(value: CGFloat) {
-        pictureImageView.snp.updateConstraints { make in
-            make.height.lessThanOrEqualTo(value)
         }
     }
     
