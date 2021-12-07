@@ -13,6 +13,7 @@ import Firebase
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    private lazy var diContainer = DIContainer()
 
     // MARK: - UIApplicationDelegate Lifecycle Methods
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -23,7 +24,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         ThemeManager.updateCurrentTheme()
         if #available(iOS 13, *) {} else {
-            createAndShowFirstScene()
+            let appAssembler = AppAssembler(contaier: diContainer)
+            appAssembler.assembleMainRouter()
+            createAndShowFirstScene(router: diContainer
+                                        .resolve(type: MainRouter.self,
+                                                 asSingleton: true))
         }
         return true
     }
@@ -36,13 +41,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     // MARK: - Create and Show First Scene
-    private func createAndShowFirstScene() {
+    private func createAndShowFirstScene(router: MainRouterProtocol) {
         let window = UIWindow(frame: UIScreen.main.bounds)
         window.backgroundColor = ThemeManager.currentTheme.settings.mainColor
-        let navController = UINavigationController()
-        let router = MainRouter(navigationController: navController)
         router.initiateFirstViewController()
-        window.rootViewController = navController
+        window.rootViewController = router.navigationController
         window.makeKeyAndVisible()
         self.window = window
         
