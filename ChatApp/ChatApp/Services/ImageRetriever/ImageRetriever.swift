@@ -1,5 +1,5 @@
 //
-//  ImageRetrieverProtocol.swift
+//  ImageRetriever.swift
 //  ChatApp
 //
 //  Created by Тимур Таймасов on 25.11.2021.

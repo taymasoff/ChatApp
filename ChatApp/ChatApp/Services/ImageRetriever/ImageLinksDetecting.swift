@@ -27,7 +27,7 @@ extension ImageLinksDetecting {
             for word in textArray {
                 if word.isImageLink(), let url = URL(string: word) {
                     completion(url)
-                    break
+                    return
                 }
             }
             completion(nil)
@@ -50,8 +50,9 @@ extension ImageLinksDetecting {
             if let link = link, let indexOfLink = indexOfLink {
                 textArray.remove(at: indexOfLink)
                 completion((link, textArray.joined(separator: " ")))
+            } else {
+                completion(nil)
             }
-            return completion(nil)
         }
     }
 }
