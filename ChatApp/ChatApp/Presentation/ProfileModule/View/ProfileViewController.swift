@@ -126,13 +126,13 @@ extension ProfileViewController: ViewModelBindable {
     func bindWithViewModel() {
         // MARK: Bind userName to userNameTextField
         viewModel?.userName.bind(listener: { [unowned self] name in
-            self.profileView.userNameTextField.text = name
-            // Обновляем плейсхолдер аватарки с инициалами нашего имени,
-            // если userAvatar все еще nil
             if self.viewModel?.userAvatar.value == nil {
                 self.profileView.profileImageView.addProfilePlaceholder(fullName: name)
-                self.animateImageViewChange()
             }
+            if self.profileView.userNameTextField.text != "" || self.profileView.userNameTextField.text != nil {
+                animateImageViewChange()
+            }
+            self.profileView.userNameTextField.text = name
         })
         // MARK: Bind userDescription to userDescriptionTextField
         viewModel?.userDescription.bind(listener: { [unowned self] description in
@@ -152,7 +152,6 @@ extension ProfileViewController: ViewModelBindable {
                     initialsLabel.removeFromSuperview()
                 }
                 self.profileView.profileImageView.image = image
-                self.animateImageViewChange()
             } else {
                 self.profileView.profileImageView.addProfilePlaceholder(
                     fullName: viewModel?.userName.value,

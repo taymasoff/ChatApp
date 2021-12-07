@@ -32,14 +32,17 @@ final class ProfileViewModel: Routable {
     let operationState: Dynamic<OperationState?> = Dynamic(nil)
     
     private let repository: ProfileRepositoryProtocol
+    private let imagePicker: ImagePickerManager
     
     // MARK: - Init
     init(router: MainRouterProtocol,
          repository: ProfileRepositoryProtocol? = nil,
-         delegate: ProfileDelegate? = nil) {
+         delegate: ProfileDelegate? = nil,
+         imagePicker: ImagePickerManager = ImagePickerManager()) {
         self.router = router
         self.repository = repository ?? ProfileRepository()
         self.delegate = delegate
+        self.imagePicker = imagePicker
         
         self.userName = DynamicPreservable(
             "", id: AppFileNames.userName.rawValue
@@ -64,8 +67,7 @@ final class ProfileViewModel: Routable {
         userName.setAndPreserve(user.name)
         notifyDelegateOnNameSave()
         userDescription.setAndPreserve(user.description)
-        if let image = user.avatar,
-           image != userAvatar.value {
+        if let image = user.avatar {
             userAvatar.setAndPreserve(image)
             notifyDelegateOnAvatarSave()
         }
@@ -73,7 +75,7 @@ final class ProfileViewModel: Routable {
     
     // MARK: - Action Methods
     func editProfileImagePressed(sender: UIViewController) {
-        ImagePickerManager().pickImage(sender) { [weak self] image in
+        imagePicker.pickImage(sender) { [weak self] image, _ in
             self?.userAvatar.value = image
         }
     }

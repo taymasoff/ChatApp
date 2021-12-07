@@ -30,6 +30,7 @@ class ProfileView: UIView {
         let imageView = UIImageView()
         imageView.isUserInteractionEnabled = true
         imageView.layer.masksToBounds = true
+        imageView.contentMode = .scaleAspectFill
         return imageView
     }()
     

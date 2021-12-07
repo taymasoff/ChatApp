@@ -12,17 +12,22 @@ import Rswift
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    private lazy var diContainer = DIContainer()
+    
+    private let appDelegate = UIApplication.shared.delegate as? AppDelegate
+    lazy var diContainer = appDelegate?.diContainer
 
     // MARK: - UIWindowSceneDelegate Lifecycle Methods
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
-        let appAssembler = AppAssembler(contaier: diContainer)
-        appAssembler.assembleMainRouter()
-        createAndShowFirstScene(scene: scene,
-                                router: diContainer
-                                    .resolve(type: MainRouter.self,
-                                             asSingleton: true))
+        guard let diContainer = diContainer else {
+            fatalError("Couldn't get AppDelegate")
+        }
+        
+        createAndShowFirstScene(
+            scene: scene,
+            router: diContainer.resolve(type: MainRouter.self,
+                                        asSingleton: true)
+        )
     }
     
     private func createAndShowFirstScene(scene: UIScene, router: MainRouterProtocol) {

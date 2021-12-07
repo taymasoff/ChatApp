@@ -13,9 +13,19 @@ import Firebase
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    private lazy var diContainer = DIContainer()
+    
+    let diContainer = DIContainer()
+    lazy var appAssembler = AppAssembler(contaier: diContainer)
 
     // MARK: - UIApplicationDelegate Lifecycle Methods
+    func application(_ application: UIApplication,
+                     willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+        
+        appAssembler.startupAssemble()
+        
+        return true
+    }
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         FirebaseApp.configure()
@@ -24,11 +34,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         ThemeManager.updateCurrentTheme()
         if #available(iOS 13, *) {} else {
-            let appAssembler = AppAssembler(contaier: diContainer)
-            appAssembler.assembleMainRouter()
-            createAndShowFirstScene(router: diContainer
-                                        .resolve(type: MainRouter.self,
-                                                 asSingleton: true))
+            createAndShowFirstScene(
+                router: diContainer.resolve(type: MainRouter.self,
+                                            asSingleton: true)
+            )
         }
         return true
     }

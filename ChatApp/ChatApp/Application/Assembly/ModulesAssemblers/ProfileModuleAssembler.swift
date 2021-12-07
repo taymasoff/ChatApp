@@ -51,7 +51,9 @@ class ProfileModuleAssembler {
             return ProfileViewModel(
                 router: container.resolve(type: MainRouter.self, asSingleton: true),
                 repository: container.resolve(type: ProfileRepository.self),
-                delegate: self.configuration.profileDelegate
+                delegate: self.configuration.profileDelegate,
+                imagePicker: container.resolve(type: ImagePickerManager.self,
+                                               asSingleton: true)
             )
         }
     }

@@ -11,8 +11,8 @@ import UIKit
 class AppAssembler {
     
     // MARK: - Properties
-    var container: DIContainer
-    private lazy var coreAssembler = CoreAssembler(container: container)
+    let container: DIContainer
+    private lazy var servicesAssembler = ServicesAssembler(container: container)
     
     private lazy var userProfileFMPreferences = FileManagerPreferences(
         textExtension: .txt,
@@ -25,9 +25,22 @@ class AppAssembler {
         self.container = contaier
     }
     
+    // MARK: - Startup Assemble
+    func startupAssemble() {
+        assembleMainRouter()
+        servicesAssembler.assembleFileManager(ofType: .gcd)
+        servicesAssembler.assembleRequestDisptacher()
+        servicesAssembler.assembleImageFetcher()
+        servicesAssembler.assembleGridImagesModule()
+        servicesAssembler.assembleImagePicker()
+        servicesAssembler.assembleImageRetriever()
+        assembleConversationsModule()
+    }
+    
     // MARK: - Assemble Methods
     func assembleMainRouter() {
-        container.register(type: MainRouter.self) { _ in
+        container.register(type: MainRouter.self,
+                           asSingleton: true) { _ in
             let navigationController = UINavigationController()
             return MainRouter(navigationController: navigationController,
                               appAssembler: self)
@@ -35,7 +48,6 @@ class AppAssembler {
     }
     
     func assembleConversationsModule() {
-        coreAssembler.assembleFileManager(ofType: .gcd)
         let conversationsModuleAssembler = ConversationsModuleAssembler(
             container: container,
             configuration: .init(fmPreferences: userProfileFMPreferences)

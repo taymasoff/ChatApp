@@ -11,6 +11,9 @@ import Rswift
 
 /// Ячейка сообщения
 final class MessageCell: UITableViewCell, ReuseIdentifiable, ViewModelBased {
+    typealias ImageCallback = (_ image: UIImage?, _ updatedText: String?) -> Void
+    typealias UpdateCellImageHandler = (_ textViewText: String?,
+                                        _ completion: @escaping ImageCallback) -> Void
     
     /// Направление расположения текстовых "баблов" в ячейке
     enum ChatBubbleDirection { case left, right }
@@ -51,7 +54,14 @@ final class MessageCell: UITableViewCell, ReuseIdentifiable, ViewModelBased {
         return textView
     }()
     
-    private var timeLabel: UILabel! = {
+    private var pictureImageView: ScaledHeightImageView = {
+        let imageView = ScaledHeightImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        return imageView
+    }()
+    
+    private var timeLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
         label.textColor = R.color.timeGray()
@@ -80,6 +90,26 @@ final class MessageCell: UITableViewCell, ReuseIdentifiable, ViewModelBased {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Config
+    func updateCellImage(updateHandler: UpdateCellImageHandler) {
+        pictureImageView.image = nil
+        updateHandler(textView.text, didRecieveUpdatedTextAndImage)
+    }
+    
+    private func didRecieveUpdatedTextAndImage(image: UIImage?, text: String?) {
+        guard text != nil || image != nil else { return }
+        
+        if let newText = text, textView.text != newText {
+            textView.text = newText
+        }
+        
+        if let image = image {
+            pictureImageView.image = image
+        }
+        
+        layoutIfNeeded()
     }
     
     // MARK: - Internal Methods
@@ -131,13 +161,14 @@ extension MessageCell: Configurable, ViewModelBindable {
 }
 
 // MARK: - Setup Subviews Methods
-extension MessageCell {
+private extension MessageCell {
     
     func setupSubviewsHierarchy() {
         contentView.addSubview(bgBubbleView)
         bgBubbleView.addSubview(containerStackView)
         containerStackView.addArrangedSubview(nameLabel)
         containerStackView.addArrangedSubview(textView)
+        containerStackView.addArrangedSubview(pictureImageView)
         containerStackView.addArrangedSubview(timeLabel)
     }
     

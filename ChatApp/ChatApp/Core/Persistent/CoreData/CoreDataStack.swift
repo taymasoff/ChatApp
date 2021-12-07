@@ -53,6 +53,6 @@ extension NSPersistentStoreDescription {
             .url?
             .absoluteString
             .replacingOccurrences(of: "file://", with: "")
-            .replacingOccurrences(of: "%20", with: "\\ ")
+            .replacingOccurrences(of: "%20", with: " ")
     }
 }

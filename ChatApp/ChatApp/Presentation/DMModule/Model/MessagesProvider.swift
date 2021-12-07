@@ -10,18 +10,36 @@ import UIKit
 final class MessagesProvider: NSObject {
     
     private let frcDataProvider: FRCDataProvider<DBMessage>
+    private let imageRetriever: ImageRetrieverProtocol
     
     var changes: Dynamic<[DataSourceChange]> {
         return frcDataProvider.changes
     }
     
-    init(frcDataProvider: FRCDataProvider<DBMessage>) {
+    init(frcDataProvider: FRCDataProvider<DBMessage>,
+         imageRetriever: ImageRetrieverProtocol) {
         self.frcDataProvider = frcDataProvider
+        self.imageRetriever = imageRetriever
         
         do {
             try frcDataProvider.startFetching()
         } catch {
             Log.error("Failed to fetch cached messages: \(error)")
+        }
+    }
+    
+    func handleCellImageUpdate(fromText text: String?,
+                               completion: @escaping (UIImage?, String?) -> Void) {
+        guard let text = text else {
+            DispatchQueue.main.async {
+                completion(nil, nil)
+            }
+            return
+        }
+        imageRetriever.retrieveFirstImage(fromText: text) { image, text in
+            DispatchQueue.main.async {
+                completion(image, text)
+            }
         }
     }
     
@@ -56,6 +74,10 @@ extension MessagesProvider: UITableViewDataSource {
         }
         
         cell.configure(with: messageCellViewModel(forIndexPath: indexPath))
+        
+        cell.updateCellImage { [weak self] textViewText, completion in
+            self?.handleCellImageUpdate(fromText: textViewText, completion: completion)
+        }
         
         return cell
     }

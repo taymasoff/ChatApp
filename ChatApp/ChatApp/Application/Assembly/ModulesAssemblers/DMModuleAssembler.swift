@@ -53,7 +53,8 @@ class DMModuleAssembler {
                 chatName: self.configuration.chatName,
                 chatImage: self.configuration.chatImage,
                 repository: container.resolve(type: DMRepository.self),
-                messagesProvider: container.resolve(type: MessagesProvider.self)
+                messagesProvider: container.resolve(type: MessagesProvider.self),
+                imagePicker: container.resolve(type: ImagePickerManager.self)
             )
         }
     }
@@ -80,7 +81,8 @@ class DMModuleAssembler {
     func assembleMessagesProvider() {
         container.register(type: MessagesProvider.self) { container in
             return MessagesProvider(
-                frcDataProvider: container.resolve(type: FRCDataProvider<DBMessage>.self)
+                frcDataProvider: container.resolve(type: FRCDataProvider<DBMessage>.self),
+                imageRetriever: container.resolve(type: ImageRetriever.self)
             )
         }
     }
