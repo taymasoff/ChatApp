@@ -11,11 +11,31 @@ import CoreData
 
 @objc(DBChannel)
 public class DBChannel: NSManagedObject {
-
+    
+    @objc
+    var isActive: Bool {
+        if let lastActivity = lastActivity {
+            return lastActivity.minutesSince() < 10
+        } else {
+            return false
+        }
+    }
+    
+    @objc
+    var sectionName: String {
+        return isActive ? "Active Conversations" : "Inactive Conversations"
+    }
 }
 
-// MARK: - To Domain Convertable
-extension DBChannel: ToDomainModelConvertable {
+// MARK: - ManagedObjectModel
+extension DBChannel: ManagedObjectModel {
+    var uniqueSearchPredicate: NSPredicate? {
+        return NSPredicate(format: "identifier == %@", identifier)
+    }
+    
+    var uniqueSearchString: String? {
+        return identifier
+    }
     
     func toDomainModel() -> Conversation {
         return Conversation(

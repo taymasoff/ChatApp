@@ -11,6 +11,7 @@ import Rswift
 
 /// Контроллер экрана диалогов
 final class ConversationsViewController: UIViewController, ViewModelBased {
+    static let rowHeight: CGFloat = 80
     
     // MARK: - Properties
     private var profileBarButton: UIBarButtonItem? {
@@ -38,38 +39,59 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        gearBarButton = makeGearBarButton()
-        conversationsTableView = makeConversationsTableView()
-        newConversationButton = makeNewConversationButton()
-        searchController = makeSearchController()
-        setupNewConversationView()
+        setupSubviews()
+        setupAppeareance()
+        configureTableView()
         
-        navigationItem.title = viewModel?.title
-        navigationItem.leftBarButtonItem = gearBarButton
-        
-        navigationController?.navigationBar.prefersLargeTitles = true
-        
-        conversationsTableView.register(ConversationCell.self,
-                                        forCellReuseIdentifier: ConversationCell.reuseID)
-        
-        conversationsTableView.rowHeight = 80
-        
-        navigationItem.searchController = searchController
-        navigationController?.navigationItem.hidesSearchBarWhenScrolling = true
-        // Для корректного отображения SearchControllerа
-        extendedLayoutIncludesOpaqueBars = true
-        
-        setupRefreshControl()
         bindWithViewModel()
+        subscribeToConversationProviderUpdates()
         subscribeToNotificationUpdates()
         viewModel?.viewDidLoad()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        viewModel?.viewWillAppear()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         addKeyboardObserver()
     }
-
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        viewModel?.viewWillDisappear()
+    }
+    
+    // MARK: - Config Methods
+    private func setupSubviews() {
+        gearBarButton = makeGearBarButton()
+        conversationsTableView = makeConversationsTableView()
+        newConversationButton = makeNewConversationButton()
+        searchController = makeSearchController()
+        setupNewConversationView()
+        setupRefreshControl()
+    }
+    
+    private func setupAppeareance() {
+        navigationItem.title = viewModel?.title
+        navigationItem.leftBarButtonItem = gearBarButton
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.searchController = searchController
+        navigationController?.navigationItem.hidesSearchBarWhenScrolling = true
+        // Для корректного отображения SearchControllerа
+        extendedLayoutIncludesOpaqueBars = true
+    }
+    
+    private func configureTableView() {
+        conversationsTableView.register(ConversationCell.self,
+                                        forCellReuseIdentifier: ConversationCell.reuseID)
+        conversationsTableView.rowHeight = Self.rowHeight
+        conversationsTableView.delegate = viewModel
+        conversationsTableView.dataSource = viewModel?.conversationsProvider
+    }
+    
     // MARK: - Action Methods
     @objc
     private func profileBarButtonPressed() {
@@ -108,72 +130,63 @@ final class ConversationsViewController: UIViewController, ViewModelBased {
     }
 }
 
+// MARK: - ViewModelBindable
 extension ConversationsViewController: ViewModelBindable {
     func bindWithViewModel() {
         viewModel?.profileAvatarUpdateInfo.bind(listener: { [unowned self] update in
             updateProfileBarButton(with: update)
         })
-        viewModel?.onDataUpdate = { [unowned self] in
-            DispatchQueue.main.async {
-                self.conversationsTableView.reloadData()
+    }
+}
+
+// MARK: - TableViewProvider Updates
+extension ConversationsViewController {
+    private func subscribeToConversationProviderUpdates() {
+        viewModel?.conversationsProvider.changes.bind { [weak self] changes in
+            guard !changes.isEmpty else { return }
+            
+            self?.updateTableViewIfVisible(withChanges: changes)
+        }
+    }
+    
+    private func updateTableViewIfVisible(withChanges changes: [DataSourceChange]) {
+        guard isViewLoaded && view.window != nil else { return }
+        conversationsTableView.performBatchUpdates {
+            for change in changes {
+                switch change {
+                case let .section(sectionUpdate):
+                    switch sectionUpdate {
+                    case let .inserted(ind):
+                        conversationsTableView.insertSections([ind],
+                                                              with: .none)
+                    case let .deleted(ind):
+                        conversationsTableView.deleteSections([ind],
+                                                              with: .none)
+                    }
+                case let .object(objectUpdate):
+                    switch objectUpdate {
+                    case let .inserted(at: indexPath):
+                        conversationsTableView.insertRows(at: [indexPath],
+                                                          with: .automatic)
+                    case let .deleted(from: indexPath):
+                        conversationsTableView.deleteRows(at: [indexPath],
+                                                          with: .automatic)
+                    case let .updated(at: indexPath):
+                        conversationsTableView.reloadRows(at: [indexPath],
+                                                          with: .none)
+                    case let .moved(from: fromIndexPath, to: toIndexPath):
+                        conversationsTableView.deleteRows(at: [fromIndexPath],
+                                                          with: .none)
+                        conversationsTableView.insertRows(at: [toIndexPath],
+                                                          with: .none)
+                    }
+                }
             }
         }
     }
 }
 
-// MARK: - UITableView Delegate & Data Source
-extension ConversationsViewController: UITableViewDataSource, UITableViewDelegate {
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return viewModel?.numberOfSections() ?? 0
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel?.numberOfRowsInSection(section) ?? 0
-    }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return viewModel?.titleForHeaderInSection(section)
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView
-            .dequeueReusableCell(withIdentifier: ConversationCell.reuseID,
-                                 for: indexPath) as? ConversationCell
-        
-        guard let cell = cell else {
-            Log.error("Не удалось найти ConversationCell по идентификатору \(ConversationCell.reuseID). Возможно введен не верный ID.")
-            return UITableViewCell()
-        }
-        
-        guard let conversationCellViewModel = viewModel?.conversationCellViewModel(forIndexPath: indexPath) else {
-            Log.error("Не удалось создать ConversationCellViewModel по indexPath: \(indexPath).")
-            return UITableViewCell()
-        }
-    
-        cell.configure(with: conversationCellViewModel)
-    
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        viewModel?.didSelectRowAt(indexPath)
-        tableView.deselectRow(at: indexPath, animated: false)
-    }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let view = UITableViewHeaderFooterView()
-        view.contentView.backgroundColor = ThemeManager.currentTheme.settings.mainColor
-        view.textLabel?.textColor = ThemeManager.currentTheme.settings.titleTextColor
-        return view
-    }
-    
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            viewModel?.didSwipeToDelete(at: indexPath)
-        }
-    }
-}
-
+// MARK: - UITextFieldDelegate
 extension ConversationsViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if newConversationView.isSendable {
@@ -295,8 +308,6 @@ private extension ConversationsViewController {
     
     func makeConversationsTableView() -> UITableView {
         let tableView = UITableView()
-        tableView.delegate = self
-        tableView.dataSource = self
         tableView.keyboardDismissMode = .onDrag
         tableView.backgroundColor = .clear
         view.addSubview(tableView)

@@ -8,7 +8,8 @@
 import Foundation
 
 /// Тип, представляющий поддержку методов подписки и отписки облачного хранилища
-protocol CloudStoreSubscribable: DynamicModelBasedCloudStore {
+protocol CloudStoreSubscribable {
+    associatedtype ModelType: Codable
     
     /// Подписывается на обновления и обновляет model при любом изменении
     /// - Parameters:

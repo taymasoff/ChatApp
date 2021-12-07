@@ -1,5 +1,5 @@
 //
-//  CDContextProvider.swift
+//  CoreDataStack.swift
 //  ChatApp
 //
 //  Created by Тимур Таймасов on 02.11.2021.
@@ -7,18 +7,16 @@
 
 import CoreData
 
-protocol CDContextProviderProtocol {
+protocol CoreDataStackProtocol {
     var mainContext: NSManagedObjectContext { get }
     var newBackgroundContext: NSManagedObjectContext { get }
-    func performBackgroundTask(_ block: @escaping (NSManagedObjectContext) -> Void)
 }
 
-/// Core Data Context Provider
-final class CDContextProvider: CDContextProviderProtocol {
+final class CoreDataStack: CoreDataStackProtocol {
     
     private init() { }
     
-    static let shared = CDContextProvider()
+    static let shared = CoreDataStack()
     
     var mainContext: NSManagedObjectContext {
         return persistentContainer.viewContext
@@ -31,16 +29,30 @@ final class CDContextProvider: CDContextProviderProtocol {
     private lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: AppData.coreDataModel)
         
-        container.loadPersistentStores(completionHandler: { (_, error) in
+        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
                 fatalError("Persistent container initialization error: \(error),\(error.userInfo)")
             }
+            
+            #if DEBUG
+            debugPrint(storeDescription.getDatabaseLocation() ?? "No database location")
+            #endif
+            
             container.viewContext.automaticallyMergesChangesFromParent = true
         })
         return container
     }()
+}
+
+extension NSPersistentStoreDescription {
     
-    func performBackgroundTask(_ block: @escaping (NSManagedObjectContext) -> Void) {
-        persistentContainer.performBackgroundTask(block)
+    /// Получить путь хранилища NSPersistentStore
+    /// - Returns: путь к хранилищу в формате строки, удобной для чтения
+    func getDatabaseLocation() -> String? {
+        return self
+            .url?
+            .absoluteString
+            .replacingOccurrences(of: "file://", with: "")
+            .replacingOccurrences(of: "%20", with: "\\ ")
     }
 }

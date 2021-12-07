@@ -21,24 +21,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         setupLogger()
         
-        logCoreData()
-        
         ThemeManager.updateCurrentTheme()
         if #available(iOS 13, *) {} else {
             createAndShowFirstScene()
         }
         return true
-    }
-    
-    private func logCoreData() {
-        let context = CDContextProvider.shared.mainContext
-        let cWorker = CDWorker<Conversation, DBChannel>(context: context)
-        guard let channels = try? cWorker.coreDataManager.fetchEntities() else {
-            return
-        }
-        channels.forEach {
-            print("🗄 [CDChannel]: \($0.name) have \($0.messages?.count ?? 0) messages.")
-        }
     }
     
     private func setupLogger() {

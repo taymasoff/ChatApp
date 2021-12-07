@@ -10,4 +10,5 @@ import Foundation
 enum CoreDataError: Error {
     case invalidDBType
     case fetchingFailed
+    case failedToObtainPermanentIDsForInsertedObjects
 }
