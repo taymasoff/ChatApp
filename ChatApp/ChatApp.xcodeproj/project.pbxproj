@@ -134,6 +134,9 @@
 		22FB82462756FE30001AEB72 /* LongPressLogoEmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FB82452756FE30001AEB72 /* LongPressLogoEmitter.swift */; };
 		22FB8259275EDC76001AEB72 /* LinkOnlyImageLinksDetectingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FB8258275EDC76001AEB72 /* LinkOnlyImageLinksDetectingTests.swift */; };
 		22FB825D275EF4DB001AEB72 /* LinkAndFormattedTextLinksDetectingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FB825C275EF4DB001AEB72 /* LinkAndFormattedTextLinksDetectingTests.swift */; };
+		22FB8260275EFBCE001AEB72 /* ImageRetrieverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FB825F275EFBCE001AEB72 /* ImageRetrieverTests.swift */; };
+		22FB826227605846001AEB72 /* MockCachedImageFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FB826127605846001AEB72 /* MockCachedImageFetcher.swift */; };
+		22FB826427606FAF001AEB72 /* DummyCachedImageFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FB826327606FAF001AEB72 /* DummyCachedImageFetcher.swift */; };
 		22FEEA2327275BF4003C8B62 /* NewConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEA2227275BF4003C8B62 /* NewConversationView.swift */; };
 		22FEEA2527284AFF003C8B62 /* String+containsLetters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEA2427284AFF003C8B62 /* String+containsLetters.swift */; };
 		22FEEA2A272995DC003C8B62 /* FirestoreError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEA29272995DC003C8B62 /* FirestoreError.swift */; };
@@ -302,6 +305,9 @@
 		22FB824D275EDB20001AEB72 /* ChatAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChatAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		22FB8258275EDC76001AEB72 /* LinkOnlyImageLinksDetectingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkOnlyImageLinksDetectingTests.swift; sourceTree = "<group>"; };
 		22FB825C275EF4DB001AEB72 /* LinkAndFormattedTextLinksDetectingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkAndFormattedTextLinksDetectingTests.swift; sourceTree = "<group>"; };
+		22FB825F275EFBCE001AEB72 /* ImageRetrieverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRetrieverTests.swift; sourceTree = "<group>"; };
+		22FB826127605846001AEB72 /* MockCachedImageFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCachedImageFetcher.swift; sourceTree = "<group>"; };
+		22FB826327606FAF001AEB72 /* DummyCachedImageFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyCachedImageFetcher.swift; sourceTree = "<group>"; };
 		22FEEA2227275BF4003C8B62 /* NewConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationView.swift; sourceTree = "<group>"; };
 		22FEEA2427284AFF003C8B62 /* String+containsLetters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+containsLetters.swift"; sourceTree = "<group>"; };
 		22FEEA29272995DC003C8B62 /* FirestoreError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreError.swift; sourceTree = "<group>"; };
@@ -1075,9 +1081,28 @@
 		22FB825B275EF0B3001AEB72 /* ServiceLayerTests */ = {
 			isa = PBXGroup;
 			children = (
-				22FB825A275EE6E3001AEB72 /* ImageLinksDetecting */,
+				22FB825E275EFBA0001AEB72 /* ImageRetriever */,
+				22FB825F275EFBCE001AEB72 /* ImageRetrieverTests.swift */,
 			);
 			path = ServiceLayerTests;
+			sourceTree = "<group>";
+		};
+		22FB825E275EFBA0001AEB72 /* ImageRetriever */ = {
+			isa = PBXGroup;
+			children = (
+				22FB825A275EE6E3001AEB72 /* ImageLinksDetecting */,
+				22FB82652763ACCD001AEB72 /* CachedImageFetcherDoubles */,
+			);
+			path = ImageRetriever;
+			sourceTree = "<group>";
+		};
+		22FB82652763ACCD001AEB72 /* CachedImageFetcherDoubles */ = {
+			isa = PBXGroup;
+			children = (
+				22FB826327606FAF001AEB72 /* DummyCachedImageFetcher.swift */,
+				22FB826127605846001AEB72 /* MockCachedImageFetcher.swift */,
+			);
+			path = CachedImageFetcherDoubles;
 			sourceTree = "<group>";
 		};
 		22FEEA2827298F83003C8B62 /* Dynamic */ = {
@@ -1476,7 +1501,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				22FB8259275EDC76001AEB72 /* LinkOnlyImageLinksDetectingTests.swift in Sources */,
+				22FB826427606FAF001AEB72 /* DummyCachedImageFetcher.swift in Sources */,
+				22FB826227605846001AEB72 /* MockCachedImageFetcher.swift in Sources */,
 				22FB825D275EF4DB001AEB72 /* LinkAndFormattedTextLinksDetectingTests.swift in Sources */,
+				22FB8260275EFBCE001AEB72 /* ImageRetrieverTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
