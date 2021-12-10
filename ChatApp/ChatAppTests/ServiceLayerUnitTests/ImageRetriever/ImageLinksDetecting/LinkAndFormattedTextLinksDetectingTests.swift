@@ -28,7 +28,7 @@ class LinkAndFormattedTextImageLinksDetectingTests: XCTestCase {
             promise.fulfill()
         }
         
-        wait(for: [promise], timeout: 0.2)
+        wait(for: [promise], timeout: 0.4)
         
         XCTAssertNil(result)
     }
@@ -44,7 +44,7 @@ class LinkAndFormattedTextImageLinksDetectingTests: XCTestCase {
             promise.fulfill()
         }
         
-        wait(for: [promise], timeout: 0.2)
+        wait(for: [promise], timeout: 2)
         
         XCTAssertNil(result)
     }
@@ -60,7 +60,7 @@ class LinkAndFormattedTextImageLinksDetectingTests: XCTestCase {
             promise.fulfill()
         }
         
-        wait(for: [promise], timeout: 0.2)
+        wait(for: [promise], timeout: 0.4)
         
         XCTAssertNil(result)
     }
@@ -78,7 +78,7 @@ class LinkAndFormattedTextImageLinksDetectingTests: XCTestCase {
             promise.fulfill()
         }
         
-        wait(for: [promise], timeout: 0.2)
+        wait(for: [promise], timeout: 0.4)
         
         XCTAssertEqual(result?.link, expectedOutputURL)
         XCTAssertEqual(result?.newText, expectedOutputText)
@@ -97,7 +97,7 @@ class LinkAndFormattedTextImageLinksDetectingTests: XCTestCase {
             promise.fulfill()
         }
         
-        wait(for: [promise], timeout: 0.2)
+        wait(for: [promise], timeout: 0.4)
         
         XCTAssertEqual(result?.link, expectedOutputURL)
         XCTAssertEqual(result?.newText, expectedOutputText)
@@ -116,7 +116,7 @@ class LinkAndFormattedTextImageLinksDetectingTests: XCTestCase {
             promise.fulfill()
         }
         
-        wait(for: [promise], timeout: 0.2)
+        wait(for: [promise], timeout: 0.4)
         
         XCTAssertEqual(result?.link, expectedOutputURL)
         XCTAssertEqual(result?.newText, expectedOutputText)
@@ -135,7 +135,7 @@ class LinkAndFormattedTextImageLinksDetectingTests: XCTestCase {
             promise.fulfill()
         }
         
-        wait(for: [promise], timeout: 0.2)
+        wait(for: [promise], timeout: 0.4)
         
         XCTAssertEqual(result?.link, expectedOutputURL)
         XCTAssertEqual(result?.newText, expectedOutputText)
@@ -152,7 +152,7 @@ class LinkAndFormattedTextImageLinksDetectingTests: XCTestCase {
             promise.fulfill()
         }
         
-        wait(for: [promise], timeout: 0.2)
+        wait(for: [promise], timeout: 0.4)
         
         XCTAssertNil(result)
     }
@@ -172,7 +172,7 @@ class LinkAndFormattedTextImageLinksDetectingTests: XCTestCase {
             promise.fulfill()
         }
         
-        wait(for: [promise], timeout: 0.2)
+        wait(for: [promise], timeout: 0.4)
         
         XCTAssertEqual(result?.link, expectedOutputURL)
         XCTAssertEqual(result?.newText, expectedOutputText)
@@ -198,7 +198,7 @@ This text has multiple image links in it. There is first one: Then this one: \(i
             promise.fulfill()
         }
         
-        wait(for: [promise], timeout: 0.2)
+        wait(for: [promise], timeout: 0.4)
         
         XCTAssertEqual(result?.link, expectedOutputURL)
         XCTAssertEqual(result?.newText, expectedOutputText)

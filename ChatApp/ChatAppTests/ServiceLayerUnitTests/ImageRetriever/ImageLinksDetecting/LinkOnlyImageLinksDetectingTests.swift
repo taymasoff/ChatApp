@@ -25,7 +25,7 @@ class LinkOnlyImageLinksDetectingTests: XCTestCase {
             promise.fulfill()
         }
         
-        wait(for: [promise], timeout: 0.2)
+        wait(for: [promise], timeout: 0.4)
         
         XCTAssertNil(resultURL)
     }
@@ -40,7 +40,7 @@ class LinkOnlyImageLinksDetectingTests: XCTestCase {
             promise.fulfill()
         }
         
-        wait(for: [promise], timeout: 0.2)
+        wait(for: [promise], timeout: 0.4)
         
         XCTAssertNil(resultURL)
     }
@@ -55,7 +55,7 @@ class LinkOnlyImageLinksDetectingTests: XCTestCase {
             promise.fulfill()
         }
         
-        wait(for: [promise], timeout: 0.2)
+        wait(for: [promise], timeout: 0.4)
         
         XCTAssertNil(resultURL)
     }
@@ -71,7 +71,7 @@ class LinkOnlyImageLinksDetectingTests: XCTestCase {
             promise.fulfill()
         }
         
-        wait(for: [promise], timeout: 0.2)
+        wait(for: [promise], timeout: 0.4)
         
         XCTAssertEqual(resultURL, expectedOutput)
     }
@@ -87,7 +87,7 @@ class LinkOnlyImageLinksDetectingTests: XCTestCase {
             promise.fulfill()
         }
         
-        wait(for: [promise], timeout: 0.2)
+        wait(for: [promise], timeout: 0.4)
         
         XCTAssertEqual(resultURL, expectedOutput)
     }
@@ -103,7 +103,7 @@ class LinkOnlyImageLinksDetectingTests: XCTestCase {
             promise.fulfill()
         }
         
-        wait(for: [promise], timeout: 0.2)
+        wait(for: [promise], timeout: 0.4)
         
         XCTAssertEqual(resultURL, expectedOutput)
     }
@@ -119,7 +119,7 @@ class LinkOnlyImageLinksDetectingTests: XCTestCase {
             promise.fulfill()
         }
         
-        wait(for: [promise], timeout: 0.2)
+        wait(for: [promise], timeout: 0.4)
         
         XCTAssertEqual(resultURL, expectedOutput)
     }
@@ -134,7 +134,7 @@ class LinkOnlyImageLinksDetectingTests: XCTestCase {
             promise.fulfill()
         }
         
-        wait(for: [promise], timeout: 0.2)
+        wait(for: [promise], timeout: 0.4)
         
         XCTAssertNil(resultURL)
     }
@@ -151,7 +151,7 @@ class LinkOnlyImageLinksDetectingTests: XCTestCase {
             promise.fulfill()
         }
         
-        wait(for: [promise], timeout: 0.2)
+        wait(for: [promise], timeout: 0.4)
         
         XCTAssertEqual(resultURL, expectedOutput)
     }
@@ -172,7 +172,7 @@ This text has multiple image links in it. There is first one: \(imageLinksInText
             promise.fulfill()
         }
         
-        wait(for: [promise], timeout: 0.2)
+        wait(for: [promise], timeout: 0.4)
         
         XCTAssertEqual(resultURL, expectedOutput)
     }

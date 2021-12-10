@@ -26,7 +26,7 @@ class ImageRetrieverTests: XCTestCase {
             promise.fulfill()
         }
         
-        wait(for: [promise], timeout: 0.2)
+        wait(for: [promise], timeout: 2)
         
         XCTAssertNil(result?.image)
         XCTAssertNil(result?.newText)
@@ -42,7 +42,7 @@ class ImageRetrieverTests: XCTestCase {
             promise.fulfill()
         }
         
-        wait(for: [promise], timeout: 0.2)
+        wait(for: [promise], timeout: 2)
         
         XCTAssertNil(result?.image)
         XCTAssertNil(result?.newText)
@@ -61,7 +61,7 @@ class ImageRetrieverTests: XCTestCase {
             promise.fulfill()
         }
         
-        wait(for: [promise], timeout: 0.2)
+        wait(for: [promise], timeout: 2)
         
         XCTAssertTrue(mockCachedImageFetcher.verifyFetchCachedImageCalled(withURL: urlExpectedToBeCalled))
         XCTAssertEqual(result?.image, testEnv.imageOnSuccess)
@@ -81,7 +81,7 @@ class ImageRetrieverTests: XCTestCase {
             promise.fulfill()
         }
         
-        wait(for: [promise], timeout: 0.2)
+        wait(for: [promise], timeout: 2)
         
         XCTAssertTrue(mockCachedImageFetcher.verifyFetchCachedImageCalled(withURL: urlExpectedToBeCalled))
         XCTAssertNil(result?.image)
@@ -101,7 +101,7 @@ class ImageRetrieverTests: XCTestCase {
             promise.fulfill()
         }
         
-        wait(for: [promise], timeout: 0.2)
+        wait(for: [promise], timeout: 2)
         
         XCTAssertTrue(mockCachedImageFetcher.verifyFetchCachedImageCalled(withURL: urlExpectedToBeCalled))
         XCTAssertEqual(result?.image, testEnv.imageOnFail)
@@ -130,7 +130,7 @@ some other links. Like this one: \(imageLinks[1]) or this one \(imageLinks[2])
             promise.fulfill()
         }
         
-        wait(for: [promise], timeout: 0.2)
+        wait(for: [promise], timeout: 2)
         
         XCTAssertTrue(mockCachedImageFetcher.verifyFetchCachedImageCalled(withURL: urlExpectedToBeCalled))
         XCTAssertEqual(result?.image, testEnv.imageOnSuccess)
