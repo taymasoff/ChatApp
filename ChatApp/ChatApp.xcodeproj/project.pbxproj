@@ -1064,7 +1064,7 @@
 		22FB824E275EDB21001AEB72 /* ChatAppTests */ = {
 			isa = PBXGroup;
 			children = (
-				22FB825B275EF0B3001AEB72 /* ServiceLayerTests */,
+				22FB825B275EF0B3001AEB72 /* ServiceLayerUnitTests */,
 			);
 			path = ChatAppTests;
 			sourceTree = "<group>";
@@ -1078,13 +1078,13 @@
 			path = ImageLinksDetecting;
 			sourceTree = "<group>";
 		};
-		22FB825B275EF0B3001AEB72 /* ServiceLayerTests */ = {
+		22FB825B275EF0B3001AEB72 /* ServiceLayerUnitTests */ = {
 			isa = PBXGroup;
 			children = (
 				22FB825E275EFBA0001AEB72 /* ImageRetriever */,
 				22FB825F275EFBCE001AEB72 /* ImageRetrieverTests.swift */,
 			);
-			path = ServiceLayerTests;
+			path = ServiceLayerUnitTests;
 			sourceTree = "<group>";
 		};
 		22FB825E275EFBA0001AEB72 /* ImageRetriever */ = {
