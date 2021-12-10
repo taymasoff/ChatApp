@@ -118,6 +118,7 @@ class ProfileView: UIView {
     init() {
         super.init(frame: CGRect.zero)
         
+        accessibilityIdentifier = "profileView"
         backgroundColor = .clear
         setupSubviews()
         

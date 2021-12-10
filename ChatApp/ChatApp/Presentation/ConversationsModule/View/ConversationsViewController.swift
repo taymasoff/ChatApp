@@ -197,7 +197,7 @@ private extension ConversationsViewController {
         imageView.layer.cornerRadius = CGFloat(imageViewSize / 2)
         imageView.layer.masksToBounds = true
         let button = UIButton(type: .custom)
-        
+        button.accessibilityIdentifier = "profileBarButton"
         button.addTarget(self,
                          action: #selector(profileBarButtonPressed),
                          for: .touchUpInside)
