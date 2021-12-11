@@ -30,4 +30,6 @@ struct AppData {
     static var currentUserName: String
     
     static var deviceID: String = UIDevice.current.identifierForVendor!.uuidString
+    
+    static let coreDataModel: String = "ChatAppDataModel"
 }

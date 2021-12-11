@@ -57,3 +57,11 @@
 
 
 </details>
+<details> 
+  <summary>Home Work #7</summary>
+
+Интегрировал Core Data в проект.
+
+<a href="https://youtu.be/8A3rpEQqiOU"><img src="https://i.imgur.com/6FJSiFp.png" height="350"/></a>
+
+</details>
