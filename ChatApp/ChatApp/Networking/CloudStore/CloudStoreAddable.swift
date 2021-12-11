@@ -9,7 +9,7 @@ import Foundation
 
 /// Тип, представляющий поддержку добавления сущности в облачное хранилище из модели
 protocol CloudStoreAddable {
-    associatedtype ModelType
+    associatedtype ModelType: Codable
     
     /// Добавить сущность, созданную из модели
     /// - Parameters:

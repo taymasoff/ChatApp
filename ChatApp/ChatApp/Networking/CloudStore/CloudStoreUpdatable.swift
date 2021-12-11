@@ -8,7 +8,8 @@
 import Foundation
 
 /// Тип, представляющий поддержку ручного обновления модели из облачного хранилища
-protocol CloudStoreUpdatable: DynamicModelBasedCloudStore {
+protocol CloudStoreUpdatable {
+    associatedtype ModelType: Codable
     
     /// Обновляет модель данных один раз
     /// - Parameter completion: сообщение об успехе или ошибка

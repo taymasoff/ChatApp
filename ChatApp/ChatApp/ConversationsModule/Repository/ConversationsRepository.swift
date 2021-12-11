@@ -8,13 +8,12 @@
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 import UIKit
+import CoreData
 
 enum ProfileAvatarUpdateInfo { case avatar(UIImage), name(String) }
 
 // MARK: - ConversationsRepositoryProtocol
 protocol ConversationsRepositoryProtocol {
-    var conversations: Dynamic<[Conversation]> { get }
-    
     func subscribeToUpdates()
     func unsubscribeFromUpdates()
     func updateConversationsOnce(completion: @escaping (Bool) -> Void)
@@ -29,17 +28,13 @@ protocol ConversationsRepositoryProtocol {
 final class ConversationsRepository: ConversationsRepositoryProtocol {
     
     // MARK: - Properties
-    private var isFirstFetch = true
-    
     private let cloudStore: FirestoreManager<Conversation>
-    private let cdContextProvider: CDContextProviderProtocol
+    private let coreDataStack: CoreDataStackProtocol
     
-    private lazy var saveWorker = CDWorker<Conversation, DBChannel>(
-        context: cdContextProvider.newBackgroundContext,
+    private lazy var bgWorker = CDWorker<Conversation, DBChannel>(
+        context: coreDataStack.newBackgroundContext,
         mergePolicy: .mergeByPropertyObjectTrumpMergePolicyType
     )
-    
-    let conversations: Dynamic<[Conversation]> = Dynamic([])
     
     let fileManager: AsyncFileManagerProtocol
     let fmPreferences: FileManagerPreferences
@@ -53,18 +48,12 @@ final class ConversationsRepository: ConversationsRepositoryProtocol {
          cloudStore: FirestoreManager<Conversation> = FirestoreManager<Conversation>(
             collectionName: FBCollections.channels.rawValue
          ),
-         cdContextProvider: CDContextProviderProtocol = CDContextProvider.shared
+         coreDataStack: CoreDataStackProtocol = CoreDataStack.shared
     ) {
         self.fileManager = fileManager
         self.fmPreferences = fmPreferences
         self.cloudStore = cloudStore
-        self.cdContextProvider = cdContextProvider
-    }
-    
-    private func bindCloudWithModel() {
-        self.cloudStore.model.bind { [weak self] conversations in
-            self?.conversations.value = conversations
-        }
+        self.coreDataStack = coreDataStack
     }
 }
 
@@ -80,8 +69,6 @@ extension ConversationsRepository {
     
     // MARK: Subscribe to stream
     func subscribeToUpdates() {
-        bindCloudWithModel()
-        isFirstFetch = true
         cloudStore.subscribeToUpdates(enableLogging: true) { [weak self] result in
             switch result {
             case .success(let updateLog):
@@ -186,36 +173,24 @@ extension ConversationsRepository: FMImageOperatable, FMStringOperatable {
 }
 
 // MARK: - Core Data Methods
-extension ConversationsRepository {
+private extension ConversationsRepository {
     
-    // MARK: Save changes to Core Data
-    private func updateCoreData(with updateLog: CSModelUpdateLog<Conversation>?) {
+    /// Обновляет базу данных CoreData последними изменениями
+    /// - Parameter updateLog: список изменений
+    func updateCoreData(with updateLog: CSModelUpdateLog<Conversation>?) {
         guard let updateLog = updateLog else { return }
         
-        // Если мы только что подписались на изменения - чистим базу, и перезаписываем
-        // так как мы не можем знать какие изменения там произошли с прошлого запуска
-        if isFirstFetch {
-            saveWorker.coreDataManager.removeAllAndSave { [weak self] _ in
-                self?.isFirstFetch = false
-            }
-        }
-        
         if updateLog.addedCount != 0 {
-            saveWorker.coreDataManager.insert(updateLog.addedObjects) { _ in }
+            bgWorker.coreDataManager.insert(updateLog.addedObjects) { _ in }
         }
-        
         if updateLog.updatedCount != 0 {
-            // При выбранной merge политике, insert должен работать как update
-            saveWorker.coreDataManager.insert(updateLog.updatedObjects) { _ in }
+            bgWorker.coreDataManager.update(updateLog.updatedObjects) { _ in }
         }
-        
         if updateLog.removedCount != 0 {
             for object in updateLog.removedObjects {
-                guard let id = object.identifier else { continue }
-                saveWorker.coreDataManager.removeEntity(withID: id) { _ in }
+                bgWorker.coreDataManager.removeEntity(ofObject: object) { _ in }
             }
         }
-        
-        saveWorker.saveIfNeeded { _ in }
+        bgWorker.saveIfNeeded { _ in }
     }
 }

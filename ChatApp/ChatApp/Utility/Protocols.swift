@@ -59,14 +59,36 @@ extension ReuseIdentifiable {
     }
 }
 
-// MARK: - To Domain Model Convertable
-protocol ToDomainModelConvertable {
+// MARK: - Managed Object Model
+protocol ManagedObjectModel: CDIdentifiable {
     associatedtype DomainModel
+    
     func toDomainModel() -> DomainModel
 }
 
-// MARK: - To DataBase Entity Insertable
-protocol DomainModel {
+// MARK: - Domain Model
+protocol DomainModel: CDIdentifiable {
     associatedtype Entity
-    func insertInto(entity: Entity)
+    
+    @discardableResult
+    func insertInto(entity: Entity) -> Entity
+}
+
+// MARK: - Core Data Identifiable
+protocol CDIdentifiable {
+    var uniqueSearchString: String? { get }
+    var uniqueSearchPredicate: NSPredicate? { get }
+}
+
+// MARK: - Fire Store Identifiable
+protocol FSIdentifiable {
+    var identifier: String? { get set }
+}
+
+// MARK: - TableView Provider
+protocol TableViewProviderProtocol: UITableViewDataSource {
+    associatedtype Model
+    
+    var changes: Dynamic<[DataSourceChange]> { get }
+    func object(at indexPath: IndexPath) -> Model
 }

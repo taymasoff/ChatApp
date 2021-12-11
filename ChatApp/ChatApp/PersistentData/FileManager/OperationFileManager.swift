@@ -15,7 +15,7 @@ protocol FMOperationQueueSupportable {
 }
 
 /// OperationBased File Manager
-class OperationFileManagera: AsyncFileManagerProtocol, FMOperationQueueSupportable {
+class OperationFileManager: AsyncFileManagerProtocol, FMOperationQueueSupportable {
     
     // MARK: - Properties
     var fileManager: FileManager

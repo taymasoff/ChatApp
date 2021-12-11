@@ -15,7 +15,9 @@ protocol RouterProtocol {
 protocol MainRouterProtocol: RouterProtocol {
     func initiateFirstViewController()
     func showDMViewController(animated: Bool,
-                              withViewModel viewModel: DMViewModel)
+                              dialogueID: String,
+                              chatName: String?,
+                              chatImage: UIImage?)
     func presentThemesViewController(onThemeChanged: @escaping (UIColor) -> Void)
     func presentThemesViewControllerObjc(delegate: ThemesViewControllerDelegate)
     func presentProfileViewController(delegate: ProfileDelegate?)
@@ -26,16 +28,20 @@ protocol MainRouterProtocol: RouterProtocol {
 
 class MainRouter: MainRouterProtocol {
     var navigationController: UINavigationController?
+    let appAssembler: AppAssembler
     
-    init(navigationController: UINavigationController) {
+    init(navigationController: UINavigationController, appAssembler: AppAssembler) {
         self.navigationController = navigationController
+        self.appAssembler = appAssembler
     }
     
     /// Инициализировать первый экран приложения
     func initiateFirstViewController() {
         if let navigationController = navigationController {
-            let conversationsViewModel = ConversationsViewModel(router: self)
-            let conversationsViewController = ConversationsViewController(with: conversationsViewModel)
+            appAssembler.assembleConversationsModule()
+            let conversationsViewController = appAssembler.container.resolve(
+                type: ConversationsViewController.self
+            ) as ConversationsViewController
             navigationController.viewControllers = [conversationsViewController]
         }
     }
@@ -43,9 +49,16 @@ class MainRouter: MainRouterProtocol {
     /// Инициализировать и закинуть в navigation стэк экран переписки
     /// - Parameter animated: включена ли анимация перехода (да по умолчанию)
     func showDMViewController(animated: Bool = true,
-                              withViewModel viewModel: DMViewModel) {
+                              dialogueID: String,
+                              chatName: String?,
+                              chatImage: UIImage?) {
         if let navigationController = navigationController {
-            let dmViewController = DMViewController(with: viewModel)
+            appAssembler.assembleDMModule(dialogueID: dialogueID,
+                                          chatName: chatName,
+                                          chatImage: chatImage)
+            let dmViewController = appAssembler.container.resolve(
+                type: DMViewController.self
+            ) as DMViewController
             navigationController.pushViewController(dmViewController,
                                                     animated: animated)
         }
@@ -54,9 +67,10 @@ class MainRouter: MainRouterProtocol {
     /// Инициализировать и представить модально экран выбора тем (Swift)
     func presentThemesViewController(onThemeChanged: @escaping (UIColor) -> Void) {
         if let navigationController = navigationController {
-            let themesViewModel = ThemesViewModel(router: self,
-                                                  onThemeChanged: onThemeChanged)
-            let themesViewController = ThemesViewController(with: themesViewModel)
+            appAssembler.assembleThemesModule(onThemeChanged: onThemeChanged)
+            let themesViewController = appAssembler.container.resolve(
+                type: ThemesViewController.self
+            ) as ThemesViewController
             // Представляем модально с прозрачным эффектом
             themesViewController.modalPresentationStyle = .overCurrentContext
             navigationController.present(themesViewController,
@@ -83,9 +97,10 @@ class MainRouter: MainRouterProtocol {
     /// Инициализировать и представить модально экран профиля в своем собственном NC
     func presentProfileViewController(delegate: ProfileDelegate? = nil) {
         if let navigationController = navigationController {
-            let profileViewModel = ProfileViewModel(router: self,
-                                                    delegate: delegate)
-            let profileViewController = ProfileViewController(with: profileViewModel)
+            appAssembler.assembleProfileModule(delegate: delegate)
+            let profileViewController = appAssembler.container.resolve(
+                type: ProfileViewController.self
+            ) as ProfileViewController
             // Представляем модально с прозрачным эффектом
             profileViewController.modalPresentationStyle = .overCurrentContext
             navigationController.present(profileViewController,

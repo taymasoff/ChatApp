@@ -91,6 +91,11 @@ extension ConversationCell {
         animate(isHighlighted: false)
     }
     
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesMoved(touches, with: event)
+        animate(isHighlighted: false)
+    }
+    
     private func animate(isHighlighted: Bool, completion: ((Bool) -> Void)? = nil) {
         let animationOptions: UIView.AnimationOptions = [.allowUserInteraction]
         if isHighlighted {
@@ -217,9 +222,9 @@ private extension ConversationCell {
         
         // MARK: Layout Profile Image View
         profileImageView.snp.makeConstraints { make in
-            make.left.top.bottom.equalToSuperview().inset(15)
-            layoutSubviews()
+            make.left.top.bottom.equalToSuperview().inset(15).priority(UILayoutPriority(999))
             make.width.equalTo(profileImageView.snp.height)
+            layoutSubviews()
         }
         
         let profileImageRadius = profileImageView.frame.width / 2
@@ -239,7 +244,7 @@ private extension ConversationCell {
         allTextContainer.snp.makeConstraints { make in
             make.left.equalTo(profileImageView.snp.right).offset(10)
             make.right.equalToSuperview().inset(10)
-            make.top.bottom.equalToSuperview().inset(12)
+            make.top.bottom.equalToSuperview().inset(12).priority(UILayoutPriority(999))
         }
         
         // MARK: Layout Name Date Container
