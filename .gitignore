@@ -138,3 +138,6 @@ iOSInjectionProject/
 #R.swift
 *.generated.swift
 *.orig
+
+# Secret Configuration Files
+*/ConfigurationFiles/*.xcconfig
