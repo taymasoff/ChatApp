@@ -6,6 +6,32 @@
 	<string>To allow user pick profile image</string>
 	<key>NSCameraUsageDescription</key>
 	<string>To allow user pick profile image</string>
+	<key>Configurations</key>
+	<dict>
+		<key>PixabayAPIConfiguration</key>
+		<dict>
+			<key>baseURL</key>
+			<string>$(PIXABAY_BASE_URL)</string>
+			<key>basePath</key>
+			<string>$(PIXABAY_BASE_PATH)</string>
+			<key>token</key>
+			<string>$(PIXABAY_TOKEN)</string>
+		</dict>
+		<key>ApplicationConfiguration</key>
+		<dict>
+			<key>defaultUserName</key>
+			<string>$(APP_DEFAULT_USER_NAME)</string>
+		</dict>
+		<key>FileManagerConfiguration</key>
+		<dict>
+			<key>userNameFileName</key>
+			<string>$(FM_USER_NAME_FILENAME)</string>
+			<key>userDescriptionFileName</key>
+			<string>$(FM_USER_DESCRIPTION_FILENAME)</string>
+			<key>userAvatarFileName</key>
+			<string>$(FM_USER_AVATAR_FILENAME)</string>
+		</dict>
+	</dict>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
