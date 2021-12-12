@@ -65,3 +65,13 @@
 <a href="https://youtu.be/8A3rpEQqiOU"><img src="https://i.imgur.com/6FJSiFp.png" height="350"/></a>
 
 </details>
+<details> 
+  <summary>Home Work #8</summary>
+
+Интегрировал FetchedResultsController для использования кешированных данных в работе с таблицей.
+
+Видео демка:
+
+<a href="https://youtu.be/0TLP1oEldW0"><img src="https://i.imgur.com/fk1y66d.png" height="350"/></a>
+
+</details>
