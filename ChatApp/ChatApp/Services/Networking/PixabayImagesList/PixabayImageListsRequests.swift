@@ -13,11 +13,11 @@ enum PixabayImageListsRequests: RequestProtocol {
     case imagesByQuery(String)
     
     var baseURL: String {
-        return "pixabay.com"
+        return PixabayConfig.baseURL.rawValue
     }
     
     var path: String {
-        return "/api"
+        return PixabayConfig.basePath.rawValue
     }
     
     var method: HTTPMethod {
@@ -28,13 +28,13 @@ enum PixabayImageListsRequests: RequestProtocol {
         switch self {
         case .randomImages:
             return .url([
-                "key": AppData.pixabayAPIKey,
+                "key": PixabayConfig.token.rawValue,
                 "safesearch": "true",
                 "per_page": "\(Int.random(in: 150..<200))"
             ])
         case .imagesByQuery(let query):
             return .url([
-                "key": AppData.pixabayAPIKey,
+                "key": PixabayConfig.token.rawValue,
                 "safesearch": "true",
                 "per_page": "\(Int.random(in: 150..<200))",
                 "q": query
