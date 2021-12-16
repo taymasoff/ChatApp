@@ -1,5 +1,6 @@
-desc "Clean and build for testing"
+desc "Install dependencies, clean and build project"
 lane :build_for_testing do |options|
+  cocoapods(try_repo_update_on_error: true)
   scan(clean: true, build_for_testing: true)
 end
 
