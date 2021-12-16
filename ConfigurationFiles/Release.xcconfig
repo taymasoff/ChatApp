@@ -1,0 +1,9 @@
+//
+//  Release.xcconfig
+//  ChatApp
+//
+//  Created by Тимур Таймасов on 12.12.2021.
+//
+
+#include "Base.xcconfig"
+#include "Pods/Target Support Files/Pods-ChatApp/Pods-ChatApp.release.xcconfig"
