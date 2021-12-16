@@ -1,7 +1,7 @@
 desc "Run SwiftLint checks"
 lane :run_linter do |options|
   swiftlint(
-    ignore_exit_status: true,
+    strict: true,
     executable: "Pods/SwiftLint/swiftlint"
     )
 end
