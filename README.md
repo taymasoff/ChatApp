@@ -205,13 +205,3 @@ SWIFT, MVVM, SnapKit, CoreData, Firebase/Firestore, Fastlane, Github Actions
 За 4 часа до дедлайна ранер препода сдох и пришлось быстренько делать свой. Мой старенький макбук все еще могет! 20 минут пыхтит правда)
 [Ссылка на Pull Request (CI)](https://github.com/TFS-iOS/chat-app-taymasoff/pull/13)
 </details>
-<details> 
-  <summary>Home Work #8</summary>
-
-Интегрировал FetchedResultsController для использования кешированных данных в работе с таблицей.
-
-Видео демка:
-
-<a href="https://youtu.be/0TLP1oEldW0"><img src="https://i.imgur.com/fk1y66d.png" height="350"/></a>
-
-</details>
