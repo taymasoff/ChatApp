@@ -1,0 +1,19 @@
+//
+//  Base.xcconfig
+//  ChatApp
+//
+//  Created by Тимур Таймасов on 12.12.2021.
+//
+
+// MARK: - Application
+APP_DEFAULT_USER_NAME = Unauthorized
+
+// MARK: - FileNames
+FM_USER_NAME_FILENAME = UserName
+FM_USER_DESCRIPTION_FILENAME = UserDescription
+FM_USER_AVATAR_FILENAME = UserAvatar
+
+// MARK: - Pixabay API
+PIXABAY_BASE_URL = pixabay.com
+PIXABAY_BASE_PATH = /api
+PIXABAY_TOKEN = 24447993-d83826e9b7088e14b4ae65ef0
